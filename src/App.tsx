@@ -1,25 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import { Route, Routes } from "react-router-dom";
+import Projects from "./pages/project-page/projects";
+import Dashboard from "./pages/dashboard";
+import { ThemeProvider, createMuiTheme } from "@mui/material";
+import PeoplePage from "./pages/people";
 
 function App() {
+  const theme = createMuiTheme({
+    typography: {
+      fontFamily: [
+        "Poppins",
+        "sans-serif" // Corrected the typo here
+      ].join(','),
+    }
+  });
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <ThemeProvider theme={theme}>
+    <div>
+      <Routes>
+        {/*<Route path="/" element={ />} />*/}
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/projects" element={<Projects />} />
+        <Route path="/employees" element={<PeoplePage />} />
+      </Routes>
     </div>
+    </ThemeProvider>
   );
 }
 
