@@ -6,6 +6,9 @@ import Projects from "./pages/project-page/projects";
 import Dashboard from "./pages/dashboard";
 import { ThemeProvider, createMuiTheme } from "@mui/material";
 import PeoplePage from "./pages/people";
+import CreateProject from "./pages/project-page/create/create-project";
+import UpdateProjects from "./pages/project-page/update/update-project";
+import UpdateProject from "./pages/project-page/update/update-project";
 
 function App() {
   const theme = createMuiTheme({
@@ -24,6 +27,8 @@ function App() {
         {/*<Route path="/" element={ />} />*/}
         <Route path="/" element={<Dashboard />} />
         <Route path="/projects" element={<Projects />} />
+        <Route path="/projects/create-new" element={<CreateProject />} />
+        <Route path="/projects/update/:id" element={<UpdateProject />} />
         <Route path="/employees" element={<PeoplePage />} />
       </Routes>
     </div>

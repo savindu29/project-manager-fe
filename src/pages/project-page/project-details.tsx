@@ -1,11 +1,15 @@
 import { Box, Chip, Divider, IconButton } from "@mui/material";
 
-import Projects from ".";
+import Projects from "./project-details";
 import HorizontalLinearAlternativeLabelStepper from "../../components/status-stepper/success";
 import HorizontalStepperWithError from "../../components/status-stepper/unccess";
 import { useEffect, useState } from "react";
 import ContactCard from "../../components/person-contact-card/contact-card";
 import { getProject } from "../../apis/project-api";
+import ControlledAccordions from "../../components/accordian";
+import Todo from "./todo-body";
+import SpecialDocs from "./special-doc";
+import LeftAlignedTimeline from "../../components/timeline";
 
 const ProjectDetail = ({ projectId }: any) => {
   const [projectDetails, setProjectDetails] = useState<any>(null);
@@ -30,19 +34,24 @@ const ProjectDetail = ({ projectId }: any) => {
     setStatusHistory(!statusHistory);
   };
   const emptyData = "Not set the Data";
+  const [expanded, setExpanded] = useState<string | false>(false);
 
+  const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+    setExpanded(isExpanded ? panel : false);
+  };
   return (
-    <div className="flex h-screen ">
-      <div className="overflow-y-scroll w-full flex pr-8 my-8 text-gray-700">
+    <div className="flex h-screen pb-16">
+      <div className="overflow-y-scroll w-full flex pr-8 my-2 text-gray-700 ">
         <div className="w-full">
           {loading ? ( // Show a loading indicator or message while loading
             <p>Loading...</p>
           ) : (
             <>
               <div className="flex w-full ">
-                <div className="w-full ">
-
-                  {/* <div className="h-20 w-full flex bg-gray-100"></div> */}
+                
+                <div className="w-full  ">
+              
+                
                   {/* heading */}
                   <h1 className="font-semibold text-2xl">
                     {projectDetails.name || emptyData}
@@ -55,6 +64,8 @@ const ProjectDetail = ({ projectId }: any) => {
                     </span>
                   </p>
                 </div>
+                
+                
                 <div className="w-full flex justify-end items-end">
                   <p>
                     Initiation Date:{" "}
@@ -119,14 +130,17 @@ const ProjectDetail = ({ projectId }: any) => {
                 </div>
 
                 <div
-                  className={`w-full h-56 bg-gray-100 mt-6 duration-300 rounded-xl ${
+                  className={`w-full  py-6  mt-6 duration-300 rounded-xl ${
                     statusHistory ? "block" : "hidden"
                   }`}
-                ></div>
+                >
+
+                  <LeftAlignedTimeline statusHistoryList={projectDetails.statusHistoryList}/>
+                </div>
               </div>
 
               {/* client and responsible person contact cards */}
-              <div className="w-full   flex py-16">
+              <div className="w-full   flex py-8">
                 <div className="flex w-full ">
                   <div>
                     <h1 className="text-center mb-4 font-medium">
@@ -251,8 +265,31 @@ const ProjectDetail = ({ projectId }: any) => {
                   </div>
                 </div>
               </div>
+              <div>
+      <ControlledAccordions
+        title="ToDO"
+        description="Pending Tasks"
+        body={<Todo todo={projectDetails.todo }/>}
+        expanded={expanded === 'panel1'}
+        onChange={handleChange('panel1')}
+      />
+      <ControlledAccordions
+        title="Documents"
+        description="Special Documents"
+        body={<SpecialDocs/>}
+        expanded={expanded === 'panel2'}
+        onChange={handleChange('panel2')}
+      />
+    </div>
+    <div className="h-20"></div>
             </>
           )}
+
+
+
+
+
+
         </div>
       </div>
     </div>

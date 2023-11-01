@@ -2,6 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PositionedSnackbar from '../snack-bar';
 
+
+const formatDate = (dateString: string) => {
+  const options = { year: 'numeric', month: 'short', day: '2-digit' };
+  return new Date(dateString).toLocaleDateString(undefined, options as any);
+};
+
 const ProjectCard = ({ cardDetails, onCardClick }: any) => {
  
   const handleCardClick = () => {
@@ -38,7 +44,7 @@ const ProjectCard = ({ cardDetails, onCardClick }: any) => {
         <div className="w-full text-right">Stage: {cardDetails.currentStatus}</div>
       </div>
       <p className="text-sm mt-2">{cardDetails.todo}</p>
-      <h1 className="mt-2 text-sm">Last Status Date: {cardDetails.latestStatusHistoryDate} </h1>
+      <h1 className="mt-2 text-sm">Last Status Date:  {formatDate(cardDetails.latestStatusHistoryDate)} </h1>
 
       <PositionedSnackbar open={snackbarOpen} onClose={handleSnackbarClose} message={"Loading the Project..."} />
     </div>

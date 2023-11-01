@@ -1,0 +1,62 @@
+import * as React from 'react';
+import Timeline from '@mui/lab/Timeline';
+import TimelineItem from '@mui/lab/TimelineItem';
+import TimelineSeparator from '@mui/lab/TimelineSeparator';
+import TimelineConnector from '@mui/lab/TimelineConnector';
+import TimelineContent from '@mui/lab/TimelineContent';
+import TimelineDot from '@mui/lab/TimelineDot';
+import TimelineOppositeContent, {
+  timelineOppositeContentClasses,
+} from '@mui/lab/TimelineOppositeContent';
+import { Divider } from '@mui/material';
+
+const formatDate = (dateString: string) => {
+    const options = { year: 'numeric', month: 'short', day: '2-digit' };
+    return new Date(dateString).toLocaleDateString(undefined, options as any);
+  };
+
+  const formatDateTime = (dateString: string) => {
+    const options = { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    return new Date(dateString).toLocaleDateString(undefined, options as any);
+  };
+export default function LeftAlignedTimeline({statusHistoryList}:any) {
+  return (
+    <Timeline
+      sx={{
+        [`& .${timelineOppositeContentClasses.root}`]: {
+          flex: 0.2,
+        },
+      }}
+    >
+
+        {statusHistoryList.map((status: any) => (
+                <TimelineItem key={status.id}>
+                <TimelineOppositeContent color="textSecondary">
+               
+               
+                 {formatDateTime(status.date)}
+                </TimelineOppositeContent>
+                <TimelineSeparator>
+                  <TimelineDot />
+                  <TimelineConnector />
+                </TimelineSeparator>
+                <TimelineContent>
+                    <div className='text-sm mb-4'>
+                    {status.description}
+                
+                
+                 
+                </div>
+               
+                </TimelineContent>
+                
+              </TimelineItem>
+              ))}
+
+
+
+      
+
+    </Timeline>
+  );
+}

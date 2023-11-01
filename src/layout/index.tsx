@@ -106,8 +106,10 @@ export default function MiniDrawer() {
   const navigate = useNavigate();
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <Drawer variant="permanent" open={open}>
+    <Box sx={{ display: "flex",}}>
+      <Drawer variant="permanent" open={open}
+    
+      >
         <div className="flex justify-center items-center h-24">
         <div className={`bg-sky-50 py-2 px-3  flex items-center justify-center  rounded-xl  mr-4 duration-500 ${!open && "hidden"}`}>
           <div>
@@ -129,7 +131,9 @@ export default function MiniDrawer() {
        
         
         <Divider />
-        <List>
+        <List
+        sx={{ backgroundColor: 'rgb(241 245 249)' }}
+        >
           
             <ListItem  disablePadding sx={{ display: "block" ,marginTop:3}}>
             
