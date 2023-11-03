@@ -4,8 +4,9 @@ import MiniDrawer from '../../../layout';
 const CreateProject = () => {
   return (
     <div>
+      <MiniDrawer/>
       <div>
-        <MiniDrawer/>
+
       </div>
     </div>
   );
