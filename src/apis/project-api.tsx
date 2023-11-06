@@ -52,3 +52,4 @@ export const getAllProjects = async (
       throw err;
     }
   };
+
