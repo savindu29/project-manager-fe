@@ -6,7 +6,7 @@ import axios, {AxiosError} from "axios";
 export default function EmployeeUpdateForm() {
 
     interface Person {
-        id: number;
+        id: any;
         name: string;
         companyEmail: string;
         mobile: string;
@@ -14,131 +14,105 @@ export default function EmployeeUpdateForm() {
         designation: string;
         specializedField: string;
     }
+    const [persons, setPersons] = useState<Person[]>([]); // Stores the list of persons
 
-    const [persons, setPersons] = useState<Person[]>([]);
-    const [selectedPerson, setSelectedPerson] = useState<string>('Roshen')
-    const [updatedDetails, setUpdatedDetails] = useState<Person>({
-        id: 16,
-        name: 'Roshen',
-        companyEmail: '',
-        mobile: '',
-        privateEmail: '',
-        designation: '',
-        specializedField: '',
-    });
+    const [names, setNames] = useState<string[]>([]);
+    const [selectedName, setSelectedName] = useState<string>('');
+    const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
 
-    // useEffect(() => {
-    //     // Fetch the list of persons from the Swagger API
-    //     const fetchData = async () => {
-    //         try {
-    //             const response = await axios.get<Person[]>('YOUR_SWAGGER_API_URL');
-    //             setPersons(response.data);
-    //         } catch (error) {
-    //             console.error('Error fetching data:', error);
-    //         }
-    //     };
-    //     fetchData();
-    // }, []);
 
-    // const handleSelectPerson = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    //     const selectedName = e.target.value;
-    //
-    //     // Find the selected person based on the name
-    //     const selectedPersonDetails = persons.find((person) => person.name === selectedName);
-    //
-    //     if (selectedPersonDetails) {
-    //         setSelectedPerson(selectedPersonDetails);
-    //         setUpdatedDetails({ ...selectedPersonDetails });
-    //     }
-    // };
+    useEffect(() => {
+        // Fetch the list of persons from the Swagger API
+        const fetchData = async () => {
+            try {
+                const response = await axios.get<{ data: Person[] }>("http://localhost:8000/api/v1/responsible-person/list");
+                const data = response.data.data; // Extract the 'data' property from the response
 
-    const getAPIData = async () => {
-        const URL = "http://localhost:8000/api/v1/responsible-person/list";
+                setPersons(data);
+                console.log(persons)// Set 'persons' to the array of persons
+
+                if (data.length > 0) {
+                    // Set the selected name to the first name in the list by default
+                    setSelectedName(data[0].name);
+                    console.log(selectedName)
+                    setSelectedPerson(data[0]);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        fetchData();
+    }, []);
+
+
+    const handleSelectName = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selected = e.target.value;
+        setSelectedName(selected);
+
+        // Find the selected person's details based on the name
+        const selectedPersonDetails = persons.find((person) => person.name === selected);
+
+        setSelectedPerson(selectedPersonDetails || null);
+        // Ensure that selectedPerson is set to null if no person is found
+    }
+
+
+
+
+    const handleUpdateDetails = async () => {
         try {
-            const result = await fetch(URL);
-            if (result.ok) {
-                const data = await result.json();
-                // Handle the data as needed
-                console.log(data);
+            if (selectedPerson) {
+                // Exclude the id when sending the request
+                const { id, ...dataWithoutId } = selectedPerson;
+
+                // Send a PUT request to update the person's details
+                const response = await axios.put(`http://localhost:8000/api/v1/responsible-person/update/${selectedPerson.id}`, dataWithoutId);
+
+                // Handle the response as needed
+                console.log('Details updated:', response.data);
             } else {
-                console.error('Failed to fetch data:', result.status, result.statusText);
+                console.error('No person selected.');
             }
         } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error('Error updating details:', error);
         }
-
-        useEffect(()=>{
-            getAPIData()
-        },[])
-
     };
 
-
-
-    // const handleUpdateDetails = async () => {
-    //     try {
-    //         // Send a PUT request to update the person's details
-    //         const response = await axios.put('http://localhost:8000/api/v1/responsible-person/list', updatedDetails);
-    //
-    //         // Handle the response as needed
-    //         console.log('Details updated:', response.data);
-    //     } catch (error) {
-    //         console.error('Error updating details:', error);
-    //     }
-    // };
     return (
         <div>
             <label>Select a person: </label>
-            {/*<select value={selectedPerson?.name} onChange={handleSelectPerson}>*/}
-            {/*    <option value="">Select a person</option>*/}
-            {/*    {persons.map((person) => (*/}
-            {/*        <option key={person.id} value={person.name}>*/}
-            {/*            {person.name}*/}
-            {/*        </option>*/}
-            {/*    ))}*/}
-
-            {/*</select>*/}
-
-            <select value={selectedPerson} onChange={(e) => setSelectedPerson(e.target.value)}>
-
-                <option value={"Roshen"}> Roshen </option>
-                <option value={"Savindu Panagoda"}> Savindu </option>
+            <select value={selectedName} onChange={handleSelectName}>
+                {persons.map((person) => (
+                    <option  value={person.name}>
+                        {person.name}
+                    </option>
+                ))}
             </select>
+
+
 
 
             <div className="sm:col-span-3">
                 <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
-                    First name
+                    Name
                 </label>
                 <div className="mt-2">
                     <input
                         type="text"
-                        name="first-name"
-                        id="first-name"
+                        name="name"
+                        id="name"
                         autoComplete="given-name"
                         className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
-                        value={updatedDetails.name}
-                        onChange={(e) => setUpdatedDetails({ ...updatedDetails, name: e.target.value })}
+                        value={selectedPerson ? selectedPerson.name : ''}
+                        onChange={(e) => setSelectedPerson(selectedPerson
+                            ? { ...selectedPerson, name: e.target.value }
+                            : null)}
 
                     />
                 </div>
             </div>
 
-            <div className="sm:col-span-3">
-                <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-gray-900">
-                    Last name
-                </label>
-                <div className="mt-2">
-                    <input
-                        type="text"
-                        name="last-name"
-                        id="last-name"
-                        autoComplete="family-name"
-                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
 
-                    />
-                </div>
-            </div>
 
             <div className="sm:col-span-4">
                 <label htmlFor="companyEmail" className="block text-sm font-medium leading-6 text-gray-900">
@@ -151,9 +125,10 @@ export default function EmployeeUpdateForm() {
                         type="email"
                         autoComplete="email"
                         className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
-                        value={updatedDetails.companyEmail}
-                        onChange={(e) => setUpdatedDetails({ ...updatedDetails, companyEmail: e.target.value })}
-
+                        value={selectedPerson ? selectedPerson.companyEmail : ''}
+                        onChange={(e) => setSelectedPerson(selectedPerson
+                            ? { ...selectedPerson, companyEmail: e.target.value }
+                            : null)}
                     />
                 </div>
             </div>
@@ -169,9 +144,10 @@ export default function EmployeeUpdateForm() {
                         type="email"
                         autoComplete="email"
                         className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
-                        value={updatedDetails.privateEmail}
-                        onChange={(e) => setUpdatedDetails({ ...updatedDetails, privateEmail: e.target.value })}
-
+                        value={selectedPerson ? selectedPerson.privateEmail : ''}
+                        onChange={(e) => setSelectedPerson(selectedPerson
+                            ? { ...selectedPerson, privateEmail: e.target.value }
+                            : null)}
                     />
                 </div>
             </div>
@@ -187,8 +163,10 @@ export default function EmployeeUpdateForm() {
                         id="mobile"
                         autoComplete="tel"
                         className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
-                        value={updatedDetails.mobile}
-                        onChange={(e) => setUpdatedDetails({ ...updatedDetails, mobile: e.target.value })}
+                        value={selectedPerson ? selectedPerson.mobile : ''}
+                        onChange={(e) => setSelectedPerson(selectedPerson
+                            ? { ...selectedPerson, mobile: e.target.value }
+                            : null)}
                     />
                 </div>
             </div>
@@ -204,9 +182,10 @@ export default function EmployeeUpdateForm() {
                         id="designation"
                         autoComplete="designation"
                         className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
-                        value={updatedDetails.designation}
-                        onChange={(e) => setUpdatedDetails({ ...updatedDetails, designation: e.target.value })}
-                    />
+                        value={selectedPerson ? selectedPerson.designation : ''}
+                        onChange={(e) => setSelectedPerson(selectedPerson
+                            ? { ...selectedPerson, designation: e.target.value }
+                            : null)} />
                 </div>
             </div>
 
@@ -221,13 +200,14 @@ export default function EmployeeUpdateForm() {
                         id="skills"
                         autoComplete="skills"
                         className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
-                        value={updatedDetails.specializedField}
-                        onChange={(e) => setUpdatedDetails({ ...updatedDetails, specializedField: e.target.value })}
-
+                        value={selectedPerson ? selectedPerson.specializedField : ''}
+                        onChange={(e) => setSelectedPerson(selectedPerson
+                            ? { ...selectedPerson, specializedField: e.target.value }
+                            : null)}
                     />
                 </div>
             <button
-                // onClick={handleUpdateDetails}
+                onClick={handleUpdateDetails}
                 className="rounded-md bg-sky-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
 
             >
