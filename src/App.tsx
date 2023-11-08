@@ -9,6 +9,7 @@ import PeoplePage from "./pages/people";
 import CreateProject from "./pages/project-page/create/create-project";
 //import UpdateProjects from "./pages/project-page/update/update-project";
 import UpdateProject from "./pages/project-page/update/update-project";
+import LoginPage from "./pages/Login/login";
 
 function App() {
   const theme = createMuiTheme({
@@ -30,6 +31,7 @@ function App() {
         <Route path="/projects/create-new" element={<CreateProject />} />
         <Route path="/projects/update/:id" element={<UpdateProject/>} />
         <Route path="/employees" element={<PeoplePage />} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </div>
     </ThemeProvider>
