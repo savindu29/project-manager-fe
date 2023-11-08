@@ -52,3 +52,14 @@ export const getAllProjects = async (
       throw err;
     }
   };
+
+  export const updateProject = async (id: number) => {
+    try {
+      //const url = `http://localhost:8000/api/v1/project/${id}`;
+  
+    //  const result = await axios.get(url);
+      //return result.data;
+    } catch (err) {
+      throw err;
+    }
+  };
