@@ -5,11 +5,12 @@ import { Route, Routes } from "react-router-dom";
 import Projects from "./pages/project-page/projects";
 import Dashboard from "./pages/dashboard";
 import { ThemeProvider, createMuiTheme } from "@mui/material";
-import PeoplePage from "./pages/people";
+import PeoplePage from "./pages/people/create";
 import CreateProject from "./pages/project-page/create/create-project";
 //import UpdateProjects from "./pages/project-page/update/update-project";
 import UpdateProject from "./pages/project-page/update/update-project";
 import LoginPage from "./pages/Login/login";
+import UpdatePeoplePage from "./pages/people/update";
 
 function App() {
   const theme = createMuiTheme({

@@ -1,8 +1,55 @@
-import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
+import {useState} from "react";
+import axios, {AxiosError} from "axios";
+const url = "http://localhost:8000/api/v1/responsible-person/create"
+
 
 export default function EmployeeCreateForm() {
+  const [name, setName] = useState('');
+  const [companyEmail, setEmail] = useState('');
+  const [mobile, setMobileNumber] = useState('');
+  const [privateEmail, setPemail] = useState('');
+  const [designation, setDesignation] = useState('');
+  const [specializedField, setSpecializedArea] = useState('');
+  const [message, setMessage] = useState('');
+
+  const [successMessage, setSuccessMessage] = useState("");
+  const handleSubmit = async (e:any) => {
+    e.preventDefault();
+    try {
+      const resp = await axios.post(url,{
+        name:name,
+        companyEmail:companyEmail,
+        mobile:mobile,
+        privateEmail: privateEmail,
+        designation: designation,
+        specializedField: specializedField
+      });
+
+      setSuccessMessage("Submission was successful.");
+      setName("");
+      setSpecializedArea("");
+      setEmail("");
+      setDesignation("");
+      setPemail("");
+      setMobileNumber("")
+      console.log(resp.data);
+
+    }catch (error:any ) {
+
+      console.log(error.response);
+    }
+
+
+
+
+
+
+
+  };
+
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="space-y-12">
        
 
@@ -13,7 +60,7 @@ export default function EmployeeCreateForm() {
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-3">
               <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
-                First name
+               Name
               </label>
               <div className="mt-2">
                 <input
@@ -22,24 +69,14 @@ export default function EmployeeCreateForm() {
                   id="first-name"
                   autoComplete="given-name"
                   className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
+                  required
                 />
               </div>
             </div>
 
-            <div className="sm:col-span-3">
-              <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-gray-900">
-                Last name
-              </label>
-              <div className="mt-2">
-                <input
-                  type="text"
-                  name="last-name"
-                  id="last-name"
-                  autoComplete="family-name"
-                  className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
+            
 
             <div className="sm:col-span-4">
               <label htmlFor="companyEmail" className="block text-sm font-medium leading-6 text-gray-900">
@@ -52,6 +89,9 @@ export default function EmployeeCreateForm() {
                   type="email"
                   autoComplete="email"
                   className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={companyEmail}
+
                 />
               </div>
             </div>
@@ -67,6 +107,9 @@ export default function EmployeeCreateForm() {
                   type="email"
                   autoComplete="email"
                   className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+                  onChange={(e) => setPemail(e.target.value)}
+                  value={privateEmail}
+
                 />
               </div>
             </div>
@@ -82,6 +125,8 @@ export default function EmployeeCreateForm() {
                   id="mobile"
                   autoComplete="tel"
                   className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+                  onChange={(e) => setMobileNumber(e.target.value)}
+                  value={mobile}
                 />
               </div>
             </div>
@@ -97,6 +142,8 @@ export default function EmployeeCreateForm() {
                   id="designation"
                   autoComplete="designation"
                   className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+                  onChange={(e) => setDesignation(e.target.value)}
+                  value={designation}
                 />
               </div>
             </div>
@@ -112,6 +159,9 @@ export default function EmployeeCreateForm() {
                   id="skills"
                   autoComplete="skills"
                   className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+                  onChange={(e) => setSpecializedArea(e.target.value)}
+                  value={specializedField}
+
                 />
               </div>
             </div>
@@ -132,6 +182,8 @@ export default function EmployeeCreateForm() {
           Save
         </button>
       </div>
+
+      <div id="success-message">{successMessage}</div>
     </form>
   )
 }
