@@ -53,3 +53,12 @@ export const getAllProjects = async (
     }
   };
 
+  export const updateProject = async (id: number, updatedData: any) => {
+    try {
+      const url = `http://localhost:8000/api/v1/project/${id}`;
+      const result = await axios.put(url, updatedData); // Assuming you're using a PUT request for updates
+      return result.data;
+    } catch (err) {
+      throw err;
+    }
+  };

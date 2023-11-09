@@ -11,6 +11,7 @@ import Todo from "./todo-body";
 import SpecialDocs from "./special-doc";
 import LeftAlignedTimeline from "../../components/timeline";
 
+
 const ProjectDetail = ({ projectId }: any) => {
   const [projectDetails, setProjectDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true); // Add loading state
@@ -284,12 +285,6 @@ const ProjectDetail = ({ projectId }: any) => {
     <div className="h-20"></div>
             </>
           )}
-
-
-
-
-
-
         </div>
       </div>
     </div>
