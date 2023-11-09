@@ -1,5 +1,5 @@
 import React from 'react';
-import MiniDrawer from '../../layout';
+import MiniDrawer from '../../../layout';
 import EmployeeCreateForm from './add-employees';
 import { Link } from 'react-router-dom';
 
