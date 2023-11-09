@@ -78,7 +78,7 @@ export default function EmployeeCreateForm() {
 
             
 
-            <div className="sm:col-span-4">
+            <div className="sm:col-span-3">
               <label htmlFor="companyEmail" className="block text-sm font-medium leading-6 text-gray-900">
                 Company Email address
               </label>
@@ -114,7 +114,7 @@ export default function EmployeeCreateForm() {
               </div>
             </div>
 
-            <div className="sm:col-span-2 sm:col-start-1">
+            <div className="sm:col-span-3 sm:col-start-1">
               <label htmlFor="mobile" className="block text-sm font-medium leading-6 text-gray-900">
                 Mobile Number
               </label>
@@ -131,7 +131,7 @@ export default function EmployeeCreateForm() {
               </div>
             </div>
 
-            <div className="sm:col-span-2">
+            <div className="sm:col-span-3">
               <label htmlFor="designation" className="block text-sm font-medium leading-6 text-gray-900">
                 Designation
               </label>
