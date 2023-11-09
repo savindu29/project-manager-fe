@@ -1,10 +1,8 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import MiniDrawer from "../../../layout";
-import { Button, TextField } from "@mui/material";
+import { Button, TextField , IconButton} from "@mui/material";
 import { getProject,updateProject } from "../../../apis/project-api";
-
 const UpdateProject = () => {
   const { id } = useParams();
   const projectId = parseInt(id || '', 10);
@@ -12,19 +10,24 @@ const UpdateProject = () => {
   const navigate = useNavigate();
 
   const [projectDetails, setProjectDetails] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [editedProjectDetails, setEditedProjectDetails] = useState<any>({});
 
   useEffect(() => {
     const fetchProject = async () => {
       try {
+        console.log("Fetching project with ID:", projectId);
         const response = await getProject(projectId);
+        console.log("API response:", response);
         setProjectDetails(response);
-        setEditedProjectDetails(response);
+
+        // Initialize editedProjectDetails with the response data
+        setEditedProjectDetails({ ...response });
+
         setLoading(false);
       } catch (error) {
         console.error('Error fetching project:', error);
-        setLoading(false);
+        setLoading(true);
       }
     };
 
@@ -35,10 +38,10 @@ const UpdateProject = () => {
 
   const handleSave = async () => {
     try {
-      await updateProject(editedProjectDetails);
+      await updateProject(projectId, editedProjectDetails); // Update the project data
       // Fetch the updated project details after saving
       const updatedResponse = await getProject(projectId);
-      setProjectDetails(updatedResponse.data);
+      setProjectDetails(updatedResponse);
     } catch (error) {
       console.error("Error updating project:", error);
     }
@@ -55,6 +58,8 @@ const UpdateProject = () => {
       [name]: value,
     }));
   }
+  
+
 
  return (
   <div className="flex h-screen pb-16">
@@ -62,20 +67,20 @@ const UpdateProject = () => {
     <div className="overflow-y-scroll w-full flex pr-8 my-2 text-gray-700">
       <div className="w-full">
       {loading ? (
-            <p>Loading...</p>
-        ) : (
+  <p>Loading...</p>
+) : (
           <>
           <div className="w-full">
       {/* heading */}
       <h1 className="font-semibold text-2xl">
-                  Update <span className="text-sky-600 font-medium">{projectDetails?.name || emptyData}</span> Here!
-                </h1>
-      <p className="text-sm mt-2">
+      Update <span className="text-sky-600 font-medium">{projectDetails?.name || emptyData}</span> Here!
+    </h1>
+    <p className="text-sm mt-2">
       {projectDetails?.grantClient?.name} -{" "}
-                  <span>
-                    {projectDetails?.grantClient?.country || emptyData}
-                  </span>
-      </p>
+      <span>
+        {projectDetails?.grantClient?.country || emptyData}
+      </span>
+    </p>
     </div>
             <div className="w-full flex justify-end items-end">
               <p>
@@ -88,14 +93,15 @@ const UpdateProject = () => {
             <br />
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <TextField
-              name="priority"
-              label="Priority"
-              value={editedProjectDetails?.priority || projectDetails?.priority || emptyData}
-              onChange={handleChange}
-              InputLabelProps={{
-                style: { fontSize: '20px' } // Adjust the fontSize value as needed
-              }}
-            />
+  name="priority"
+  label="Priority"
+  value={editedProjectDetails?.priority || projectDetails?.priority || emptyData}
+  onChange={handleChange}
+  InputLabelProps={{
+    style: { fontSize: '20px' }
+  }}
+/>
+
  
  <div className="px-8 py-6">
   <p>Status</p>  <br />
@@ -192,7 +198,7 @@ const UpdateProject = () => {
                   Save
                 </Button>
                 &nbsp;&nbsp;&nbsp;
-                <Button variant="outlined" size="large"color="primary" onClick={handleCancelEdit}>
+                <Button variant="outlined" size="large" color="primary" onClick={handleCancelEdit}>
                   Cancel
                 </Button>
               </div>

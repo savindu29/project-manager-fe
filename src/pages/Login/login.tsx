@@ -18,17 +18,17 @@ const LoginPage: React.FC = () => {
   }, [loggedIn]);
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
-        <div className="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1">
-            <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
-                <div className="mt-1 flex flex-col items-center"> 
-                    <img
-                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcGnVuY8VrtkzrFMILfX1nVkTqSSo_iFbhE9hRmrQS4oazGYHalTK9jPp0n3Lw0TKJWvw&usqp=CAU"
-                        className="w-32 mx-auto"
-                    />
-                    <h1 className="text-2xl xl:text-3xl font-extrabold text-center">
-                        Sign up to Project Management System
-                    </h1>
+                <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
+                    <div className="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1">
+                        <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
+                            <div className="mt-1 flex flex-col items-center"> 
+                            <img
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcGnVuY8VrtkzrFMILfX1nVkTqSSo_iFbhE9hRmrQS4oazGYHalTK9jPp0n3Lw0TKJWvw&usqp=CAU"
+            className="w-48 mx-auto"
+            style={{ margin: '-50px 0' }} />
+            <h1 className="text-xl xl:text-2xl font-extrabold text-center"> 
+            Sign up to Project Management System
+            </h1>
                     <div className="w-full flex-1 mt-8">
                         <div className="mx-auto max-w-xs">
                             <input
