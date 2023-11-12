@@ -1,3 +1,4 @@
+import { error } from "console";
 import { getProjectsOptions } from ".";
 import axios from "axios";
 
@@ -58,7 +59,8 @@ export const getAllProjects = async (
       const url = `http://localhost:8000/api/v1/project/${id}`;
       const result = await axios.put(url, updatedData); // Assuming you're using a PUT request for updates
       return result.data;
-    } catch (err) {
-      throw err;
+    } catch (error:any) {
+      console.error("error update: ",error.message)
+      throw error;
     }
   };

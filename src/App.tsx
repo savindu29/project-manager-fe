@@ -31,8 +31,9 @@ function App() {
         <Route path="/projects" element={<Projects />} />
         <Route path="/projects/create-new" element={<CreateProject />} />
         <Route path="/projects/update/:id" element={<UpdateProject/>} />
-        <Route path="/employees" element={<PeoplePage />} />
+        <Route path="/employees" element={<UpdatePeoplePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/employees/add-new" element={<PeoplePage />} />
       </Routes>
     </div>
     </ThemeProvider>

@@ -3,6 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import MiniDrawer from "../../../layout";
 import { Button, TextField , IconButton} from "@mui/material";
 import { getProject,updateProject } from "../../../apis/project-api";
+
+import axios, {AxiosError} from "axios";
+
+
+
 const UpdateProject = () => {
   const { id } = useParams();
   const projectId = parseInt(id || '', 10);
@@ -13,26 +18,49 @@ const UpdateProject = () => {
   const [loading, setLoading] = useState(false);
   const [editedProjectDetails, setEditedProjectDetails] = useState<any>({});
 
+  
+
+
+   
+
   useEffect(() => {
     const fetchProject = async () => {
       try {
         console.log("Fetching project with ID:", projectId);
         const response = await getProject(projectId);
+
+        const response2 = response.data
+        console.log("response2: ", response2)
+  
         console.log("API response:", response);
-        setProjectDetails(response);
-
-        // Initialize editedProjectDetails with the response data
-        setEditedProjectDetails({ ...response });
-
-        setLoading(false);
+  
+        if (response) {
+          // Check if response is not null or undefined
+          setProjectDetails(response2);
+  
+          // Initialize editedProjectDetails with the response data
+          setEditedProjectDetails({...response2});
+  
+          
+        } else {
+          console.log("Project details are null or undefined");
+          // Handle the case where the data is null or undefined
+        }
       } catch (error) {
         console.error('Error fetching project:', error);
         setLoading(true);
       }
     };
-
+  
     fetchProject();
-  }, [projectId]);
+  }, [projectId]); // Include setEditedProjectDetails as a dependency
+  
+  useEffect(() => {
+    console.log("Edited Project:", editedProjectDetails);
+  }, [editedProjectDetails]);
+
+
+
 
   const emptyData = 'No Data';
 
@@ -48,16 +76,21 @@ const UpdateProject = () => {
   };
   
   const handleCancelEdit = () => {
+    console.log("projectDetails:", projectDetails);
     setEditedProjectDetails({ ...projectDetails });
   };
 
   function handleChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void {
     const { name, value } = event.target;
+    console.log("Value:", value);
     setEditedProjectDetails((prevDetails: any) => ({
       ...prevDetails,
       [name]: value,
     }));
   }
+  console.log("edit", editedProjectDetails[1])
+  console.log("cost:", editedProjectDetails?.acStartDate)
+  console.log("quotedValue:", editedProjectDetails?.cost?.quotedValue)
   
 
 
@@ -73,12 +106,12 @@ const UpdateProject = () => {
           <div className="w-full">
       {/* heading */}
       <h1 className="font-semibold text-2xl">
-      Update <span className="text-sky-600 font-medium">{projectDetails?.name || emptyData}</span> Here!
+      Update <span className="text-sky-600 font-medium">{editedProjectDetails?.name || emptyData}</span> Here!
     </h1>
     <p className="text-sm mt-2">
-      {projectDetails?.grantClient?.name} -{" "}
+      {editedProjectDetails?.grantClient?.name} -{" "}
       <span>
-        {projectDetails?.grantClient?.country || emptyData}
+        {editedProjectDetails?.grantClient?.country || emptyData}
       </span>
     </p>
     </div>
@@ -86,21 +119,19 @@ const UpdateProject = () => {
               <p>
                 Initiation Date:{" "}
                 <span className="text-sky-600 font-medium">
-                  {projectDetails?.initiationDate || emptyData}
+                  {editedProjectDetails?.initiationDate || emptyData}
                 </span>{" "}
               </p>
             </div>
             <br />
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <TextField
-  name="priority"
-  label="Priority"
-  value={editedProjectDetails?.priority || projectDetails?.priority || emptyData}
-  onChange={handleChange}
-  InputLabelProps={{
-    style: { fontSize: '20px' }
-  }}
-/>
+              name="priority"
+              label="Priority"
+              value={editedProjectDetails?.priority?.name}
+              onChange={handleChange}
+              
+            />
 
  
  <div className="px-8 py-6">
@@ -109,14 +140,14 @@ const UpdateProject = () => {
     <TextField
       name="date"
       label="Date"
-      value={editedProjectDetails?.date || projectDetails?.date || emptyData}
+      value={editedProjectDetails?.date || emptyData}
       onChange={handleChange}
     />
     &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
     <TextField
       name="currentStatus"
       label="Current Status"
-      value={editedProjectDetails?.currentStatus || projectDetails?.currentStatus || emptyData}
+      value={editedProjectDetails?.projectStatus?.name ||  emptyData}
       onChange={handleChange}
       fullWidth
     />
@@ -129,28 +160,28 @@ const UpdateProject = () => {
           <TextField
             name="totalEffortMh"
             label="Total Effort (MD/MH)"
-            value={editedProjectDetails?.totalEffortMh || emptyData}
+            value={editedProjectDetails?.cost?.totalEffortMh || emptyData}
             onChange={handleChange}
             fullWidth
           />
           <TextField
             name="quotedValue"
             label="Quoted Value"
-            value={editedProjectDetails?.quotedValue || emptyData}
+            value={editedProjectDetails?.cost?.quotedValue || emptyData}
             onChange={handleChange}
             fullWidth
           />
           <TextField
             name="quotedRate"
             label="Quoted Rate"
-            value={editedProjectDetails?.quotedRate || emptyData}
+            value={editedProjectDetails?.cost?.quotedRate || emptyData}
             onChange={handleChange}
             fullWidth
           />
           <TextField
             name="amcValue"
             label="AMC Value"
-            value={editedProjectDetails?.amcValue || emptyData}
+            value={editedProjectDetails?.cost?.amcValue || emptyData}
             onChange={handleChange}
             fullWidth
           />
@@ -165,40 +196,50 @@ const UpdateProject = () => {
   <TextField
     name="piStartDate"
     label="Proposed Implementation Start Date"
-    value={editedProjectDetails.piStartDate || emptyData}
+    value={editedProjectDetails?.piStartDate || emptyData}
     onChange={handleChange}
     fullWidth
   />
   <TextField
     name="acStartDate"
     label="Actual Implementation Start Date"
-    value={editedProjectDetails.acStartDate || emptyData}
+    value={editedProjectDetails?.acStartDate || emptyData}
     onChange={handleChange}
     fullWidth
   />
+  
+  
   <TextField
     name="piEndDate"
     label="Proposed Implementation End Date"
-    value={editedProjectDetails.piEndDate || emptyData}
+    value={editedProjectDetails?.piEndDate || emptyData}
     onChange={handleChange}
     fullWidth
   />
   <TextField
     name="acEndDate"
     label="Implementation Due Date"
-    value={editedProjectDetails.acEndDate || emptyData}
+    value={editedProjectDetails?.acEndDate || emptyData}
     onChange={handleChange}
     fullWidth
   />
+
+
+  
+
 </div>      </div>
       </div>
       <div className="px-8 py-6">
               <div className="mt-4">
-                <Button variant="contained" size="large" color="primary" onClick={handleSave}>
+                <Button variant="contained" size="large" color="primary" 
+                onClick={handleSave}
+                >
                   Save
                 </Button>
                 &nbsp;&nbsp;&nbsp;
-                <Button variant="outlined" size="large" color="primary" onClick={handleCancelEdit}>
+                <Button variant="outlined" size="large" color="primary" 
+                onClick={handleCancelEdit}
+                >
                   Cancel
                 </Button>
               </div>
