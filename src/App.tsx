@@ -33,6 +33,7 @@ function App() {
         <Route path="/projects/update/:id" element={<UpdateProject/>} />
         <Route path="/employees" element={<PeoplePage />} />
         <Route path="/login" element={<LoginPage />} />
+
       </Routes>
     </div>
     </ThemeProvider>
