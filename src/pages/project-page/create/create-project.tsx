@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import MiniDrawer from '../../../layout';
-import "./styles/styles.css"
+import { styled } from '@mui/material/styles'
+
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -11,6 +12,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import CreateSearch from '../../../components/search/createSearch';
 
 
 const ITEM_HEIGHT = 48;
@@ -38,19 +40,49 @@ const names = [
 ];
 
 
+
 const CreateProject = () => {
   const [visible,SetChecked]=useState(false);
 
     const checkBox = () =>{
         SetChecked(!visible)
     }
+
+    const checkBox2 =() =>{
+        setVisible(!visiblity)
+    }
+
+    const checkbox3 = () =>{
+        setVisi(!a)
+    }
+
+    const checkbox4 = () =>{
+        setv(!b)
+    }
+    
+    
     const [age, setAge] = React.useState('');
+    
+    const [showForm, setShowForm] = useState<boolean>(false);
+    const [title, setTitle] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
+    const [date, setDate] = useState<string>('');
+    const [todos, setTodos] = useState<{ title: string; description: string; date: string }[]>([]);
+
+    const handleAddTodo = () => {
+        if (title && description && date) {
+          setTodos([...todos, { title, description, date }]);
+          // Clear the form after adding a todo
+          setTitle('');
+          setDescription('');
+          setDate('');
+          setShowForm(false)
+        }
+      };
+    
 
 
-
-
-
-
+    const [b, setv] = useState(false);
 
     const [visiblity, setVisible] = useState(false);
 
@@ -85,471 +117,777 @@ const CreateProject = () => {
         const [startDate, setStartDate] = useState(new Date());}
   
   return (
-    <div className="box1">
-            <div className="container">
-                <MiniDrawer/>
+    <div className="space-y-12" >
+            <div >
+                
                 <div className="text">
                     New Project
                 </div>
                 <form>
                     <h2 className="font-semibold text-lg">Project Details</h2>
-                    <div className="form-row">
-                        <div className="input-data">
-                            <input
-                                type="text"
-                                required
-                            />
-                            <div className="underline"></div>
-                            <label htmlFor="">Project Name</label>
-                        </div>
-                        <div className="input-data">
-                            <input type="text" required/>
-                            <div className="underline"></div>
-                            <label htmlFor="">Project Priority</label>
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <div className="input-data">
-                            <input
-                                type="text"
-                                required
-                            />
-                            <div className="underline"></div>
-                            <label htmlFor="">Customer Name</label>
-                        </div>
-                        <div className="input-data">
-                            <input type="text" required/>
-                            <div className="underline"></div>
-                            <label htmlFor="">Client's Country</label>
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <div className="input-data">
-                            <input
-                                type="text"
-                                required
-                            />
-                            <div className="underline"></div>
-                            <label htmlFor="">Client's Project Lead/Project Manager </label>
-                        </div>
-                        <div className="input-data">
-                            <input type="text" required/>
-                            <div className="underline"></div>
-                            <label htmlFor="">Client's Lead's Email</label>
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <div className="input-data">
-                            <input
-                                type="text"
-                                required
-                            />
-                            <div className="underline"></div>
-                            <label htmlFor="">Project Lead's Conatact Number</label>
-                        </div>
-                        <div className="input-data">
-                            <input type="text" required/>
-                            <div className="underline"></div>
-                            <label htmlFor="">Quoted Value </label>
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <div className="input-data">
-                            <input
-                                type="text"
-                                required
-                            />
-                            <div className="underline"></div>
-                            <label htmlFor="">Quoting Rate</label>
-                        </div>
-                        <div className="input-data">
-                            <input type="text" required/>
-                            <div className="underline"></div>
-                            <label htmlFor="">AMC Value </label>
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <div className="input-data">
-                            <input
-                                type="text"
-                                required
-                            />
-                            <div className="underline"></div>
-                            <label htmlFor="">Total Man Hours</label>
-                        </div>
-                        <div className="input-data">
-                            <input type="text" required/>
-                            <div className="underline"></div>
-                            <label htmlFor="">Project Status</label>
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <div className="input-data">
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DemoContainer components={['DatePicker']}>
-                                    <DatePicker label="Latest Project Status Date" />
-                                </DemoContainer>
-                            </LocalizationProvider>
-                        </div>
-                        <div className="input-data">
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DemoContainer components={['DatePicker']}>
-                                    <DatePicker label="Initiation Date" />
-                                </DemoContainer>
-                            </LocalizationProvider>
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <div className="input-data">
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DemoContainer components={['DatePicker']}>
-                                    <DatePicker label="Proposed Implementation Start Date" />
-                                </DemoContainer>
-                            </LocalizationProvider>
-                        </div>
-                        <div className="input-data">
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DemoContainer components={['DatePicker']}>
-                                    <DatePicker label="Proposed Implementation End Date" />
-                                </DemoContainer>
-                            </LocalizationProvider>
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <div className="input-data">
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DemoContainer components={['DatePicker']}>
-                                    <DatePicker label="Actual Implementation Start Date" />
-                                </DemoContainer>
-                            </LocalizationProvider>
-                        </div>
-                        <div className="input-data">
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DemoContainer components={['DatePicker']}>
-                                    <DatePicker label="Implementation Due Date" />
-                                </DemoContainer>
-                            </LocalizationProvider>
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <div className="input-data">
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DemoContainer components={['DatePicker']}>
-                                    <DatePicker label="Actual Implementation End Date" />
-                                </DemoContainer>
-                            </LocalizationProvider>
-                        </div>
-                        <div className="input-data">
-
-                        </div>
-                    </div>
-
-
-                    <div className="form-row">
-                        <label>Third Party project?</label>
-                        <div className={"checkbox"}>
-                            <input type="checkbox" value="1" checked={visible} onChange={checkBox}/>
-                        </div>
-
-                    </div>
-                    { visible &&
-                        <div>
-                            <h2>Partner details</h2>
-                            <div className="form-row">
-                                <div className="input-data">
+                    <div className="border-b border-gray-900/10 pb-12">
+                        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
+                            <div className="sm:col-span-3">
+                                <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Project Name</label>
+                                <div className="mt-2"> 
                                     <input
                                         type="text"
-                                        required
+                                        
+                                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
                                     />
-                                    <div className="underline"></div>
-                                    <label htmlFor="">Company Name</label>
-                                </div>
-                                <div className="input-data">
-                                    <input type="text" required/>
-                                    <div className="underline"></div>
-                                    <label htmlFor="">Project Lead's Name</label>
+                                    </div>
+                                    
+                            </div>
+                            <div className="sm:col-span-3">
+                            <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Initiation Date</label>
+                                <div className="mt-2">
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                            
+                                            <DatePicker 
+                                            
+                                            sx={{
+                                                width: "100%",
+                                                "& .MuiInputLabel-root.Mui-focused": { color: "#979797" }, //styles the label
+                                                "& .MuiOutlinedInput-root": {
+                                                 "&:hover > fieldset": { borderColor: "#C7C8CD" },
+                                                 height: "35px",
+                                                 borderRadius: "6px",
+                                                },
+                                               }}                                        />
+                                           
+                                        </LocalizationProvider>
                                 </div>
                             </div>
-                            <div className="form-row">
-                                <div className="input-data">
+                            <div className="sm:col-span-3">
+                                <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Project Priority</label>
+                                <div className="mt-2"> 
                                     <input
                                         type="text"
-                                        required
+                                        
+                                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
                                     />
-                                    <div className="underline"></div>
-                                    <label htmlFor="">Project Lead's Email</label>
-                                </div>
-                                <div className="input-data">
-                                    <input type="text" required/>
-                                    <div className="underline"></div>
-                                    <label htmlFor="">Project Lead's Conatact Number</label>
+                                    </div>
+                                    
+                            </div>
+                            <div className="sm:col-span-3">
+                                <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Project Status</label>
+                                <div className="mt-2"> 
+                                    <input
+                                        type="text"
+                                        
+                                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                    />
+                                    </div>
+                                    
+                            </div>
+                            <div className="sm:col-span-3">
+                                <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Latest Project Status</label>
+                                <div className="mt-2"> 
+                                    <input
+                                        type="text"
+                                        
+                                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                    />
+                                    </div>
+                                    
+                            </div>
+                            <div className="sm:col-span-3">
+                            <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Status Date</label>
+                                <div className="mt-2">
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                            
+                                            <DatePicker 
+                                            
+                                            sx={{
+                                                width: "100%",
+                                                "& .MuiInputLabel-root.Mui-focused": { color: "#979797" }, //styles the label
+                                                "& .MuiOutlinedInput-root": {
+                                                 "&:hover > fieldset": { borderColor: "#C7C8CD" },
+                                                 height: "35px",
+                                                 borderRadius: "6px",
+                                                },
+                                               }}                                        />
+                                           
+                                        </LocalizationProvider>
                                 </div>
                             </div>
-                        </div>
-                    }
-
-
-
-                    <h2 className="font-semibold text-lg">Inova Details</h2>
-
-
-                    <div className="form-row">
-                        <div className="input-data">
-                            <FormControl fullWidth>
-                                <InputLabel id="demo-multiple-checkbox-label">project Leads</InputLabel>
-                                <Select
-                                    labelId="demo-multiple-checkbox-label"
-                                    id="demo-multiple-checkbox"
-                                    multiple
-                                    value={personName}
-                                    onChange={handleChanges}
-                                    input={<OutlinedInput label="Tag" />}
-                                    renderValue={(selected) => selected.join(', ')}
-                                    MenuProps={MenuProps}
-                                >
-                                    {names.map((name) => (
-                                        <MenuItem key={name} value={name}>
-                                            <Checkbox checked={personName.indexOf(name) > -1} />
-                                            <ListItemText primary={name} />
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </div>
-                    </div>
-
-                    <div className={"radio"}>
-                        <label className="radio label"> Add New Project Lead: </label>
-
-                                Yes <input type="radio" className="mx-2" name="isyes" value="1" onClick={ ()=>setVisible(true)} />
-
-                                No <input type="radio" className="mx-2 mt-1" name="isyes" value="0" onClick={ ()=>setVisible(false)} />
-
-                    </div>
-
-
-                    { visiblity &&
-                        <div>
-                            <div className="form-row">
-                                <div className="input-data">
-                                    <input type="text" required/>
-                                    <div className="underline"></div>
-                                    <label htmlFor="">Project Lead's Name</label>
+                            <div className="sm:col-span-3">
+                            <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Proposal Due Date Date</label>
+                                <div className="mt-2">
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                            
+                                            <DatePicker 
+                                            
+                                            sx={{
+                                                width: "100%",
+                                                "& .MuiInputLabel-root.Mui-focused": { color: "#979797" }, //styles the label
+                                                "& .MuiOutlinedInput-root": {
+                                                 "&:hover > fieldset": { borderColor: "#C7C8CD" },
+                                                 height: "35px",
+                                                 borderRadius: "6px",
+                                                },
+                                               }}                                        />
+                                           
+                                        </LocalizationProvider>
                                 </div>
-                                <div className="input-data">
-                                    <input type="text" required/>
-                                    <div className="underline"></div>
-                                    <label htmlFor="">Project Lead's Email</label>
+                            </div> 
+                            <div className="sm:col-span-3">
+                            <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Proposal Submitted Date</label>
+                                <div className="mt-2">
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                            
+                                            <DatePicker 
+                                            
+                                            sx={{
+                                                width: "100%",
+                                                "& .MuiInputLabel-root.Mui-focused": { color: "#979797" }, //styles the label
+                                                "& .MuiOutlinedInput-root": {
+                                                 "&:hover > fieldset": { borderColor: "#C7C8CD" },
+                                                 height: "35px",
+                                                 borderRadius: "6px",
+                                                },
+                                               }}                                        />
+                                           
+                                        </LocalizationProvider>
+                                </div>
+                            </div> 
+                            <div className="sm:col-span-3">
+                            <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Proposed Implementation Start Date</label>
+                                <div className="mt-2">
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                            
+                                            <DatePicker 
+                                            
+                                            sx={{
+                                                width: "100%",
+                                                "& .MuiInputLabel-root.Mui-focused": { color: "#979797" }, //styles the label
+                                                "& .MuiOutlinedInput-root": {
+                                                 "&:hover > fieldset": { borderColor: "#C7C8CD" },
+                                                 height: "35px",
+                                                 borderRadius: "6px",
+                                                },
+                                               }}                                        />
+                                           
+                                        </LocalizationProvider>
+                                </div>
+                            </div>            
+                            <div className="sm:col-span-3">
+                            <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Proposed Implimentaion End Date</label>
+                                <div className="mt-2">
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                            
+                                            <DatePicker 
+                                            
+                                            sx={{
+                                                width: "100%",
+                                                "& .MuiInputLabel-root.Mui-focused": { color: "#979797" }, //styles the label
+                                                "& .MuiOutlinedInput-root": {
+                                                 "&:hover > fieldset": { borderColor: "#C7C8CD" },
+                                                 height: "35px",
+                                                 borderRadius: "6px",
+                                                },
+                                               }}                                        />
+                                           
+                                        </LocalizationProvider>
+                                </div>
+                            </div>    
+                            <div className="sm:col-span-3">
+                            <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Actual Implementaion Start Date</label>
+                                <div className="mt-2">
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                            
+                                            <DatePicker 
+                                            
+                                            sx={{
+                                                width: "100%",
+                                                "& .MuiInputLabel-root.Mui-focused": { color: "#979797" }, //styles the label
+                                                "& .MuiOutlinedInput-root": {
+                                                 "&:hover > fieldset": { borderColor: "#C7C8CD" },
+                                                 height: "35px",
+                                                 borderRadius: "6px",
+                                                },
+                                               }}                                        />
+                                           
+                                        </LocalizationProvider>
+                                </div>
+                            </div> 
+                            <div className="sm:col-span-3">
+                            <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Implimentaion Due Date</label>
+                                <div className="mt-2">
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                            
+                                            <DatePicker 
+                                            
+                                            sx={{
+                                                width: "100%",
+                                                "& .MuiInputLabel-root.Mui-focused": { color: "#979797" }, //styles the label
+                                                "& .MuiOutlinedInput-root": {
+                                                 "&:hover > fieldset": { borderColor: "#C7C8CD" },
+                                                 height: "35px",
+                                                 borderRadius: "6px",
+                                                },
+                                               }}                                        />
+                                           
+                                        </LocalizationProvider>
+                                </div>
+                            </div> 
+                            <div className="sm:col-span-3">
+                            <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Actual Implimentaion End Date</label>
+                                <div className="mt-2">
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                            
+                                            <DatePicker 
+                                            
+                                            sx={{
+                                                width: "100%",
+                                                "& .MuiInputLabel-root.Mui-focused": { color: "#979797" }, //styles the label
+                                                "& .MuiOutlinedInput-root": {
+                                                 "&:hover > fieldset": { borderColor: "#C7C8CD" },
+                                                 height: "35px",
+                                                 borderRadius: "6px",
+                                                },
+                                               }}                                        />
+                                           
+                                        </LocalizationProvider>
+                                </div>
+                            </div>  
+                            <div className="sm:col-span-4 mb-6">
+                                <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Clarification Discussion Details</label>
+                                <div className="mt-2"> 
+                                    <input
+                                        type="text"
+                                        
+                                        className="block w-full rounded-md border-0 py-10 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                    />
+                                    </div>
+                                    
+                            </div>    
+                            
+                        </div>
+                        <h2 className="font-semibold text-lg mt-6">Client Details</h2>
+                        <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
+                            <div className="sm:col-span-3">
+                                <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Client Name</label>
+                                <div className="mt-2"> 
+                                    <input
+                                        type="text"
+                                        
+                                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                    />
+                                    </div>
                                 </div>
 
+                                <div className="sm:col-span-4 flex items-center">
+                                    <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900 mr-2 ">New Client</label>
+                                
+                                    <input type="checkbox" value="1" checked={visible} onChange={checkBox}
+                                    />
+
+                                    
+                                </div>
+                                </div>
+                                { visible &&
+                                <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Client Name</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Client Country</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Contact Person Name</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Email</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Mobile Number</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Fix Telephone Number</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Designation</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Description</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                }
+
+                                <div className="sm:col-span-4 flex items-center mt-6">
+                                    <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900 mr-2 ">Is this a Third Party Project</label>
+                                
+                                    <input type="checkbox" value="1" checked={visiblity} onChange={checkBox2}
+                                    />
+                                </div>
+                                {visiblity &&
+                                <div>
+                                     <h2 className="font-semibold text-lg mt-6">Intermediary client Details</h2>
+                                        <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
+                                            <div className="sm:col-span-3">
+                                                <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Intermediary Client Name</label>
+                                                <div className="mt-2"> 
+                                                    <input
+                                                        type="text"
+                                                        
+                                                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                                    />
+                                                 </div>
+                                            </div>
+
+                                                <div className="sm:col-span-4 flex items-center">
+                                                    <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900 mr-2 ">New Intermediary Client</label>
+                                                
+                                                    <input type="checkbox" value="1" checked={a} onChange={checkbox3}
+                                                    />
+
+                                                    
+                                                </div>
+                                            </div>
+                                            { a &&
+                                <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Intermediary Client Name</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Intermediary Client Country</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Intermediary Contact Person Name</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Intermediary Person's Email</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Mobile Number</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Fix Telephone Number</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Designation</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Description</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                }
+                               
+    
+                                </div>
+                                    
+                                    
+                                }
+    
+                            
+
+                            <h2 className="font-semibold text-lg mt-8">Inova Project Lead</h2>
+                                    <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
+                                        <div className="sm:col-span-3 mb-6">
+                                            <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Project Lead's Name</label>
+                                            <div className="mt-2"> 
+                                            <CreateSearch />
+                                                </div>
+                                                
+                                        </div>
+                            
+
+                        </div>
+                        <h2 className="font-semibold text-lg mt-8">Project Estimators</h2>
+                                    <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
+                                        <div className="sm:col-span-3 mb-6">
+                                            <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Project Estimator's Name</label>
+                                            <div className="mt-2"> 
+                                            <CreateSearch />
+                                                </div>
+                                                
+                                        </div>
+                                        <div className="sm:col-span-4 flex items-center">
+                                            <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900 mr-2 ">New Project Estimator</label>
+                                        
+                                            <input type="checkbox" value="1" checked={b} onChange={checkbox4}
+                                            />   
+                                        </div>
+                                    </div>
+                                    { b &&
+                                <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Name</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Mobile Number</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Personal Email</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Company Email</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Designation</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Specialized Field</label>
+                                        <div className="mt-2"> 
+                                            <input
+                                                type="text"
+                                                
+                                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                            />
+                                        </div>
+                                    </div>
+                                   
+                                </div>
+                                }
+                                    
+                    
+                    <h2 className="font-semibold text-lg mt-8">Cost</h2>
+                    <div className="border-b border-gray-900/10 pb-12">
+                        <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
+                            <div className="sm:col-span-3">
+                                <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Total Effort (MD/MH)</label>
+                                <div className="mt-2"> 
+                                    <input
+                                        type="text"
+                                        
+                                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                    />
+                                    </div>
+                                    
                             </div>
-                            <div className="form-row">
-                                <div className="input-data">
-                                    <input type="text" required/>
-                                    <div className="underline"></div>
-                                    <label htmlFor="">Project Lead's Contact Number</label>
-                                </div>
-                                <div className="input-data">
-                                    <input type="text" required/>
-                                    <div className="underline"></div>
-                                    <label htmlFor="">Project Lead's Private Email</label>
-                                </div>
+                            <div className="sm:col-span-3">
+                                <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Quoted Value</label>
+                                <div className="mt-2"> 
+                                    <input
+                                        type="text"
+                                        
+                                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                    />
+                                    </div>
+                                    
                             </div>
-                            <div className="form-row">
-                                <div className="input-data">
-                                    <input type="text" required/>
-                                    <div className="underline"></div>
-                                    <label htmlFor="">Specified Field</label>
-                                </div>
+                            <div className="sm:col-span-3">
+                                <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Quoting Rate</label>
+                                <div className="mt-2"> 
+                                    <input
+                                        type="text"
+                                        
+                                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                    />
+                                    </div>
+                                    
                             </div>
+                            <div className="sm:col-span-3">
+                                <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">AMC Value</label>
+                                <div className="mt-2"> 
+                                    <input
+                                        type="text"
+                                        
+                                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
 
-                        </div>
-                    }
-
-                    <h2 className="font-semibold text-lg">Project Estimators</h2>
-                    <div className="form-row">
-                        <div className="input-data">
-                            <FormControl fullWidth>
-                                <InputLabel id="demo-multiple-checkbox-label">Project Estimators</InputLabel>
-                                <Select
-                                    labelId="demo-multiple-checkbox-label"
-                                    id="demo-multiple-checkbox"
-                                    multiple
-                                    value={personNames}
-                                    onChange={handleChanges2}
-                                    input={<OutlinedInput label="Tag" />}
-                                    renderValue={(selected) => selected.join(', ')}
-                                    MenuProps={MenuProps}
-                                >
-                                    {names.map((name) => (
-                                        <MenuItem key={name} value={name}>
-                                            <Checkbox checked={personNames.indexOf(name) > -1} />
-                                            <ListItemText primary={name} />
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </div>
-                    </div>
-                    <div className={"radio"}>
-                        <label className="col-sm-3 col-form-label"><span> Add New Project Estimators: </span></label>
-                        Yes <input type="radio" className="mx-2" name="isyes" value="1" onClick={ ()=>setVisi(true)} />
-
-                        No <input type="radio" className="mx-2 mt-1" name="isyes" value="0" onClick={ ()=>setVisi(false)} />
-
-                    </div>
-
-                    {a &&
-                        <div>
-                            <div className="form-row">
-                                <div className="input-data">
-                                    <input type="text" required/>
-                                    <div className="underline"></div>
-                                    <label htmlFor="">Effort Estimator's Name</label>
-                                </div>
-                                <div className="input-data">
-                                    <input type="text" required/>
-                                    <div className="underline"></div>
-                                    <label htmlFor="">Effort Estimator's Email</label>
-                                </div>
-
+                                    />
+                                    </div>
+                                    
                             </div>
-                            <div className="form-row">
-                                <div className="input-data">
-                                    <input type="text" required/>
-                                    <div className="underline"></div>
-                                    <label htmlFor="">Effort Estimator's Contact Number</label>
-                                </div>
-                                <div className="input-data">
-                                    <input type="text" required/>
-                                    <div className="underline"></div>
-                                    <label htmlFor="">Effort Estimator's Private Email</label>
-                                </div>
+                            <div className="sm:col-span-6">
+                                <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">RFP Resources</label>
+                                <div className="mt-2"> 
+                                    <input
+                                        type="file"
+                                        
+                                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                    />
+                                    </div>
+                                    
                             </div>
-                            <div className="form-row">
-                                <div className="input-data">
-                                    <input type="text" required/>
-                                    <div className="underline"></div>
-                                    <label htmlFor="">Specified Field</label>
-                                </div>
+                            <div className="sm:col-span-6">
+                                <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Output From Inova</label>
+                                <div className="mt-2"> 
+                                    <input
+                                        type="file"
+                                        
+                                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+
+                                    />
+                                    </div>
+                                    
                             </div>
-
-                        </div>}
-
-
-                    <h2 className="font-semibold text-lg">Other Details</h2>
-
-
-                    <div className="form-row">
-                        <div className="underline"></div>
-
-                        <div className="input-data textarea">
-                            <textarea  required></textarea>
-                            <br />
-                            <label htmlFor="">To Do</label>
-
-                            <br />
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <div className="underline"></div>
-
-                        <div className="input-data textarea">
-                            <textarea  required></textarea>
-                            <br />
-                            <label htmlFor="">RFP resources Description</label>
-
-                            <br />
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <div className="underline"></div>
-
-                        <div className="input-data textarea">
-                            <textarea  required></textarea>
-                            <br />
-                            <label htmlFor="">RFP Resources Locations</label>
-
-                            <br />
-                        </div>
-                    </div>
-
-                    <div className="form-row">
-                        <div className="input-data textarea">
-                            <textarea  required></textarea>
-                            <br />
-                            <div className="underline"></div>
-                            <label htmlFor="">Clarification Discussion Details</label>
-                            <br />
-                        </div>
-
-                    </div>
-
-
-                    <div className="form-row">
-                        <div className="input-data textarea">
-                            <textarea  required></textarea>
-                            <br />
-                            <div className="underline"></div>
-                            <label htmlFor="">Outputs from Inova Description</label>
-                            <br />
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <div className="input-data textarea">
-                            <textarea  required></textarea>
-                            <br />
-                            <div className="underline"></div>
-                            <label htmlFor="">Outputs from Inova Location</label>
-                            <br />
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <div className="input-data textarea">
-                            <textarea  required></textarea>
-                            <br />
-                            <div className="underline"></div>
-                            <label htmlFor="">Clarification Discussion Details</label>
-                            <br />
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <div className="input-data textarea">
-                            <textarea  required></textarea>
-                            <br />
-                            <div className="underline"></div>
-                            <label htmlFor="">Impl. Success/Faliure Reasons</label>
-                            <br />
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <div className="input-data textarea">
-                            <textarea  required></textarea>
-                            <br />
-                            <div className="underline"></div>
-                            <label htmlFor="">Lessons Learned</label>
-                            <br />
                         </div>
                     </div>
 
 
-
-
-
-
-
-
-                    <div className="form-row submit-btn">
-                        <div className="input-data">
-                            <div className="inner"></div>
-                            <input type="submit" value="submit"/>
+                    <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
+                        <h2 className="font-semibold text-lg sm:col-span-3">To Do</h2>
+                        <button type="button" className="rounded-md bg-sky-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick={() => setShowForm(!showForm)}>{showForm ? 'Hide Form' : 'Add Task'}</button>
                         </div>
-                    </div>
+                            {showForm && (
+                            <form >
+                                <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="" className="block text-sm font-medium leading-6 text-gray-900">Title</label>
+                                        <input 
+                                        type="text" 
+                                        value={title} 
+                                        onChange={(e)=>setTitle(e.target.value)} 
+                                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+                                        />
+                                    </div>
 
-                </form>
+                                    <div className="sm:col-span-3">
+                                        <label>Description: </label>
+                                        <input 
+                                        type="text" 
+                                        value={description} 
+                                        onChange={(e)=>setDescription(e.target.value)}
+                                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+                                        />
+                                    </div>
+
+                                    <div className="sm:col-span-3">
+                                        <label>Date: </label>
+                                        <input type="date" 
+                                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+                                        value={date} onChange={(e)=>setDate(e.target.value)} />
+                                        </div>
+                                </div>
+                                <div className="flex justify-center mt-6">
+                                    <button
+                                    className="rounded-md bg-sky-500 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    type="button"
+                                    onClick={handleAddTodo}
+                                    >
+                                    Add
+                                    </button>
+                                </div>
+
+                            </form>
+                            )}
+                            {todos.length > 0 && (
+
+                            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-8">
+                            <thead className="text-xs text-black uppercase bg-gray-400 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" className="px-6 py-3 bg-gray">Title</th>
+                                <th scope="col" className="px-6 py-3 bg-gray">Description</th>
+                                <th scope="col" className="px-6 py-3 bg-gray">Date</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {todos.map((todo, index) => (
+                                <tr className="bg-white border-b  dark:border-gray-700" key={index}>
+                                <td className="px-6 py-4">{todo.title}</td>
+                                <td className="px-6 py-4">{todo.description}</td>
+                                <td className="px-6 py-4">{todo.date}</td>
+                                </tr>
+                            ))}
+                            </tbody>
+                            </table>
+
+                            )}
+                        </div>
 
 
-            </div>
+
+                    
+                        <label>Notes: </label>
+                                        <input 
+                                        type="text" 
+                                        
+                                        className="block w-full rounded-md border-0 py-12 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+                                        />
+
+                    
+                  <button
+                    type="submit"
+                    className="rounded-md bg-sky-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mt-4"
+                            
+                    >
+                    Save
+                    </button>
+
+               </form>
+               </div>     
         </div>
   );
 };
