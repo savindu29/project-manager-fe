@@ -1,5 +1,8 @@
 import {useState} from "react";
 import axios, {AxiosError} from "axios";
+import Alert from '@mui/material/Alert';
+import { Collapse, Snackbar } from "@mui/material";
+import { open } from "fs";
 const url = "http://localhost:8000/api/v1/responsible-person/create"
 
 
@@ -39,6 +42,8 @@ export default function EmployeeCreateForm() {
       console.log(error.response);
     }
 
+    
+
 
 
 
@@ -55,6 +60,7 @@ export default function EmployeeCreateForm() {
 
         <div className="border-b border-gray-900/10 pb-12">
           <h2 className="text-base font-semibold leading-7 text-gray-900">Information</h2>
+
           <p className="mt-1 text-sm leading-6 text-gray-600">Use a permanent address where you can receive mail.</p>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -78,7 +84,7 @@ export default function EmployeeCreateForm() {
 
             
 
-            <div className="sm:col-span-4">
+            <div className="sm:col-span-3">
               <label htmlFor="companyEmail" className="block text-sm font-medium leading-6 text-gray-900">
                 Company Email address
               </label>
@@ -114,7 +120,7 @@ export default function EmployeeCreateForm() {
               </div>
             </div>
 
-            <div className="sm:col-span-2 sm:col-start-1">
+            <div className="sm:col-span-3 sm:col-start-1">
               <label htmlFor="mobile" className="block text-sm font-medium leading-6 text-gray-900">
                 Mobile Number
               </label>
@@ -131,7 +137,7 @@ export default function EmployeeCreateForm() {
               </div>
             </div>
 
-            <div className="sm:col-span-2">
+            <div className="sm:col-span-3">
               <label htmlFor="designation" className="block text-sm font-medium leading-6 text-gray-900">
                 Designation
               </label>
@@ -178,12 +184,14 @@ export default function EmployeeCreateForm() {
         <button
           type="submit"
           className="rounded-md bg-sky-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                
         >
           Save
         </button>
+       
       </div>
 
-      <div id="success-message">{successMessage}</div>
+     
     </form>
   )
 }
