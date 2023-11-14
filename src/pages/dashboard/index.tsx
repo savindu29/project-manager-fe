@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import MiniDrawer from '../../layout';
-import { Pie } from 'react-chartjs-3'; // Update the import
+//import { Pie } from 'react-chartjs-2'; // Update the import
 
 interface Project {
   status: string;
@@ -111,10 +111,10 @@ const Dashboard = () => {
         </div> */}
 
                 {/* Pie Chart */}
-                <div className="p-4">
+                {/* <div className="p-4">
           <h3 className="text-lg font-semibold mb-2">Projects' Priorities</h3>
           <Pie data={pieChartData} />
-        </div>
+        </div> */}
       </div>
     </div>
     </div>

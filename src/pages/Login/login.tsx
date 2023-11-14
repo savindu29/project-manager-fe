@@ -1,21 +1,40 @@
-
-import React, { useState, useEffect } from 'react';
-
+import { useEffect } from 'react';
+import { useState } from 'react';
 const LoginPage: React.FC = () => {
-
   const [loggedIn, setLoggedIn] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
- 
-    setLoggedIn(true);
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/v1/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      });
+
+      if (response.ok) {
+        // Login successful, setLoggedIn to true
+        setLoggedIn(true);
+      } else {
+        // Login failed, handle error (e.g., display an error message)
+        console.error('Login failed');
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+    }
   };
 
   useEffect(() => {
-    
     if (loggedIn) {
- 
+        window.location.href = "/projects";
     }
-  }, [loggedIn]);
+  }, [loggedIn, history]);
 
   return (
                 <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
@@ -31,12 +50,18 @@ const LoginPage: React.FC = () => {
             </h1>
                     <div className="w-full flex-1 mt-8">
                         <div className="mx-auto max-w-xs">
-                            <input
-                                className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                                type="text" placeholder="Username" /> 
-                            <input
-                                className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
-                                type="password" placeholder="Password" />
+                        <input
+          className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+          type="text" placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <input
+          className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
+          type="password" placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
                                                         <button
             className="mt-5 tracking-wide font-semibold bg-sky-600 text-gray-100 w-full py-4 rounded-lg hover-bg-sky-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
             onClick={handleLogin}
