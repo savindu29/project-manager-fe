@@ -6,6 +6,7 @@ import { getProject,updateProject } from "../../../apis/project-api";
 
 import axios, {AxiosError} from "axios";
 
+
 const UpdateProject = () => {
   const { id } = useParams();
   const projectId = parseInt(id || '', 10);
@@ -15,6 +16,11 @@ const UpdateProject = () => {
   const [projectDetails, setProjectDetails] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [editedProjectDetails, setEditedProjectDetails] = useState<any>({});
+
+  
+
+
+   
 
   useEffect(() => {
     const fetchProject = async () => {
