@@ -481,6 +481,8 @@ const CreateProject = () => {
                 <div className="mt-2">
                   <input
                     type="text"
+                    name="grantClientName"
+                    id="grantClientName"
                     className="appearance-none w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
                   />
                 </div>
@@ -506,6 +508,8 @@ const CreateProject = () => {
                 <div className="mt-2">
                   <input
                     type="text"
+                    name="grantClientContactName"
+                    id="grantClientContactName"
                     className="appearance-none w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
                   />
                 </div>
@@ -519,7 +523,9 @@ const CreateProject = () => {
                 </label>
                 <div className="mt-2">
                   <input
-                    type="text"
+                    type="email"
+                    name="grantClientContactEmail"
+                    id="grantClientContactEmail"
                     className="appearance-none w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
                   />
                 </div>
@@ -527,13 +533,16 @@ const CreateProject = () => {
               <div className="sm:col-span-3 px-6">
                 <label
                   htmlFor=""
+                
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
                   Mobile Number
                 </label>
                 <div className="mt-2">
                   <input
-                    type="text"
+                    type="tel"
+                    name="grantClientContactMobile"
+                    id="grantClientContactMobile"
                     className="appearance-none w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
                   />
                 </div>
@@ -547,7 +556,9 @@ const CreateProject = () => {
                 </label>
                 <div className="mt-2">
                   <input
-                    type="text"
+                    type="tel"
+                    name="grantClientContactFix"
+                    id="grantClientContactFix"
                     className="appearance-none w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
                   />
                 </div>
@@ -562,6 +573,8 @@ const CreateProject = () => {
                 <div className="mt-2">
                   <input
                     type="text"
+                    name="grantClientContactMobile"
+                    id="grantClientContactMobile"
                     className="appearance-none w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
                   />
                 </div>
@@ -576,6 +589,8 @@ const CreateProject = () => {
                 <div className="mt-2">
                   <input
                     type="text"
+                    name="grantClientContactDescription"
+                    id="grantClientContactDescription"
                     className="appearance-none w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
                   />
                 </div>
@@ -614,6 +629,8 @@ const CreateProject = () => {
                     <div className="mt-2">
                       <input
                         type="text"
+                        name="intermediaryClientName"
+                        id="intermediaryClientName"
                         className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -639,6 +656,8 @@ const CreateProject = () => {
                     <div className="mt-2">
                       <input
                         type="text"
+                        name="intermediaryClientContactName"
+                        id="intermediaryClientContactName"
                         className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -652,7 +671,9 @@ const CreateProject = () => {
                     </label>
                     <div className="mt-2">
                       <input
-                        type="text"
+                        type="email"
+                        name="intermediaryClientContactEmail"
+                        id="intermediaryClientContactEmail"
                         className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -666,7 +687,9 @@ const CreateProject = () => {
                     </label>
                     <div className="mt-2">
                       <input
-                        type="text"
+                      name="intermediaryClientContactMobile"
+                      id="intermediaryClientContactMobile"
+                        type="tel"
                         className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -680,7 +703,9 @@ const CreateProject = () => {
                     </label>
                     <div className="mt-2">
                       <input
-                        type="text"
+                        type="tel"
+                        name="intermediaryClientContactFix"
+                        id="intermediaryClientContactFix"
                         className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -695,6 +720,8 @@ const CreateProject = () => {
                     <div className="mt-2">
                       <input
                         type="text"
+                        name="intermediaryClientContactDesignation"
+                        id="intermediaryClientContactDesignation"
                         className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -709,6 +736,8 @@ const CreateProject = () => {
                     <div className="mt-2">
                       <input
                         type="text"
+                        name="intermediaryClientContactDescription"
+                        id="intermediaryClientContactDescription"
                         className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -814,7 +843,9 @@ const CreateProject = () => {
                   </label>
                   <div className="mt-2">
                     <input
-                      type="text"
+                      type="number"
+                      name="totalEffort"
+                        id="totalEffort"
                       className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
                     />
                   </div>
@@ -828,7 +859,9 @@ const CreateProject = () => {
                   </label>
                   <div className="mt-2">
                     <input
-                      type="text"
+                    name="quotedValue"
+                    id="quotedValue"
+                      type="number"
                       className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
                     />
                   </div>
@@ -842,7 +875,9 @@ const CreateProject = () => {
                   </label>
                   <div className="mt-2">
                     <input
-                      type="text"
+                      type="number"
+                      name="quotedRate"
+                        id="quotedRate"
                       className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
                     />
                   </div>
@@ -856,7 +891,9 @@ const CreateProject = () => {
                   </label>
                   <div className="mt-2">
                     <input
-                      type="text"
+                      type="number"
+                      name="amcValue"
+                        id="amcValue"
                       className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
                     />
                   </div>
@@ -980,6 +1017,8 @@ const CreateProject = () => {
 
           <label>Notes: </label>
           <textarea
+          name="todoNotes"
+          id="todoNotes"
             rows={5}
             className="appearance-none w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
             defaultValue={""}
