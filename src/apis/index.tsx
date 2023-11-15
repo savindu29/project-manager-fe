@@ -6,7 +6,15 @@ export type getProjectsOptions = {
     page: number | null;
     
 
-  };
+};
+
+export type getEmployeesOptions = {
+  searchtext:string | "";
+  size: number | null;
+  page: number | null;
+  
+
+};
 
   export type projectStatus = {
     searchtext:string | "";

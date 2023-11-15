@@ -10,42 +10,70 @@ import {
   DialogContentText,
   DialogActions,
 } from "@mui/material";
+import { getEmployeesOptions } from "../../../apis";
+import { getAllEmployees } from "../../../apis/emplyee";
 
-interface Person {
-  id: any;
-  name: string;
-  companyEmail: string;
-  mobile: string;
-  privateEmail: string;
-  designation: string;
-  specializedField: string;
-}
 
+type Person = {
+  id:number,
+  name: string,
+  mobile: string,
+  companyEmail: string,
+  privateEmail: string,
+  designation: string,
+  specializedField: string
+};
 export default function EmployeeUpdateForm() {
   const [persons, setPersons] = useState<Person[]>([]);
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
   const [isConfirmationOpen, setConfirmationOpen] = useState(false);
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
 
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await axios.get<{ data: Person[] }>(
+  //       "http://localhost:8000/api/v1/responsible-person/list"
+  //     );
+  //     const data = response.data.data;
+  //     setPersons(data);
+
+  //     if (data.length > 0) {
+  //       setSelectedPerson(data[0]);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
+  const [page, setPage] = useState(1); // Initialize the active page
+  const pageSize = 8; // Specify the fixed page size
+  const [dataCount, setDatacount] = useState<number>(0);
+
   useEffect(() => {
-    fetchData();
-  }, []);
+    const fetchPersons = async () => {
+      try {
+        const params: getEmployeesOptions = {
+          searchtext: "",
+          page,
+          size: pageSize,
+        };
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get<{ data: Person[] }>(
-        "http://localhost:8000/api/v1/responsible-person/list"
-      );
-      const data = response.data.data;
-      setPersons(data);
-
-      if (data.length > 0) {
-        setSelectedPerson(data[0]);
+        const response = await getAllEmployees(params);
+        setPersons(response.data.data);
+        setDatacount(response.data.count);
+      } catch (error) {
+        console.error("Error fetching projects:", error);
       }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+    };
+
+    fetchPersons();
+  }, [page]);
+
+
+
 
   const handleUpdateDetails = async () => {
     try {
@@ -72,7 +100,7 @@ export default function EmployeeUpdateForm() {
 
       setConfirmationOpen(false);
       setSnackbarOpen(true);
-      fetchData();
+     // fetchPersons();
     } catch (error) {
       console.error("Error updating details:", error);
     }
@@ -81,7 +109,12 @@ export default function EmployeeUpdateForm() {
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
-
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    newPage: number
+  ) => {
+    setPage(newPage); // Update the active page when the page changes
+  };
   return (
     <div className="flex  w-full ">
       <div className="w-1/3 bg-gray-50  p-4 overflow-y-auto rounded-md  mr-5">
@@ -150,14 +183,19 @@ export default function EmployeeUpdateForm() {
                 selectedPerson?.id === person.id
                   ? "text-blue-500 font-semibold"
                   : "text-gray-700"
-              } bg-white rounded-lg py-3 px-4 text-sm shadow-md hover:shadow-lg`}
+              } bg-white rounded-lg py-4 px-6 text-sm shadow-md hover:shadow-lg`}
             >
               {person.name} - <span className="text-xs">{person.designation}</span> 
             </li>
           ))}
         </ul>
         <div className="h-16 flex items-center justify-center absolute bottom-2 w-96">
-          <Pagination count={10} color="primary" />
+        <Pagination
+                  count={Math.ceil(dataCount / pageSize)}
+                  page={page}
+                  color="primary"
+                  onChange={handlePageChange}
+                />
         </div>
       </div>
 
