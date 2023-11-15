@@ -31,7 +31,7 @@ export const getAllProjects = async (
         let str = Object.entries(params)
         .map(([key, val]) => `${key}=${val}`)
         .join('&');
-      const url = `http://localhost:8000/api/v1/project/list?${str}`;
+      const url = `http://localhost:8000/api/v1/project/search?${str}`;
 
      
       const result = await axios.get(url);

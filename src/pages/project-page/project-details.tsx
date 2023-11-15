@@ -134,9 +134,11 @@ const ProjectDetail = ({ projectId }: any) => {
                   className={`w-full  py-6  mt-6 duration-300 rounded-xl ${
                     statusHistory ? "block" : "hidden"
                   }`}
-                >
+                ><div className="">
+  <LeftAlignedTimeline statusHistoryList={projectDetails.statusHistoryList}/>
+                </div>
 
-                  <LeftAlignedTimeline statusHistoryList={projectDetails.statusHistoryList}/>
+                
                 </div>
               </div>
 
