@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
+
 const LoginPage: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
@@ -7,7 +8,7 @@ const LoginPage: React.FC = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/v1/auth/login', {
+      const response = await fetch('http://localhost:8000/api/v1/auth/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -17,24 +18,28 @@ const LoginPage: React.FC = () => {
           password: password,
         }),
       });
-
-      if (response.ok) {
-        // Login successful, setLoggedIn to true
-        setLoggedIn(true);
-      } else {
-        // Login failed, handle error (e.g., display an error message)
-        console.error('Login failed');
+  
+      if (!response.ok) {
+        // If the response status is not ok, log the error response
+        const errorResponse = await response.json();
+        console.error('Login failed:', errorResponse);
       }
+  
+      // Continue with your login logic for successful response
+      setLoggedIn(true);
     } catch (error) {
+      // Handle network errors or other exceptions
       console.error('Error during login:', error);
     }
   };
+  
 
   useEffect(() => {
     if (loggedIn) {
-        window.location.href = "/projects";
+      // Redirect to "/projects" without using useHistory
+      window.location.href = "/projects";
     }
-  }, [loggedIn, history]);
+  }, [loggedIn]);
 
   return (
                 <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
@@ -66,16 +71,27 @@ const LoginPage: React.FC = () => {
             className="mt-5 tracking-wide font-semibold bg-sky-600 text-gray-100 w-full py-4 rounded-lg hover-bg-sky-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
             onClick={handleLogin}
           >
-                                <svg className="w-6 h-6 -ml-2" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                                    <circle cx="8.5" cy="7" r="4" />
-                                    <path d="M20 8v6M23 11h-6" />
-                                </svg>
+           <svg className="w-6 h-6 -ml-2" fill="none" stroke="currentColor" strokeWidth="2"
+     strokeLinecap="round" strokeLinejoin="round">
+  <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+  <circle cx="8.5" cy="7" r="4" />
+  <path d="M20 8v6M23 11h-6" />
+</svg>
+
                                 <span className="ml-3">
-                                    Sign Up
+                                    Sign In
                                 </span>
-                            </button>               
+                            </button>    <br></br>
+                                                <button
+                      className="mx-auto mt-2 text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-gray-900 focus:outline-none"
+                      onClick={() => {
+                        // Handle the click event for the small button (redirect to sign-up page)
+                        window.location.href = "/register";
+                      }}
+                    >
+                      Don't have an account? <span className="underline text-sky-600">Sign Up</span>
+                    </button>
+          
                         </div>
                     </div>
                 </div>
@@ -89,6 +105,7 @@ const LoginPage: React.FC = () => {
                        backgroundSize: 'contain',
                      }}
                 ></div>
+       
             </div>
         </div>
     </div>

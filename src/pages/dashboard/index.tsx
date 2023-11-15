@@ -1,14 +1,13 @@
-// src/Dashboard.js
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import MiniDrawer from '../../layout';
-//import { Pie } from 'react-chartjs-2'; // Update the import
+import { PieChart, Pie, Cell, Legend, Tooltip } from 'recharts';
 
 interface Project {
-  status: string;
-  proposalStatus:string;
+  impStatusList: string;
   priority: string;
-
+  lessonsLearned: string;
 }
 
 const Dashboard = () => {
@@ -21,38 +20,29 @@ const Dashboard = () => {
         setProjects(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
+        
       }
     };
 
     fetchData();
   }, []);
 
-  const totalOngoingProjects = projects.filter(project => project.status === 'ongoing').length;
-  const totalCompletedProjects = projects.filter(project => project.status === 'completed').length;
-  const totalFailedProjects = projects.filter(project => project.status === 'failed').length;
+  const totalOngoingProjects = projects.filter(project => project.impStatusList === 'status"').length;
+  const totalCompletedProjects = projects.filter(project => project.impStatusList === 'completed').length;
+  const totalFailedProjects = projects.filter(project => project.impStatusList  === 'failed').length;
+ // Extracting project priority data
+ const priorityCounts: Record<string, number> = {};
+ projects.forEach(project => {
+   priorityCounts[project.priority] = (priorityCounts[project.priority] || 0) + 1;
+ });
 
-  // Assuming you have a 'proposalStatus' field in your API response
-  const totalPendingProposals = projects.filter(proposal => proposal.proposalStatus === 'pending').length;
-  const totalAcceptedProposals = projects.filter(proposal => proposal.proposalStatus === 'accepted').length;
-  const totalRejectedProposals = projects.filter(proposal => proposal.proposalStatus === 'rejected').length;
+ // Data format for recharts
+ const chartData = Object.keys(priorityCounts).map(key => ({
+   name: key,
+   value: priorityCounts[key],
+ }));
 
-    // Calculate priorities count
-    const prioritiesCount = projects.reduce((acc, project) => {
-      acc[project.priority] = (acc[project.priority] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-  
-    // Convert priorities count to Chart.js data format
-    const pieChartData = {
-      labels: Object.keys(prioritiesCount),
-      datasets: [
-        {
-          data: Object.values(prioritiesCount),
-          backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(75, 192, 192, 0.6)', 'rgba(255, 205, 86, 0.6)'],
-          hoverBackgroundColor: ['rgba(255, 99, 132, 0.8)', 'rgba(75, 192, 192, 0.8)', 'rgba(255, 205, 86, 0.8)'],
-        },
-      ],
-    };
+ const COLORS = ['#FF6384', '#36A2EB', '#FFCE56']; // You can customize the colors
 
   return (
     <div className="flex h-screen pb-16">
@@ -86,35 +76,34 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* <div className="flex flex-wrap">
-                <p className="text-lg">Proposal Progress</p>
-          <div className="w-1/3 p-2">
-            <div className="bg-slate-500 p-4 rounded-lg shadow-lg text-white">
-              <h2 className="text-lg font-bold mb-2">Ongoing Proposals</h2>
-              <p className="text-xl">{totalPendingProposals}</p>
-            </div>
+      <div className="ml-4"><br></br>
+      <p className="text-lg ml-4">Project Progress</p>
+        <PieChart width={400} height={400}>
+          <Pie
+                data={chartData}
+                cx={200}
+                cy={200}
+                labelLine={false}
+                label={(entry) => entry.name}
+                outerRadius={80}
+                fill="#8884d8" dataKey={''}          >
+            {chartData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
+          <Tooltip />
+          <Legend />
+        </PieChart>
+                  {/* Lessons Learned */}
+          <div>
+            <p className="text-lg mb-2">Lessons Learned</p>
+            <ul>
+              {projects.map((project, index) => (
+                <li key={index}>{project.lessonsLearned}</li>
+              ))}
+            </ul>
           </div>
-
-          <div className="w-1/3 p-2">
-            <div className="bg-sky-500 p-4 rounded-lg shadow-lg text-white">
-              <h2 className="text-lg font-bold mb-2">Accepted Proposals</h2>
-              <p className="text-xl">{totalAcceptedProposals}</p>
-            </div>
-          </div>
-
-          <div className="w-1/3 p-2">
-            <div className="bg-zinc-500 p-4 rounded-lg shadow-lg text-white">
-              <h2 className="text-lg font-bold mb-2">Rejected Proposals</h2>
-              <p className="text-xl">{totalRejectedProposals}</p>
-            </div>
-          </div>
-        </div> */}
-
-                {/* Pie Chart */}
-                {/* <div className="p-4">
-          <h3 className="text-lg font-semibold mb-2">Projects' Priorities</h3>
-          <Pie data={pieChartData} />
-        </div> */}
+      </div>
       </div>
     </div>
     </div>

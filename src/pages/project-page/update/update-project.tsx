@@ -17,11 +17,6 @@ const UpdateProject = () => {
   const [loading, setLoading] = useState(false);
   const [editedProjectDetails, setEditedProjectDetails] = useState<any>({});
 
-  
-
-
-   
-
   useEffect(() => {
     const fetchProject = async () => {
       try {
