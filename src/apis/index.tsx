@@ -87,7 +87,7 @@ export type getEmployeesOptions = {
   }
 
   export type  IntermediateClient ={
-    name  : string;
+    name  : string | null;
     country : string | null;
     externalContactPerson : ExternalContactPerson | null;
 

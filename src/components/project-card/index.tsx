@@ -46,7 +46,7 @@ const ProjectCard = ({ cardDetails, onCardClick }: any) => {
       <p className="text-sm mt-2">{cardDetails.todo}</p>
       <h1 className="mt-2 text-sm">Last Status Date:  {formatDate(cardDetails.latestStatusHistoryDate)} </h1>
 
-      <PositionedSnackbar open={snackbarOpen} onClose={handleSnackbarClose} message={"Loading the Project..."} />
+      <PositionedSnackbar open={snackbarOpen} onClose={handleSnackbarClose} message={"Loading the Project"} />
     </div>
   );
 };
