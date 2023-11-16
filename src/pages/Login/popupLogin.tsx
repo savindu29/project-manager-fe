@@ -16,8 +16,10 @@ interface DialogDefaultProps {
 export function DialogDefault({ open, onClose, children }: DialogDefaultProps) {
   return (
     <>
-      <Dialog open={open} handler={onClose} className="w-full lg:w-186 max-h-48">
-        <DialogHeader className="text-lg font-bold">LogIn Failed</DialogHeader>
+        <Dialog open={open} handler={onClose} className="w-full lg:w-96 max-h-48 bg-red-200">
+          <DialogHeader className="text-lg font-bold text-white bg-red-400 p-4">
+           LogIn Failed
+          </DialogHeader>
         <DialogBody className="text-lg">{children}</DialogBody>
         <DialogFooter>
           <Button

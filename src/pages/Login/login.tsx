@@ -7,7 +7,14 @@ const LoginPage: React.FC = () => {
   const [showErrorDialog, setShowErrorDialog] = useState(false);
 
   const handleLogin = async () => {
+    
     try {
+      // Basic input validation
+      if (!username || !password) {
+        // Show the popup for empty fields
+        setShowErrorDialog(true);
+        return;
+      }
       const response = await fetch('http://localhost:8000/api/v1/auth/signin', {
         method: 'POST',
         headers: {
@@ -31,8 +38,8 @@ const LoginPage: React.FC = () => {
           token: result.token,
         }));
   
-        // Redirect to the home page
-       // window.location.href = '/';
+        // to the home page
+       window.location.href = '/';
       } else {
         // If the response status is not ok, log the error response
         const errorResponse = await response.json();
@@ -63,7 +70,7 @@ const LoginPage: React.FC = () => {
               alt="Logo"
             />
             <h1 className="text-xl xl:text-2xl font-extrabold text-center"> 
-              Sign up for the Project Management System
+            <br></br>  Sign In for the Project Management System
             </h1>
             <div className="w-full flex-1 mt-8">
               <div className="mx-auto max-w-xs">
@@ -79,19 +86,19 @@ const LoginPage: React.FC = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <button
-                  className="mt-5 tracking-wide font-semibold bg-sky-600 text-gray-100 w-full py-4 rounded-lg hover-bg-sky-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
-                  onClick={handleLogin}
-                >
-                  <svg className="w-6 h-6 -ml-2" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                    <circle cx="8.5" cy="7" r="4" />
-                    <path d="M20 8v6M23 11h-6" />
-                  </svg>
-                  <span className="ml-3">
-                    Sign In
-                  </span>
-                </button>
+     <button
+  className="mt-5 tracking-wide font-semibold bg-sky-600 text-gray-100 w-full py-4 rounded-lg hover-bg-sky-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+  onClick={handleLogin}
+>
+  {/* Replace the existing SVG with your provided SVG code */}
+  <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h11m0 0-4-4m4 4-4 4m-5 3H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h3"/>
+  </svg>
+  <span className="ml-3">
+    Sign In
+  </span>
+</button>
+
                 <br></br>
                 <button
                   className="mx-auto mt-2 text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-gray-900 focus:outline-none"

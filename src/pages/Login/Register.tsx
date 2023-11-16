@@ -23,14 +23,15 @@ const SignupPage: React.FC = () => {
       });
 
       if (response.ok) {
-        // Login successful, setLoggedIn to true and redirect to "/"
-        window.location.href = '/login';
+        // Signup successful, show the popup
+        setShowDialog(true);
+        // You can redirect the user to the login page after showing the popup
+        // window.location.href = '/login';
       } else {
         // If the response status is not ok, log the error response
         const errorResponse = await response.json();
         console.error('Sign up failed:', errorResponse);
-        // Show the popup indicating login failure
-        setShowDialog(true);
+        // You can handle the error in some way or display a different popup
       }
 
       // Continue with your sign-up logic for successful response
@@ -38,9 +39,10 @@ const SignupPage: React.FC = () => {
     } catch (error) {
       // Handle network errors or other exceptions
       console.error('Error during sign up:', error);
-      setShowDialog(true);
+      // You can display a popup for network errors as well
     }
   };
+ 
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
@@ -54,7 +56,7 @@ const SignupPage: React.FC = () => {
               alt="Logo"
             />
             <h1 className="text-xl xl:text-2xl font-extrabold text-center">
-              Sign up to Project Management System
+             <br></br> Sign up to Project Management System
             </h1>
             <div className="w-full flex-1 mt-8">
               <div className="mx-auto max-w-xs">
@@ -79,22 +81,18 @@ const SignupPage: React.FC = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <button
-                  className="mt-5 tracking-wide font-semibold bg-sky-600 text-gray-100 w-full py-4 rounded-lg hover-bg-sky-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
-                  onClick={handleSignup}
-                >
-                  <svg
-                    className="w-6 h-6 -ml-2"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <circle cx="12" cy="12" r="10" />
-                  </svg>
-                  <span className="ml-3">Sign Up</span>
-                </button>
+    <button
+  className="mt-5 tracking-wide font-semibold bg-sky-600 text-gray-100 w-full py-4 rounded-lg hover-bg-sky-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+  onClick={handleSignup}
+>
+  {/* Replace the existing SVG with your provided SVG code */}
+  <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4H1m3 4H1m3 4H1m3 4H1m6.071.286a3.429 3.429 0 1 1 6.858 0M4 1h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Zm9 6.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"/>
+  </svg>
+  <span className="ml-3">Sign Up</span>
+</button>
+
+
               </div>
             </div>
           </div>
@@ -111,9 +109,13 @@ const SignupPage: React.FC = () => {
           ></div>
         </div>
       </div>
-      <RegisterSuccessDialog open={show_Dialog} onClose={() => setShowDialog(false)}>
-        Registartion successful plase login
-      </RegisterSuccessDialog>
+       {/* Add the RegisterSuccessDialog component */}
+       {show_Dialog && (
+        <RegisterSuccessDialog
+          open={show_Dialog}
+          onClose={() => setShowDialog(false)}
+        />
+      )}
     </div>
   );
 };
