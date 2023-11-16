@@ -75,35 +75,45 @@ const Dashboard = () => {
               <p className="text-xl">{totalFailedProjects}</p>
             </div>
           </div>
-
-      <div className="ml-4"><br></br>
-      <p className="text-lg ml-4">Project Progress</p>
-        <PieChart width={400} height={400}>
-          <Pie
-                data={chartData}
-                cx={200}
-                cy={200}
-                labelLine={false}
-                label={(entry) => entry.name}
-                outerRadius={80}
-                fill="#8884d8" dataKey={''}          >
-            {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-          <Tooltip />
-          <Legend />
-        </PieChart>
-                  {/* Lessons Learned */}
-          <div>
-            <p className="text-lg mb-2">Lessons Learned</p>
-            <ul>
-              {projects.map((project, index) => (
-                <li key={index}>{project.lessonsLearned}</li>
+          <div className="ml-4">
+      <div style={{ display: 'flex' }}>
+     
+        {/* Projects Priority */}
+        <div style={{ flex: 1, marginRight: '20px' }}>
+        <br></br> 
+          <p className="text-lg">Projects Priority</p>
+          <PieChart width={400} height={400}>
+            <Pie
+              data={chartData}
+              cx={200}
+              cy={200}
+              labelLine={false}
+              label={(entry) => entry.name}
+              outerRadius={80}
+              fill="#8884d8" 
+              dataKey={''} 
+            >
+              {chartData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
-            </ul>
-          </div>
+            </Pie>
+            <Tooltip />
+            <Legend />
+          </PieChart>
+        </div>
+        
+        {/* Lessons Learned */}
+         <div style={{ flex: 1, marginLeft: '80px' }}>
+          <br></br>
+          <p className="text-lg">Lessons Learned</p>
+          <ul>
+            {projects.map((project, index) => (
+              <li key={index}>{project.lessonsLearned}</li>
+            ))}
+          </ul>
+        </div>
       </div>
+    </div>
       </div>
     </div>
     </div>
