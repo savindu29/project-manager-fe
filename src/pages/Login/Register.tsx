@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { RegisterSuccessDialog } from './popupregister';
+import { RegisterFailedDialog } from './popupFailedRegister';
 
 const SignupPage: React.FC = () => {
   const [registered, setRegistered] = useState(false);
@@ -7,42 +8,66 @@ const SignupPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [show_Dialog, setShowDialog] = useState(false);
+  const [show_Dialog1, setShowDialog1] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSignup = async () => {
-    try {
-      const response = await fetch('http://localhost:8000/api/v1/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          displayName: name,
-          email: email,
-          password: password,
-        }),
-      });
+  const validateInputs = () => {
+  if (!name || !email || !password) {
+    setError('Please fill in all fields');
+    setShowDialog1(true);
+    return false;
+  }
 
-      if (response.ok) {
-        // Signup successful, show the popup
-        setShowDialog(true);
-        // You can redirect the user to the login page after showing the popup
-        // window.location.href = '/login';
-      } else {
-        // If the response status is not ok, log the error response
-        const errorResponse = await response.json();
-        console.error('Sign up failed:', errorResponse);
-        // You can handle the error in some way or display a different popup
-      }
+  if (!/\S+@\S+\.\S+/.test(email)) {
+    setError('Please enter a valid email address');
+    setShowDialog1(true);
+    return false;
+  }
+
+  setError('');
+  return true;
+};
+
+const handleSignup = async () => {
+  try {
+    if (!validateInputs()) {
+      setShowDialog1(true);
+      return; // Don't proceed with the signup if validation fails
+    }
+
+    const response = await fetch('http://localhost:8000/api/v1/auth/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        displayName: name,
+        email: email,
+        password: password,
+      }),
+    });
+
+    if (response.ok) {
+      // Signup successful, show the popup
+      setShowDialog(true);
+      // You can redirect the user to the login page after showing the popup
+      // window.location.href = '/login';
 
       // Continue with your sign-up logic for successful response
       setRegistered(true);
-    } catch (error) {
-      // Handle network errors or other exceptions
-      console.error('Error during sign up:', error);
-      // You can display a popup for network errors as well
+    } else {
+      // If the response status is not ok, log the error response
+      const errorResponse = await response.json();
+      console.error('Sign up failed:', errorResponse);
+      // You can handle the error in some way or display a different popup
     }
-  };
- 
+  } catch (error) {
+    // Handle network errors or other exceptions
+    console.error('Error during sign up:', error);
+    // You can display a popup for network errors as well
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
@@ -114,6 +139,12 @@ const SignupPage: React.FC = () => {
         <RegisterSuccessDialog
           open={show_Dialog}
           onClose={() => setShowDialog(false)}
+        />
+      )}
+      {show_Dialog1 && (
+        <RegisterFailedDialog
+          open={show_Dialog1}
+          onClose={() => setShowDialog1(false)}
         />
       )}
     </div>
