@@ -115,11 +115,12 @@ export type getEmployeesOptions = {
     actualImplementationEndDate: Date | null;
     actualImplementationDueDate: Date | null;
     lessonsLearned: string | null;
-    effortEstimators: number[] | null; 
     clarificationDiscussionDetails: string | null;
+    effortEstimators: number[] | null;
     projectLead :number;
-    iintermediateClient : IntermediateClient | null;
-    grantClient : GrantClient | null;
+    intermediateClient : IntermediateClient | null;
+    grantClient : GrantClient ;
+    cost : Cost | null
     todo :Todo | null;
     rfpResources : RfpResources[] | null ;
     outputsFromInova : OutputsFromInova[] | null;

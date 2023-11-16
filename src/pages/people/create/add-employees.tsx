@@ -43,14 +43,6 @@ export default function EmployeeCreateForm() {
       console.log(error.response);
     }
 
-    
-
-
-
-
-
-
-
   };
 
 
