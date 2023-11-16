@@ -19,7 +19,7 @@ import DropDown from "../../../components/drop-down";
 import MyFileInput from "../../../components/file-uploader";
 import axios from "axios";
 import CountrySelector from "../../../components/drop-down/countries";
-import SearchForm from "./employeesSearchForm";
+import SearchForm from "../create/employeesSearchForm";
 import { EmployeeSearchResult, ProjectRequest } from "../../../apis";
 import countryList from 'react-select-country-list';
 import Select from 'react-select';
@@ -39,7 +39,7 @@ const MenuProps = {
   },
 };
 
-const CreateProject = () => {
+const UpdateProjectForm = () => {
 
   function formatDate(date: Date): string {
     const year = date.getFullYear();
@@ -370,9 +370,11 @@ const CreateProject = () => {
       };
      
       
-      const resp = await axios.post(url, projectData);
-      console.log(projectData);
+    //   const resp = await axios.post(url, projectData);
+    //   console.log(projectData);
 
+
+    //todo
 
 
 
@@ -397,11 +399,11 @@ const CreateProject = () => {
     <div className="mt-8">
       <div>
         <div className="text text-3xl font-semibold text-zinc-600">
-          New Project
+          Update Project
         </div>
         <div className="mb-12 text-zinc-600">
           <Link to="/projects">Projects</Link> /{" "}
-          <Link to="/projects/create-new">Create Project</Link>
+          <Link to="#">Update Project</Link>
         </div>
         <form onSubmit={handleSubmit} >
           <h2 className="font-semibold text-lg mb-4 ">Project Details</h2>
@@ -1306,4 +1308,4 @@ const CreateProject = () => {
   );
 };
 
-export default CreateProject;
+export default UpdateProjectForm;
