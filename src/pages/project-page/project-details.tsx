@@ -262,7 +262,23 @@ const ProjectDetail = ({ projectId }: any) => {
               {/* Special Dates */}
               <p className="font-medium	 text-xl underline mt-12">Special Days</p>
               <div className=" w-full  px-8 py-6">
-                <div className="flex w-full">
+
+              <div className="flex w-full">
+                  <div className="w-full">
+                    <p>Proposal Due Date: </p>
+                    <p className=" text-sky-500">
+                      {projectDetails.proposalDueDate || emptyData}{" "}
+                    </p>
+                  </div>
+                  <div className="w-full">
+                    <p>Proposal Submitted Date: </p>
+                    <p className=" text-sky-500">
+                      {projectDetails.proposalSubmittedDate || emptyData}{" "}
+                    </p>
+                  </div>
+                </div>
+                {/* <div className="my-6"><hr /></div> */}
+                <div className="flex w-full mt-12">
                   <div className="w-full">
                     <p>Proposed Implementation Start Date: </p>
                     <p className=" text-sky-500">
@@ -305,20 +321,7 @@ const ProjectDetail = ({ projectId }: any) => {
 
 
               <div className=" w-full  px-8 py-6">
-                <div className="flex w-full">
-                  <div className="w-full">
-                    <p>Proposal Due Date: </p>
-                    <p className=" text-sky-500">
-                      {projectDetails.proposalDueDate || emptyData}{" "}
-                    </p>
-                  </div>
-                  <div className="w-full">
-                    <p>Proposal Submitted Date: </p>
-                    <p className=" text-sky-500">
-                      {projectDetails.proposalSubmittedDate || emptyData}{" "}
-                    </p>
-                  </div>
-                </div>
+                
                 <p className="font-medium	 text-xl underline mt-12">Cost</p>
                 <div className="flex w-full mt-12">
                   <div className="w-full">

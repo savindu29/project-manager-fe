@@ -1265,16 +1265,30 @@ const UpdateProjectForm = () => {
             )}
           </div>
 
-          <label>Notes: </label>
+          <label>Notes </label>
           <textarea
           name="todoNotes"
           id="todoNotes"
             rows={5}
-            className="appearance-none w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
+            className="appearance-none my-6 w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
             defaultValue={""}
             onChange={(e) => setNote(e.target.value)}
             value={note}
           />
+
+
+
+<h2 className="font-semibold text-lg mt-8">Lesson Learned </h2>
+          <textarea
+          name="todoNotes"
+          id="todoNotes"
+            rows={5}
+            className="appearance-none mt-6 w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
+            defaultValue={""}
+            onChange={(e) => setNote(e.target.value)}
+            value={note}
+          />
+
           {/*  */}
 
           <Dialog
