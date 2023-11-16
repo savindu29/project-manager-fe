@@ -5,7 +5,7 @@ import PeopleOutlineRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
 export const routes = [
     {
       displayName: 'Dashboard',
-      path: '/',
+      path: '/dashboard',
       icon: <WidgetsRoundedIcon/>,
     },
     {
