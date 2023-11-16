@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
+import { Alert } from '@mui/material';
 
 interface PositionedSnackbarProps {
   open: boolean;
@@ -11,13 +12,16 @@ const PositionedSnackbar: React.FC<PositionedSnackbarProps> = ({ open, onClose,m
   const { vertical, horizontal }: SnackbarOrigin = { vertical: 'top', horizontal: 'right' };
 
   return (
-    <Snackbar
-      anchorOrigin={{ vertical, horizontal }}
-      open={open}
-      autoHideDuration={1000}
-      onClose={onClose}
-      message={message}
-    />
+   
+
+    <Snackbar anchorOrigin={{ vertical, horizontal }}
+    open={open}
+    autoHideDuration={1000}
+    onClose={onClose}>
+        <Alert >
+          {message}
+        </Alert>
+      </Snackbar>
     
   );
 };

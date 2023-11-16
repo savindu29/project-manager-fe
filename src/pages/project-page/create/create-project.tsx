@@ -23,7 +23,7 @@ import SearchForm from "./employeesSearchForm";
 import { EmployeeSearchResult, ProjectRequest } from "../../../apis";
 import countryList from 'react-select-country-list';
 import Select from 'react-select';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Snackbar } from "@mui/material";
 interface Country {
   label: string;
   value: string;
@@ -238,11 +238,14 @@ const CreateProject = () => {
 
   const options = useMemo(() => countryList().getData(), []);
 
-  const changeHandler = (selectedOption: Country | null) => {
+  const changeClientCountryHandler = (selectedOption: Country | null) => {
     setValue(selectedOption);
     setClientCountry(selectedOption?.value || "Sri Lanka");
   }
-
+  const changeIntermediateCountryHandler = (selectedOption: Country | null) => {
+    setValue(selectedOption);
+    setIntermidiantClientCountry(selectedOption?.value || "");
+  }
 
 
 
@@ -250,7 +253,7 @@ const CreateProject = () => {
   const [projectinitiationDate, setProjectInitiationDate] = useState(new Date());
   const [projectPriority, setProjectPriority] = useState(-1);
   const [projectStatus, setProjectStatus]= useState(-1);
-  const [latestProjectStatus, setLatestProjectStatus]= useState("");
+  const [latestProjectStatus, setLatestProjectStatus]= useState<string | null>(null);
   const [latestProjectStatusDate, setLatestProjectStatusDate]=  useState(new Date());
   const [projectProposalDueDate, setProposalDueDate]= useState<Date | null>(null);
   const [projectProposalSubDate,setProposalSubDate]= useState<Date | null>(null);
@@ -288,7 +291,20 @@ const CreateProject = () => {
   const handleProjectStatusSelect = (selectedStatus: any) => {
     setProjectStatus(selectedStatus.id);
   };
- 
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const handleOpenSnackbar = (severity: 'success' | 'error', message: string) => {
+    setSnackbarSeverity(severity);
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+  };
 
 
  
@@ -323,31 +339,50 @@ const CreateProject = () => {
         actualImplementationDueDate : projectImpDueDate || null,
         lessonsLearned : lessonsLearned || null,
         clarificationDiscussionDetails: projectClarificationDiscussDetails ||  null,
-        intermediateClient: {
-          name: intermediantClientName || '',
-          country: intermediantClientCountry || '',
-          externalContactPerson: {
-            name: intermediantClientContactName || '',
-            mobile: intermediantClientContactMobileNumber || '',
-            fixTel: intermediantClientContactFixTelNumber || '',
-            companyEmail: intermediantClientContactEmail || '',
-            designation: intermediantClientContactDesignation || '',
-            description: intermediantClientContactDescription || '',
+        
+        
+        
+        intermediateClient:
+        intermediantClientName || intermediantClientCountry ||
+        intermediantClientContactName || intermediantClientContactMobileNumber ||
+        intermediantClientContactFixTelNumber || intermediantClientContactEmail ||
+        intermediantClientContactDesignation || intermediantClientContactDescription
+          ? {
+              name: intermediantClientName || null,
+              country: intermediantClientCountry || null,
+              externalContactPerson:
+                intermediantClientContactName || intermediantClientContactMobileNumber ||
+                intermediantClientContactFixTelNumber || intermediantClientContactEmail ||
+                intermediantClientContactDesignation || intermediantClientContactDescription
+                  ? {
+                      name: intermediantClientContactName || null,
+                      mobile: intermediantClientContactMobileNumber || null,
+                      fixTel: intermediantClientContactFixTelNumber || null,
+                      companyEmail: intermediantClientContactEmail || null,
+                      designation: intermediantClientContactDesignation || null,
+                      description: intermediantClientContactDescription || null,
+                    }
+                  : null,
+            }
+          : null,
+          grantClient: {
+            name: clientName,
+            country: clientCountry,
+            isForeign: false,
+            externalContactPerson:
+              clientContactPersonName || clientContactMobileNumber ||
+              clientContactFixTelNumber || clientContactEmai ||
+              clientContactDesignation || clientContactDescription
+                ? {
+                    name: clientContactPersonName || null,
+                    mobile: clientContactMobileNumber || null,
+                    fixTel: clientContactFixTelNumber || null,
+                    companyEmail: clientContactEmai || null,
+                    designation: clientContactDesignation || null,
+                    description: clientContactDescription || null,
+                  }
+                : null,
           },
-        },
-        grantClient: {
-          name: clientName || '', 
-          country: clientCountry || '', 
-          isForeign: false,
-          externalContactPerson: {
-            name: clientContactPersonName || '',
-            mobile: clientContactMobileNumber || '',
-            fixTel: clientContactFixTelNumber || '',
-            companyEmail: clientContactEmai || '',
-            designation: clientContactDesignation || '',
-            description: clientContactDescription || '',
-          },
-        },
         cost: {
           totalEffortMh: costTotalEffort || 0,
           quotedValue: costQuotedValue || 0,
@@ -356,12 +391,14 @@ const CreateProject = () => {
         },
         
         todo: {
-          notes: note || '',
-          tasks: todos.map((t) => ({
-            taskTitle: t.title || '',
-            taskDescription: t.description || '',
-            date: t.date ? new Date(t.date) : null,
-          })),
+          notes: note || "Pending ...",
+          tasks: (todos.length > 0
+            ? todos.map((t) => ({
+                taskTitle: t.title || null,
+                taskDescription: t.description || null,
+                date: t.date ? new Date(t.date) : null,
+              }))
+            : null) ?? null,
         },
         rfpResources : null,
         outputsFromInova : null,
@@ -372,7 +409,7 @@ const CreateProject = () => {
       
       const resp = await axios.post(url, projectData);
       console.log(projectData);
-
+      handleOpenSnackbar('success', 'Project saved successfully');
 
 
 
@@ -386,6 +423,7 @@ const CreateProject = () => {
     }catch (error:any ) {
 
       console.log(error.response);
+      handleOpenSnackbar('error', 'Error saving project');
     }
 
   };
@@ -498,7 +536,7 @@ const CreateProject = () => {
                     type="text"
                     className="appearance-none w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
                     onChange={(e) => setLatestProjectStatus(e.target.value)}
-                    value={latestProjectStatus}
+                    value={latestProjectStatus || ''} 
                     
                   />
                 </div>
@@ -707,7 +745,7 @@ const CreateProject = () => {
                 <Select
       options={options}
       value={value}
-      onChange={changeHandler}
+      onChange={changeClientCountryHandler}
       required
     />
                 </div>
@@ -871,7 +909,12 @@ const CreateProject = () => {
                       Intermediary Client Country
                     </label>
                     <div className="mt-2">
-                      <CountrySelector />
+                    <Select
+      options={options}
+      value={value}
+      onChange={changeIntermediateCountryHandler}
+  
+    />
                     </div>
                   </div>
                   <div className="sm:col-span-3 px-6">
@@ -1293,7 +1336,11 @@ const CreateProject = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}  >
+        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
           <button
             type="submit"
             className="bg-sky-400 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer mt-12"
