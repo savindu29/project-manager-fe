@@ -16,6 +16,8 @@ const ProjectDetail = ({ projectId }: any) => {
   const [projectDetails, setProjectDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true); // Add loading state
 
+  
+
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -29,6 +31,8 @@ const ProjectDetail = ({ projectId }: any) => {
     };
     fetchProjects();
   }, [projectId]);
+
+  
 
   const [statusHistory, setStatusHistory] = useState(false);
   const handleStatusHistory = () => {
