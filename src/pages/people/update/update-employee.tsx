@@ -51,12 +51,14 @@ export default function EmployeeUpdateForm() {
   const [page, setPage] = useState(1); // Initialize the active page
   const pageSize = 8; // Specify the fixed page size
   const [dataCount, setDatacount] = useState<number>(0);
+  const [searchText, setSearchText] = useState('');
+
 
   useEffect(() => {
     const fetchPersons = async () => {
       try {
         const params: getEmployeesOptions = {
-          searchtext: "",
+          searchtext: searchText,
           page,
           size: pageSize,
         };
@@ -70,9 +72,15 @@ export default function EmployeeUpdateForm() {
     };
 
     fetchPersons();
-  }, [page]);
+  }, [searchText, page, pageSize]);
 
-
+  const handleSearchChange = (event:any) => {
+    setSearchText(event.target.value);
+  };
+  const handleFormSubmit = (event:any) => {
+    event.preventDefault();
+    // You can perform additional actions on form submission if needed
+  };
 
 
   const handleUpdateDetails = async () => {
@@ -148,6 +156,8 @@ export default function EmployeeUpdateForm() {
                 className="bg-white border  text-gray-900 text-sm rounded-lg   block w-full pl-10 py-2.5 placeholder-gray-400 focus:outline-none  focus:border-blue-300"
                 placeholder="Search Employee ..."
                 required
+                value={searchText}
+                onChange={handleSearchChange}
               />
             </div>
             <button
