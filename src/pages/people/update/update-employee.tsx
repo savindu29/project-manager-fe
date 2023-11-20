@@ -116,8 +116,8 @@ export default function EmployeeUpdateForm() {
     setPage(newPage); // Update the active page when the page changes
   };
   return (
-    <div className="flex  w-full ">
-      <div className="w-1/3 bg-gray-50  p-4 overflow-y-auto rounded-md  mr-5">
+    <div className="flex  w-full h-screen">
+      <div className="w-1/3 h-full bg-gray-100  p-4 overflow-y-auto rounded-md  mr-5">
         <h2 className="text-base font-semibold leading-7 text-gray-900 text-lg mb-5 text-center">
           All Employees
         </h2>

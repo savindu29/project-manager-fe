@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 
@@ -12,9 +12,16 @@ const classNames = (...classes: string[]): string => {
   return classes.filter(Boolean).join(' ');
 };
 
-const DropDown: FC<DropdownProps> = ({ data, dropdownFor, onSelect }) => {
+const DropDown: FC<DropdownProps & { defaultSelectedId?: number }> = ({ data, dropdownFor, onSelect, defaultSelectedId }) => {
   const [selected, setSelected] = useState<{ id: number; name: string; [key: string]: any } | null>(null);
 
+  useEffect(() => {
+    // Set the initial selected value based on the defaultSelectedId prop
+    const defaultSelected = data.find((item) => item.id === defaultSelectedId);
+    if (defaultSelected) {
+      setSelected(defaultSelected);
+    }
+  }, [data, defaultSelectedId]);
   return (
     <Listbox value={selected} onChange={(value) => { setSelected(value); onSelect && onSelect(value); }}>
       {({ open }) => (
