@@ -35,7 +35,7 @@ const LoginPage: React.FC = () => {
       // Store the token in local storage
       localStorage.setItem('loginToken', result.token);
 
-      window.location.href = '/';
+      window.location.href = '/dashboard';
     } else {
       // If the response status is not ok, log the error response
       const errorResponse = await response.json();
@@ -120,7 +120,7 @@ const LoginPage: React.FC = () => {
         </div>
       </div>
       <DialogDefault open={showErrorDialog} onClose={() => setShowErrorDialog(false)}>
-        Please check your email and password
+        Please check your email and password 
       </DialogDefault>
     </div>
   );

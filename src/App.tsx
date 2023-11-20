@@ -1,5 +1,5 @@
 import "./App.css";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 import Projects from "./pages/project-page/projects";
 import Dashboard from "./pages/dashboard";
 import { ThemeProvider, createTheme } from "@mui/material";
@@ -23,17 +23,25 @@ const PrivateRoute: React.FC<{ path: string; element: React.ReactNode }> = ({ pa
   return isAuthenticated ? (
     <>{element}</>
   ) : (
-    <Navigate to="/login" />
+    <Navigate to="/login" replace={true} />
   );
 };
 
-
 function App() {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  if (!isAuthenticated) {
+    // Redirect to login if not authenticated
+    navigate("/login", { replace: true });
+    return null; // Return null to prevent rendering while redirecting
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <div>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/" element={<LoginPage />} />
           <Route
             path="/projects/*"
             element={
@@ -63,7 +71,7 @@ function App() {
               />
             }
           />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/register" element={<SignupPage />} />
         </Routes>
       </div>
@@ -72,3 +80,7 @@ function App() {
 }
 
 export default App;
+
+
+
+
