@@ -13,7 +13,7 @@ const Todo = ({ todo }: any) => {
         <div>
           <h1 className="text-xl font-medium mt-4">Tasks</h1>
 
-          <table className="table-fixed mt-2 w-full"> {/* Set table width to 3/4 of the page */}
+          <table className="table-auto mt-2 w-full"> {/* Set table width to 3/4 of the page */}
             <thead>
               <tr>
                 <th className="px-4 py-2">Task</th>

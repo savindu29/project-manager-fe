@@ -24,9 +24,20 @@ import { EmployeeSearchResult, ProjectRequest } from "../../../apis";
 import countryList from 'react-select-country-list';
 import Select from 'react-select';
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Snackbar } from "@mui/material";
+import AddTodoModal from "../../../components/models/todo-model";
+import AddLastActivityModal from "../../../components/models/status-history-model";
 interface Country {
   label: string;
   value: string;
+}
+interface TodoType {
+  title: string;
+  description: string;
+  date: string;
+}
+interface LastActivityType {
+  status: string;
+  date: string;
 }
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -58,80 +69,35 @@ const CreateProject = () => {
     setConfirmationOpen(false);
   };
 
+  const [showLastActivityForm, setShowLastActivityForm] = useState(false);
+  const [lastActivities, setLastActivities] = useState<LastActivityType[]>([]);
 
 
-  const [visible, SetChecked] = useState(false);
-
-  const checkBox = () => {
-    SetChecked(!visible);
-  };
-
-  const checkBox2 = () => {
+    const checkBox2 = () => {
     setVisible(!visiblity);
   };
+  const handleAddLastActivity = (newActivity: LastActivityType) => {
+    // Add the new last activity to the list
+    setLastActivities([...lastActivities, newActivity]);
+  };
+  const handleRemoveActivity = (indexToRemove: number) => {
+    // Filter out the activity at the specified index
+    const updatedActivities = lastActivities.filter((_, index) => index !== indexToRemove);
 
-  const checkbox3 = () => {
-    setVisi(!a);
+    // Update the state with the filtered activities
+    setLastActivities(updatedActivities);
   };
 
-  const checkbox4 = () => {
-    setv(!b);
-  };
 
-  const [age, setAge] = React.useState("");
 
   const [showForm, setShowForm] = useState<boolean>(false);
-  const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [date, setDate] = useState<string>("");
+
   const [todos, setTodos] = useState<
     { title: string; description: string; date: string }[]
   >([]);
 
-  const handleAddTodo = () => {
-    if (title && description && date) {
-      setTodos([...todos, { title, description, date }]);
-      // Clear the form after adding a todo
-      setTitle("");
-      setDescription("");
-      setDate("");
-      setShowForm(false);
-    }
-  };
-
-  const [b, setv] = useState(false);
-
   const [visiblity, setVisible] = useState(false);
 
-  const [a, setVisi] = useState(false);
-
-  const [personName, setPersonName] = React.useState<string[]>([]);
-
-  const [personNames, setPersonNames] = React.useState<string[]>([]);
-
-  const handleChanges = (event: SelectChangeEvent<typeof personName>) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-  };
-
-  const handleChanges2 = (event: SelectChangeEvent<typeof personNames>) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonNames(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-  };
-
-  const Example = () => {
-    const [startDate, setStartDate] = useState(new Date());
-  };
   const handleSelectedFiles = (id: string, files: File[]) => {
     // Handle the selected files for the specified instance
     console.log(`Selected Files for ${id}:`, files);
@@ -234,18 +200,22 @@ const CreateProject = () => {
     // Remove the selected effort estimator from the list
     setEffortEstimators((prevEstimators) => prevEstimators.filter((estimator) => estimator.id !== estimatorId));
   };
-  const [value, setValue] = useState<Country | null>(null);
+ 
 
   const options = useMemo(() => countryList().getData(), []);
 
   const changeClientCountryHandler = (selectedOption: Country | null) => {
-    setValue(selectedOption);
-    setClientCountry(selectedOption?.value || "Sri Lanka");
+    setClientCountry(selectedOption);
+    // setClientCountry(selectedOption?.value || null);
   }
   const changeIntermediateCountryHandler = (selectedOption: Country | null) => {
-    setValue(selectedOption);
-    setIntermidiantClientCountry(selectedOption?.value || "");
+    setIntermidiantClientCountry(selectedOption);
+    // setIntermidiantClientCountry(selectedOption?.value || "");
   }
+  const handleAddTodo = (newTodo: TodoType) => {
+    // Add the new todo to the list
+    setTodos([...todos, newTodo]);
+  };
 
 
 
@@ -267,7 +237,7 @@ const CreateProject = () => {
   const [selectedProjectLead, setSelectedProjectLead]= useState(-1);
 
   const [clientName, setClientName]= useState('');
-  const [clientCountry, setClientCountry] = useState('');
+  const [clientCountry, setClientCountry] = useState<Country | null>(null);
   const [clientContactPersonName, setContactPersonName]= useState('');
   const [clientContactEmai, setClientContactEmail]= useState('');
   const [clientContactMobileNumber, setClientContactMobileNumber]= useState('');
@@ -275,7 +245,7 @@ const CreateProject = () => {
   const [clientContactDesignation, setClientContactDesignation]= useState('');
   const [clientContactDescription, setClientContactDescription]= useState('');
   const [intermediantClientName, setIntermidiantClientName]= useState('');
-  const [intermediantClientCountry, setIntermidiantClientCountry]= useState('');
+  const [intermediantClientCountry, setIntermidiantClientCountry]= useState<Country | null>(null);
   const [intermediantClientContactName, setIntermidiantClientContactName]= useState('');
   const [intermediantClientContactEmail, setIntermidiantClientContactEmail]= useState('');
   const [intermediantClientContactMobileNumber, setIntermidiantClientContactMobileNumber]= useState('');
@@ -349,7 +319,7 @@ const CreateProject = () => {
         intermediantClientContactDesignation || intermediantClientContactDescription
           ? {
               name: intermediantClientName || null,
-              country: intermediantClientCountry || null,
+              country: intermediantClientCountry?.label || null,
               externalContactPerson:
                 intermediantClientContactName || intermediantClientContactMobileNumber ||
                 intermediantClientContactFixTelNumber || intermediantClientContactEmail ||
@@ -367,7 +337,7 @@ const CreateProject = () => {
           : null,
           grantClient: {
             name: clientName,
-            country: clientCountry,
+            country: clientCountry?.label || "Sri Lanka",
             isForeign: false,
             externalContactPerson:
               clientContactPersonName || clientContactMobileNumber ||
@@ -516,52 +486,56 @@ const CreateProject = () => {
                   />
                 </div>
               </div>
-              <div className="sm:col-span-6">
-                <h2 className="font-semibold text-lg mt-8 mb-2 ">
-                  Latest Project Activities
-                </h2>
-              </div>
 
-              <div className="sm:col-span-3 px-6">
-                <label
-                  htmlFor=""
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Latest Project Status
-                </label>
-                <div className="mt-2">
-                  <input
-                   name="latestStatus"
-                   id="latestStatus"
-                    type="text"
-                    className="appearance-none w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
-                    onChange={(e) => setLatestProjectStatus(e.target.value)}
-                    value={latestProjectStatus || ''} 
-                    
-                  />
-                </div>
-              </div>
-              <div className="sm:col-span-3 px-6">
-                <label
-                  htmlFor=""
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Status Date
-                </label>
-                <div className="mt-2">
-                 
-                  <input
-                   name="latestStatusDate"
-                   id="latestStatusDate"
-                    type="date"
-                    className="appearance-none w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
-                    onChange={(e) => setLatestProjectStatusDate(new Date(e.target.value))}
-                    value={latestProjectStatusDate.toISOString().split('T')[0]}
-                    // onChange={(e) => setLatestProjectStatusDate(new Date(e.target.value))}
-                    // value={latestProjectStatusDate ? formatDate(latestProjectStatusDate) : ''}
-                  />
-                </div>
-              </div>
+
+<div className="sm:col-span-6 mt-12">
+      {/* Button to open the AddLastActivityModal */}
+      <div className=" flex justify-center">
+      <button
+        type="button"
+        onClick={() => setShowLastActivityForm(true)}
+        className="bg-sky-400 mb-6 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer"
+      >
+        Add Last Activity
+      </button>
+      </div>
+
+      {/* Render AddLastActivityModal component */}
+      <AddLastActivityModal
+        isOpen={showLastActivityForm}
+        onClose={() => setShowLastActivityForm(false)}
+        onAddLastActivity={handleAddLastActivity}
+      />
+
+      {lastActivities.length > 0 && (
+       <table className="table-auto border-collapse border text-center  mt-2 w-full">
+       <thead>
+         <tr>
+           <th className="w-1/4 px-4 py-2">Latest Project Status</th>
+           <th className="w-1/4 px-4 py-2">Date</th>
+           <th className="w-1/4 px-4 py-2">Remove</th>
+         </tr>
+       </thead>
+       <tbody>
+         {lastActivities.map((activity, index) => (
+           <tr key={index} className="border">
+             <td className="w-1/4 px-4 py-2">{activity.status}</td>
+             <td className="w-1/4 px-4 py-2">{activity.date}</td>
+             <td className="w-1/4 px-4 py-2">
+          <button
+            onClick={() => handleRemoveActivity(index)}
+            className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+          >
+            Remove
+          </button>
+        </td>
+           </tr>
+         ))}
+       </tbody>
+     </table>
+     
+      )}
+    </div>
               <div className="sm:col-span-6">
                 <h2 className="font-semibold text-lg mt-8 mb-2 ">
                   Special Dates
@@ -744,7 +718,7 @@ const CreateProject = () => {
                 <div className="mt-2">
                 <Select
       options={options}
-      value={value}
+      value={clientCountry}
       onChange={changeClientCountryHandler}
       required
     />
@@ -911,7 +885,7 @@ const CreateProject = () => {
                     <div className="mt-2">
                     <Select
       options={options}
-      value={value}
+      value={intermediantClientCountry}
       onChange={changeIntermediateCountryHandler}
   
     />
@@ -1212,98 +1186,48 @@ const CreateProject = () => {
               </div>
             </div>
 
-            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6 mb-8">
-              <h2 className="font-semibold text-lg sm:col-span-3 px-6">
-                To Do
-              </h2>
-              <div className=" flex sm:col-span-3 justify-end">
-                <button
-                  type="button"
-                  className="bg-sky-400 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer"
-                  onClick={() => setShowForm(!showForm)}
-                >
-                  {showForm ? "Hide Form" : "Add Task"}
-                </button>
-              </div>
-            </div>
-            {showForm && (
-              <div>
-                <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
-                  <div className="sm:col-span-3 px-6">
-                    <label
-                      htmlFor=""
-                      className="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      Title
-                    </label>
-                    <input
-                      type="text"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
-                    />
-                  </div>
+            <div>
+      <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6 mb-8">
+        <h2 className="font-semibold text-lg sm:col-span-3 px-6">To Do</h2>
+        <div className="flex sm:col-span-3 justify-end">
+          <button
+            type="button"
+            className="bg-sky-400 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer"
+            onClick={() => setShowForm(!showForm)}
+          >
+            {showForm ? 'Hide Form' : 'Add Task'}
+          </button>
+        </div>
+      </div>
 
-                  <div className="sm:col-span-3 px-6">
-                    <label>Description </label>
-                    <input
-                      type="text"
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                      className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
-                    />
-                  </div>
+      {/* Render AddTodoModal component */}
+      <AddTodoModal
+        isOpen={showForm}
+        onClose={() => setShowForm(false)}
+        onAddTodo={handleAddTodo}
+      />
 
-                  <div className="sm:col-span-3 px-6">
-                    <label>Date </label>
-                    <input
-                      type="date"
-                      className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
-                      value={date}
-                      onChange={(e) => setDate(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <div className="flex justify-end mt-6">
-                  <button
-                    className="bg-sky-400 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer"
-                    type="button"
-                    onClick={handleAddTodo}
-                  >
-                    Add
-                  </button>
-                </div>
-              </div>
-            )}
-            {todos.length > 0 && (
-              <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-8">
-                <thead className="text-xs text-black uppercase bg-gray-400 dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th scope="col" className="px-6 py-3 bg-gray">
-                      Title
-                    </th>
-                    <th scope="col" className="px-6 py-3 bg-gray">
-                      Description
-                    </th>
-                    <th scope="col" className="px-6 py-3 bg-gray">
-                      Date
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {todos.map((todo, index) => (
-                    <tr
-                      className="bg-white border-b  dark:border-gray-700"
-                      key={index}
-                    >
-                      <td className="px-6 py-4">{todo.title}</td>
-                      <td className="px-6 py-4">{todo.description}</td>
-                      <td className="px-6 py-4">{todo.date}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
+      {todos.length > 0 && (
+        <table className="table-auto mt-2 w-full mb-6">
+          <thead>
+            <tr>
+              <th className="px-4 py-2">Task</th>
+              <th className="px-4 py-2">Due Date</th>
+              <th className="px-4 py-2">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {todos.map((todo, index) => (
+              <tr className="border" key={index}>
+                <td className="px-4 py-2">{todo.title}</td>
+                <td className="px-4 py-2">{todo.date}</td>
+                <td className="px-4 py-2">{todo.description}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
           </div>
 
           <label>Notes: </label>

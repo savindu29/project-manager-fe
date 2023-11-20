@@ -23,7 +23,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/projects/create-new" element={<AddProject />} />
-          <Route path="/projects/update/:id" element={<UpdateProject />} />
+          <Route path="/projects/update/:projectId" element={<UpdateProject />} />
           <Route path="/employees" element={<UpdatePeoplePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/employees/new" element={<PeoplePage />} />
