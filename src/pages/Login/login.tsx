@@ -7,52 +7,56 @@ const LoginPage: React.FC = () => {
   const [showErrorDialog, setShowErrorDialog] = useState(false);
 
   const handleLogin = async () => {
-  try {
-    // Basic input validation
-    if (!username || !password) {
-      // Show the popup for empty fields
+    try {
+      // Basic input validation
+      if (!username || !password) {
+        // Show the popup for empty fields
+        setShowErrorDialog(true);
+        return;
+      }
+
+      // Log the entered username to the console
+      console.log('Username entered:', username);
+
+      const response = await fetch('http://localhost:8000/api/v1/auth/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: username,
+          password: password,
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+
+        // Log the result to the console
+        console.warn('Token:', result.token);
+
+        // Store the token in local storage
+        localStorage.setItem('loginToken', result.token);
+
+       // window.location.href = '/dashboard';
+      } else {
+        // If the response status is not ok, log the error response
+        const errorResponse = await response.json();
+        console.error('Login failed:', errorResponse);
+
+        // Show the popup indicating login failure
+        setShowErrorDialog(true);
+      }
+    } catch (error) {
+      // Handle network errors or other exceptions
+      console.error('Error during login:', error);
+
+      // Show the popup for network errors or other exceptions
       setShowErrorDialog(true);
-      return;
     }
 
-    const response = await fetch('http://localhost:8000/api/v1/auth/signin', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: username,
-        password: password,
-      }),
-    });
-
-    if (response.ok) {
-      const result = await response.json();
-
-      // Log the result to the console
-      console.warn("Token:", result.token);
-
-      // Store the token in local storage
-      localStorage.setItem('loginToken', result.token);
-
-      window.location.href = '/';
-    } else {
-      // If the response status is not ok, log the error response
-      const errorResponse = await response.json();
-      console.error('Login failed:', errorResponse);
-
-      // Show the popup indicating login failure
-      setShowErrorDialog(true);
-    }
-  } catch (error) {
-    // Handle network errors or other exceptions
-    console.error('Error during login:', error);
-
-    // Show the popup for network errors or other exceptions
-    setShowErrorDialog(true);
-  }
-};
-
+  };
+  
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
       <div className="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1">
@@ -120,7 +124,7 @@ const LoginPage: React.FC = () => {
         </div>
       </div>
       <DialogDefault open={showErrorDialog} onClose={() => setShowErrorDialog(false)}>
-        Please check your email and password
+        Please check your email and password 
       </DialogDefault>
     </div>
   );

@@ -10,6 +10,8 @@ import AddProject from "./pages/project-page/create/index";
 import UpdateProject from "./pages/project-page/update/update-project";
 import SignupPage from "./pages/Login/Register";
 import { useAuth } from "./pages/Login/useAuth";
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from "react";
 
 const theme = createTheme({
   typography: {
@@ -19,12 +21,15 @@ const theme = createTheme({
 
 const PrivateRoute: React.FC<{ path: string; element: React.ReactNode }> = ({ path, element }) => {
   const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
-  return isAuthenticated ? (
-    <>{element}</>
-  ) : (
-    <Navigate to="/login" />
-  );
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
+
+  return isAuthenticated ? <>{element}</> : null;
 };
 
 
@@ -33,12 +38,12 @@ function App() {
     <ThemeProvider theme={theme}>
       <div>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/" element={<LoginPage />} />
           <Route
             path="/projects/*"
             element={
               <PrivateRoute
-                path="/projects"
+                path="/projects/*"  // Update the path to match the intended routes
                 element={
                   <Routes>
                     <Route index element={<Projects />} />
@@ -53,7 +58,7 @@ function App() {
             path="/employees/*"
             element={
               <PrivateRoute
-                path="/employees"
+                path="/employees/*"  // Update the path to match the intended routes
                 element={
                   <Routes>
                     <Route index element={<UpdatePeoplePage />} />
@@ -63,7 +68,7 @@ function App() {
               />
             }
           />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/register" element={<SignupPage />} />
         </Routes>
       </div>

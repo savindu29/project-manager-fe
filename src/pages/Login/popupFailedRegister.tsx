@@ -29,16 +29,14 @@ export function RegisterFailedDialog({
             {children || "Please Enter Valid Inputs."}
           </DialogBody>
           <DialogFooter className="p-4">
-            <Button
-              variant="text"
-            color="white"
-            onClick={() => {
-                onClose(); // Close the dialog
-              }}
+          <Button
+            variant="text"
+            color="red"
+            onClick={onClose}
             className="mr-1"
           >
             <span>Try Again</span>
-            </Button>
+          </Button>
           </DialogFooter>
         </Dialog>
       </>
