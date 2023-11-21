@@ -229,23 +229,19 @@ const ProjectDetail = ({ projectId }: any) => {
 
       {/* Intermediate Importer */}
 
-
-
-
-
-      
-
-      {projectDetails.intermediateClient&& (
-        <div className="text-sm my-4  bg-white rounded-md border ml-4 px-6 py-4 w-1/2 ">
-  <div className="mb-4">
-    <h2 className="text-2xl font-bold mb-4">Intermediate Client Details</h2>
+      {projectDetails.intermediateClient && (
+      <div className=" text-sm my-4   rounded-md border mr-4 px-6 py-4 w-1/2 bg-white">
+      <h2 className="text-2xl font-bold mb-4">Intermediate Client Details</h2>
     
     <div className="mb-4">
-        <h3 className="font-bold mb-2">Organization Details</h3>
+    <h3 className="font-bold mb-2">Organization Details</h3>
         <p className="text-gray-700 mb-1">Name: {projectDetails.intermediateClient.name}</p>
         <p className="text-gray-700 mb-1">Country: {projectDetails.intermediateClient.country}</p>
     </div>
-    <h3 className="font-bold mb-1">Contact Person Details</h3>
+
+    {projectDetails.intermediateClient.externalContactPerson && (
+  <div className="mb-4">
+   <h3 className="font-bold mb-1">Contact Person Details</h3>
     <p className="text-gray-700 mb-1">Name: {projectDetails.intermediateClient.externalContactPerson.name}</p>
     <p className="text-gray-700 mb-1">Mobile: {projectDetails.intermediateClient.externalContactPerson.mobile}</p>
     <p className="text-gray-700 mb-1">Fixed Tel: {projectDetails.intermediateClient.externalContactPerson.fixedTel}</p>
@@ -253,10 +249,10 @@ const ProjectDetail = ({ projectId }: any) => {
     <p className="text-gray-700 mb-1">Designation: {projectDetails.intermediateClient.externalContactPerson.designation}</p>
     <p className="text-gray-700 mb-1">Description: {projectDetails.intermediateClient.externalContactPerson.description}</p>
   </div>
-  </div>
     )}
+</div>
+      )}
 
-    
 
     
 
