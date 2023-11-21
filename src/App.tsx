@@ -13,6 +13,7 @@ import { useAuth } from './pages/Login/useAuth';
 import SignupPage from "./pages/Login/Register";
 
 
+
 const App = () => {
   const { isAuthenticated } = useAuth();
   console.log(isAuthenticated)
@@ -22,6 +23,7 @@ const App = () => {
     <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<SignupPage />} />
+
       <Route
         path="/employees"
         element={isAuthenticated ? <UpdatePeoplePage /> : <Navigate to="/login" />}

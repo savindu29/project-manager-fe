@@ -21,7 +21,7 @@ type Project = {
 };
 
 const Projects: React.FC = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<Project[] >([]);
   const [searchText, setSearchText] = useState('');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null); // Specify the initial state as null
   const [projectId, setProjectId] = useState<number>(0); // Specify the initial state as null
@@ -29,26 +29,36 @@ const Projects: React.FC = () => {
   const pageSize = 3; // Specify the fixed page size
   const [dataCount, setDatacount] = useState<number>(0);
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const params: getProjectsOptions = {
-          searchtext: searchText,
-          page,
-          size: pageSize,
-        };
+  const fetchProjects = async () => {
+    try {
+      const params: getProjectsOptions = {
+        searchtext: searchText,
+        page,
+        size: pageSize,
+      };
 
-        const response = await getAllProjects(params);
+      const response = await getAllProjects(params);
+
+      // Check if the response is null
+      if (response && response.data) {
         console.log(response.data);
         setProjects(response.data.data);
         setDatacount(response.data.count);
-      } catch (error) {
-        console.error("Error fetching projects:", error);
-      }
-    };
+      } else {
+        // If the response is null, set data count to 0
+        setDatacount(0);
 
+      }
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+    }
+  };
+
+// Call fetchProjects when the component mounts or when searchText, page, or pageSize changes
+  useEffect(() => {
     fetchProjects();
-  }, [searchText, page, pageSize]); // Listen to page changes
+  }, [searchText, page, pageSize]);
+  // Listen to page changes
 
   const handleCardClick = (project: Project) => {
     setSelectedProject(project);
@@ -145,14 +155,21 @@ const Projects: React.FC = () => {
               </div>
 
               <div className="overflow-hidden">
-                {projects.map((project) => (
-                  <ProjectCard
-                    key={project.id}
-                    cardDetails={project}
-                    onCardClick={handleCardClick}
-                  />
-                ))}
+                {dataCount > 0 ? (
+                    projects.map((project) => (
+                        <ProjectCard
+                            key={project.id}
+                            cardDetails={project}
+                            onCardClick={handleCardClick}
+                        />
+                    ))
+                ) : (
+                    <div className="flex items-center justify-center h-20">
+                      <p className="text-gray-500 font-bold">No results found!</p>
+                    </div>
+                )}
               </div>
+
               <div className="h-16 flex items-center justify-center absolute bottom-2 w-96">
                 <Pagination
                   count={Math.ceil(dataCount / pageSize)}

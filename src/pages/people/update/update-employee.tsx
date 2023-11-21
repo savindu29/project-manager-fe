@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import {getEmployeesOptions} from "../../../apis";
 import {getAllEmployees} from "../../../apis/emplyee";
+import ProjectCard from "../../../components/project-card";
 
 
 type Person = {
@@ -64,8 +65,17 @@ export default function EmployeeUpdateForm() {
                 };
 
                 const response = await getAllEmployees(params);
-                setPersons(response.data.data);
-                setDatacount(response.data.count);
+
+                if (response && response.data) {
+
+                    setPersons(response.data.data);
+                    setDatacount(response.data.count);
+                } else {
+                    // If the response is null, set data count to 0
+                    setDatacount(0);
+
+                }
+
             } catch (error) {
                 console.error("Error fetching projects:", error);
             }
@@ -185,19 +195,33 @@ export default function EmployeeUpdateForm() {
                 </div>
 
                 <ul className="mt-5 px-4 space-y-2">
-                    {persons.map((person) => (
-                        <li
-                            key={person.id}
-                            onClick={() => setSelectedPerson(person)}
-                            className={`cursor-pointer transition duration-300 ease-in-out transform hover:scale-105 ${
-                                selectedPerson?.id === person.id
-                                    ? "text-blue-500 font-semibold"
-                                    : "text-gray-700"
-                            } bg-white rounded-lg py-4 px-6 text-sm shadow-md hover:shadow-lg`}
-                        >
-                            {person.name} - <span className="text-xs">{person.designation}</span>
-                        </li>
-                    ))}
+                    {/*{persons.map((person) => (*/}
+                    {/*   */}
+                    {/*))}*/}
+
+
+                    {dataCount > 0 ? (
+                        persons.map((person) =>  (
+                            <li
+                                key={person.id}
+                                onClick={() => setSelectedPerson(person)}
+                                className={`cursor-pointer transition duration-300 ease-in-out transform hover:scale-105 ${
+                                    selectedPerson?.id === person.id
+                                        ? "text-blue-500 font-semibold"
+                                        : "text-gray-700"
+                                } bg-white rounded-lg py-4 px-6 text-sm shadow-md hover:shadow-lg`}
+                            >
+                                {person.name} - <span className="text-xs">{person.designation}</span>
+                            </li>
+                        ))
+                    ) : (
+                        <div className="flex items-center justify-center h-20">
+                            <p className="text-gray-500 font-bold">No results found!</p>
+                        </div>
+                    )}
+
+
+
                 </ul>
                 <div className="h-16 flex items-center justify-center absolute bottom-2 w-96">
                     <Pagination
