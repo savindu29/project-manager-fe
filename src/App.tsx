@@ -19,14 +19,31 @@ const App = () => {
   return (
     <Routes>
       <Route
-        path="/dashboard"
-        element={isAuthenticated ? <PeoplePage /> : <Navigate to="/login" />}
+        path="/employees"
+        element={isAuthenticated ? <UpdatePeoplePage /> : <Navigate to="/login" />}
       />
       <Route path="/login" element={<LoginPage />} />
       <Route
         path="/projects"
         element={isAuthenticated ? <Projects /> : <Navigate to="/login" />}
       />
+      <Route
+        path="/projects/new"
+        element={isAuthenticated ? <AddProject	 /> : <Navigate to="/login" />}
+      />
+      <Route
+        path="/projects/update/:id"
+        element={isAuthenticated ? <UpdateProject	 /> : <Navigate to="/login" />}
+      />
+      <Route
+        path="/"
+        element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />}
+      />
+      <Route
+        path="/employees/new"
+        element={isAuthenticated ? <PeoplePage	 /> : <Navigate to="/login" />}
+      />
+      
     </Routes>
   );
 };

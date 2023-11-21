@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { DialogDefault } from './popupLogin';
+import { useAuth } from './useAuth'; 
 
 const LoginPage: React.FC = () => {
+  const { login } = useAuth(); 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showErrorDialog, setShowErrorDialog] = useState(false);
@@ -34,6 +36,8 @@ const LoginPage: React.FC = () => {
 
       // Store the token in local storage
       localStorage.setItem('loginToken', result.token);
+
+      login(result.token);
 
       window.location.href = '/dashboard';
     } else {
