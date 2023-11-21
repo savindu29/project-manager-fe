@@ -5,16 +5,17 @@ import UpdateProjectForm from './update-form';
 import { getProject } from '../../../apis/project-api';
 
 const UpdateProject = () => {
-  const { projectId } = useParams();
+  const { id } = useParams();
   const [projectDetails, setProjectDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        // Check if projectId is defined before making the API call
-        if (projectId) {
-          const response = await getProject(parseInt(projectId));
+        console.log("out : ",id)
+        if (id) {
+          console.log("in : ",id)
+          const response = await getProject(parseInt(id));
           setProjectDetails(response.data);
           console.log(response.data)
           setLoading(false);
@@ -25,7 +26,7 @@ const UpdateProject = () => {
       }
     };
     fetchProjects();
-  }, [projectId]);
+  }, [id]);
 
   return (
     <div>

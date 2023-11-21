@@ -1,21 +1,20 @@
-import { error } from "console";
-import { getProjectsOptions } from ".";
+import {getProjectsOptions} from ".";
 import axios from "axios";
 
 type Project = {
-  id: number;
-  projectName: string;
-  code: string;
-  priority: string;
-  currentStatus: string;
-  todo: string;
-  latestStatusHistoryDate: string;
-  backgroundColorClass: string;
+    id: number;
+    projectName: string;
+    code: string;
+    priority: string;
+    currentStatus: string;
+    todo: string;
+    latestStatusHistoryDate: string;
+    backgroundColorClass: string;
 };
 
-type responseType ={
-  count:number;
-  data:Project[];
+type responseType = {
+    count: number;
+    data: Project[];
 
 }
 
@@ -23,44 +22,44 @@ type ApiResponse<T> = {
     data: T;
 };
 
-  
+
 export const getAllProjects = async (
     params: getProjectsOptions
-  ): Promise<ApiResponse<responseType>> => {
+): Promise<ApiResponse<responseType>> => {
     try {
         let str = Object.entries(params)
-        .map(([key, val]) => `${key}=${val}`)
-        .join('&');
-      const url = `http://localhost:8000/api/v1/project/search?${str}`;
+            .map(([key, val]) => `${key}=${val}`)
+            .join('&');
+        const url = `http://localhost:8000/api/v1/project/search?${str}`;
 
-     
-      const result = await axios.get(url);
-      
-      const data= result.data; 
-      
-      return data;
+
+        const result = await axios.get(url);
+
+        const data = result.data;
+
+        return data;
     } catch (error) {
-      throw error;
+        throw error;
     }
-  };
-  export const getProject = async (id: number) => {
+};
+export const getProject = async (id: number) => {
     try {
-      const url = `http://localhost:8000/api/v1/project/${id}`;
-  
-      const result = await axios.get(url);
-      return result.data;
-    } catch (err) {
-      throw err;
-    }
-  };
+        const url = `http://localhost:8000/api/v1/project/${id}`;
 
-  export const updateProject = async (id: number, updatedData: any) => {
-    try {
-      const url = `http://localhost:8000/api/v1/project/${id}`;
-      const result = await axios.put(url, updatedData); // Assuming you're using a PUT request for updates
-      return result.data;
-    } catch (error:any) {
-      console.error("error update: ",error.message)
-      throw error;
+        const result = await axios.get(url);
+        return result.data;
+    } catch (err) {
+        throw err;
     }
-  };
+};
+
+export const updateProject = async (id: number, updatedData: any) => {
+    try {
+        const url = `http://localhost:8000/api/v1/project/${id}`;
+        const result = await axios.put(url, updatedData); // Assuming you're using a PUT request for updates
+        return result.data;
+    } catch (error: any) {
+        console.error("error update: ", error.message)
+        throw error;
+    }
+};
