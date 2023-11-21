@@ -174,9 +174,9 @@ const Projects: React.FC = () => {
                 </div>
               </Link>
             )}
-            <Link to="/projects/create-new">
+            <Link to="/projects/new">
               <div className="bg-sky-400 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer">
-                Add new Project
+                Add New Project
               </div>
             </Link>
           </div>
