@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+// useAuth.ts
+import { useState } from 'react';
 
 export const useAuth = () => {
+  const authKey = 'loginToken'; // Use the same key as in the LoginPage component
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     try {
-      const token = localStorage.getItem('login');
+      const token = localStorage.getItem(authKey);
       return Boolean(token);
     } catch (error) {
       console.error('Error retrieving authentication status:', error);
@@ -12,12 +14,12 @@ export const useAuth = () => {
   });
 
   const login = (token: string) => {
-    localStorage.setItem('login', token);
+    localStorage.setItem(authKey, token);
     setIsAuthenticated(true);
   };
 
   const logout = () => {
-    localStorage.removeItem('login');
+    localStorage.removeItem(authKey);
     setIsAuthenticated(false);
   };
 

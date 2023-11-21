@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { RegisterSuccessDialog } from './popupregister';
 import { RegisterFailedDialog } from './popupFailedRegister';
 
@@ -7,9 +8,11 @@ const SignupPage: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
   const [show_Dialog, setShowDialog] = useState(false);
   const [show_Dialog1, setShowDialog1] = useState(false);
   const [error, setError] = useState('');
+
 
   const validateInputs = () => {
   if (!name || !email || !password) {
@@ -17,6 +20,7 @@ const SignupPage: React.FC = () => {
     setShowDialog1(true);
     return false;
   }
+
 
   if (!/\S+@\S+\.\S+/.test(email)) {
     setError('Please enter a valid email address');
@@ -60,7 +64,16 @@ const handleSignup = async () => {
       const errorResponse = await response.json();
       console.error('Sign up failed:', errorResponse);
       // You can handle the error in some way or display a different popup
-    }
+
+      if (!response.ok) {
+        // If the response status is not ok, log the error response
+        const errorResponse = await response.json();
+        console.error('Sign up failed:', errorResponse);
+      }
+
+      // Continue with your sign-up logic for successful response
+      setRegistered(true);
+    } 
   } catch (error) {
     // Handle network errors or other exceptions
     console.error('Error during sign up:', error);
@@ -69,17 +82,22 @@ const handleSignup = async () => {
 };
 
 
+  useEffect(() => {
+    if (registered) {
+      // Redirect to "/login" or any other page after successful sign up
+      window.location.href = "/login";
+    }
+  }, [registered]);
+
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
       <div className="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1">
         <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
           <div className="mt-1 flex flex-col items-center">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcGnVuY8VrtkzrFMILfX1nVkTqSSo_iFbhE9hRmrQS4oazGYHalTK9jPp0n3Lw0TKJWvw&usqp=CAU"
-              className="w-48 mx-auto"
-              style={{ margin: '-50px 0' }}
-              alt="Logo"
-            />
+          <img
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcGnVuY8VrtkzrFMILfX1nVkTqSSo_iFbhE9hRmrQS4oazGYHalTK9jPp0n3Lw0TKJWvw&usqp=CAU"
+            className="w-48 mx-auto"
+            style={{ margin: '-50px 0' }} />
             <h1 className="text-xl xl:text-2xl font-extrabold text-center">
              <br></br> Sign up to Project Management System
             </h1>
@@ -106,6 +124,7 @@ const handleSignup = async () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+
     <button
   className="mt-5 tracking-wide font-semibold bg-sky-600 text-gray-100 w-full py-4 rounded-lg hover-bg-sky-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
   onClick={handleSignup}
@@ -116,6 +135,18 @@ const handleSignup = async () => {
   </svg>
   <span className="ml-3">Sign Up</span>
 </button>
+
+
+                {/* <button
+            className="mt-5 tracking-wide font-semibold bg-sky-600 text-gray-100 w-full py-4 rounded-lg hover-bg-sky-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+            onClick={handleSignup}
+            >
+            <svg className="w-6 h-6 -ml-2" fill="none" stroke="currentColor" strokeWidth="2"
+                strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+            </svg>
+            <span className="ml-3">Sign Up</span>
+            </button> */}
 
 
               </div>
