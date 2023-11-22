@@ -1,5 +1,4 @@
-// useAuth.ts
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 
 
@@ -21,18 +20,12 @@ const isTokenExpired = (token: string | null): boolean => {
 
 
 export const useAuth = () => {
-  const authKey = 'loginToken'; // Use the same key as in the LoginPage component
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     try {
-<<<<<<< HEAD
-      const token = localStorage.getItem(authKey);
-      return Boolean(token);
-=======
       const token = localStorage.getItem('login');
 
       // Check if the token is present and not expired
       return Boolean(token) && token !== 'null' && !isTokenExpired(token);
->>>>>>> 97921c0df3474175926f11e87ddba095154d68f5
     } catch (error) {
       console.error('Error retrieving authentication status:', error);
       return false;
@@ -40,12 +33,12 @@ export const useAuth = () => {
   });
 
   const login = (token: string) => {
-    localStorage.setItem(authKey, token);
+    localStorage.setItem('login', token);
     setIsAuthenticated(true);
   };
 
   const logout = () => {
-    localStorage.removeItem(authKey);
+    localStorage.removeItem('login');
     setIsAuthenticated(false);
   };
 

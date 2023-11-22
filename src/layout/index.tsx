@@ -24,8 +24,12 @@ import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutl
 import PeopleOutlineRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes/mainRoutes";
+//import { globalEmail } from "../pages/Login/login";
+import { useParams } from 'react-router-dom';
 const drawerWidth = 300;
 
+  // console.log("Email:", globalEmail);
+ 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
   transition: theme.transitions.create("width", {
@@ -79,6 +83,7 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 const Drawer = styled(MuiDrawer, {
+  
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   width: drawerWidth,
@@ -96,14 +101,17 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function MiniDrawer() {
+  const { username } = useParams<{ username: string }>();
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
 
   const handleDrawer = () => {
     setOpen(!open);
   };
-
+  const email = localStorage.getItem('userEmail');
+  console.log("Email:", email);
   const navigate = useNavigate();
+  
 
   return (
     <Box sx={{ display: "flex",}}>
@@ -119,11 +127,10 @@ export default function MiniDrawer() {
               alt=""
             />
           </div>
-          <div className="ml-3 ">
-            <p className="font-medium text-sky-500">Username</p>
-            <p className="text-sm">user@gmail.ccom</p>
-          </div>
-          
+          <div className="ml-3">
+      <p className="font-medium text-sky-500">Username</p>
+      <p className="text-sm">{email}</p>
+    </div>
         </div>
         <ArrowBackIosRoundedIcon onClick={handleDrawer} className={`p-1 bg-gray-200 rounded-full duration-500 ${!open && "rotate-180"}`}/>
         </div>
