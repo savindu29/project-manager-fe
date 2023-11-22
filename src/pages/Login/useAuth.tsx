@@ -1,23 +1,8 @@
-import { useState, useEffect } from 'react';
-
-
+import { useState } from 'react';
 
 const isTokenExpired = (token: string | null): boolean => {
-  if (!token) {
-    return true;
-  }
-
-  try {
-    const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decoding the payload part of the token
-    const currentTime = Date.now() / 1000;
-
-    return decodedToken.exp < currentTime;
-  } catch (error) {
-    console.error('Error decoding token:', error);
-    return true; // Token decoding error or invalid format, consider it expired
-  }
+  return !token; // Consider the token expired if it's null or falsy
 };
-
 
 export const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
@@ -38,15 +23,12 @@ export const useAuth = () => {
   };
 
   const logout = () => {
-    localStorage.removeItem('login');
+    // Set the token to null or some specific value
+    localStorage.setItem('login', '');
     setIsAuthenticated(false);
+    console.log('Token expired due to logout');
+    window.location.href = '/dashboard';
   };
-
-  useEffect(() => {
-    // Check token expiration on component mount
-    const token = localStorage.getItem('login');
-    setIsAuthenticated(Boolean(token) && token !== 'null' && !isTokenExpired(token));
-  }, []);
 
   return { isAuthenticated, login, logout };
 };
