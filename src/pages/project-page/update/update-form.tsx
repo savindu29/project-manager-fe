@@ -19,13 +19,12 @@ import DropDown from "../../../components/drop-down";
 import MyFileInput from "../../../components/file-uploader";
 import axios from "axios";
 import CountrySelector from "../../../components/drop-down/countries";
-import SearchForm from "./employeesSearchForm";
-import { EmployeeSearchResult, ProjectRequest } from "../../../apis";
+import SearchForm from "../create/employeesSearchForm";
+import { EmployeeSearchResult, ProjectRequest, Task } from "../../../apis";
 import countryList from 'react-select-country-list';
 import Select from 'react-select';
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Snackbar } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import AddTodoModal from "../../../components/models/todo-model";
-import AddLastActivityModal from "../../../components/models/status-history-model";
 interface Country {
   label: string;
   value: string;
@@ -35,9 +34,14 @@ interface TodoType {
   description: string;
   date: string;
 }
-interface LastActivityType {
-  status: string;
-  date: string;
+interface EffortEstimator {
+  id: number;
+  name: string;
+  mobile: string;
+  companyEmail: string;
+  privateEmail: string;
+  designation: string;
+  specializedField: string;
 }
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -50,7 +54,7 @@ const MenuProps = {
   },
 };
 
-const CreateProject = () => {
+const UpdateProjectForm = ({ projectDetails }: { projectDetails: any }) => {
 
   function formatDate(date: Date): string {
     const year = date.getFullYear();
@@ -69,35 +73,75 @@ const CreateProject = () => {
     setConfirmationOpen(false);
   };
 
-  const [showLastActivityForm, setShowLastActivityForm] = useState(false);
-  const [lastActivities, setLastActivities] = useState<LastActivityType[]>([]);
 
 
-    const checkBox2 = () => {
+  const [visible, SetChecked] = useState(false);
+
+  const checkBox = () => {
+    SetChecked(!visible);
+  };
+
+  const checkBox2 = () => {
+   
     setVisible(!visiblity);
   };
-  const handleAddLastActivity = (newActivity: LastActivityType) => {
-    // Add the new last activity to the list
-    setLastActivities([...lastActivities, newActivity]);
-  };
-  const handleRemoveActivity = (indexToRemove: number) => {
-    // Filter out the activity at the specified index
-    const updatedActivities = lastActivities.filter((_, index) => index !== indexToRemove);
 
-    // Update the state with the filtered activities
-    setLastActivities(updatedActivities);
+  const checkbox3 = () => {
+    setVisi(!a);
   };
 
+  const checkbox4 = () => {
+    setv(!b);
+  };
 
+  const [age, setAge] = React.useState("");
 
   const [showForm, setShowForm] = useState<boolean>(false);
-
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [date, setDate] = useState<string>("");
   const [todos, setTodos] = useState<
     { title: string; description: string; date: string }[]
   >([]);
 
+  const handleAddTodo = (newTodo: TodoType) => {
+    // Add the new todo to the list
+    setTodos([...todos, newTodo]);
+  };
+
+  const [b, setv] = useState(false);
+
   const [visiblity, setVisible] = useState(false);
 
+  const [a, setVisi] = useState(false);
+
+  const [personName, setPersonName] = React.useState<string[]>([]);
+
+  const [personNames, setPersonNames] = React.useState<string[]>([]);
+
+  const handleChanges = (event: SelectChangeEvent<typeof personName>) => {
+    const {
+      target: { value },
+    } = event;
+    setPersonName(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+
+  const handleChanges2 = (event: SelectChangeEvent<typeof personNames>) => {
+    const {
+      target: { value },
+    } = event;
+    setPersonNames(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+
+  const Example = () => {
+    const [startDate, setStartDate] = useState(new Date());
+  };
   const handleSelectedFiles = (id: string, files: File[]) => {
     // Handle the selected files for the specified instance
     console.log(`Selected Files for ${id}:`, files);
@@ -200,81 +244,187 @@ const CreateProject = () => {
     // Remove the selected effort estimator from the list
     setEffortEstimators((prevEstimators) => prevEstimators.filter((estimator) => estimator.id !== estimatorId));
   };
- 
-
-  const options = useMemo(() => countryList().getData(), []);
-
+  const [value, setValue] = useState<Country | null>(null);
   const changeClientCountryHandler = (selectedOption: Country | null) => {
     setClientCountry(selectedOption);
+    
     // setClientCountry(selectedOption?.value || null);
   }
   const changeIntermediateCountryHandler = (selectedOption: Country | null) => {
     setIntermidiantClientCountry(selectedOption);
     // setIntermidiantClientCountry(selectedOption?.value || "");
   }
-  const handleAddTodo = (newTodo: TodoType) => {
-    // Add the new todo to the list
-    setTodos([...todos, newTodo]);
-  };
+
+  const options = useMemo(() => countryList().getData(), []);
+
+  // const changeHandler = (selectedOption: Country | null) => {
+  //   setValue(selectedOption);
+  //   setClientCountry(selectedOption?.value || "Sri Lanka");
+  // }
 
 
 
-  const [projectName, setProjectName] = useState('');
-  const [projectinitiationDate, setProjectInitiationDate] = useState(new Date());
-  const [projectPriority, setProjectPriority] = useState(-1);
-  const [projectStatus, setProjectStatus]= useState(-1);
-  const [latestProjectStatus, setLatestProjectStatus]= useState<string | null>(null);
-  const [latestProjectStatusDate, setLatestProjectStatusDate]=  useState(new Date());
-  const [projectProposalDueDate, setProposalDueDate]= useState<Date | null>(null);
-  const [projectProposalSubDate,setProposalSubDate]= useState<Date | null>(null);
-  const [projectProposedImpStartDate, setProposedImpStartDate]= useState<Date | null>(null);
-  const [projectProposedImpEndDate, setProposedImpEndDate]= useState<Date | null>(null);
-  const [projectActualImpStartDate, setActualImpStartDate]= useState<Date | null>(null);
-  const [projectActualImpEndDate, setActualImpEndDate]= useState<Date | null>(null);
-  const [projectImpDueDate, setImpDueDate]= useState<Date | null>(null);
-  const [projectClarificationDiscussDetails, setClarificationDiscussDetails]= useState('');
-  const [lessonsLearned, setLessonsLearned]= useState('');
-  const [selectedProjectLead, setSelectedProjectLead]= useState(-1);
 
-  const [clientName, setClientName]= useState('');
-  const [clientCountry, setClientCountry] = useState<Country | null>(null);
-  const [clientContactPersonName, setContactPersonName]= useState('');
-  const [clientContactEmai, setClientContactEmail]= useState('');
-  const [clientContactMobileNumber, setClientContactMobileNumber]= useState('');
-  const [clientContactFixTelNumber, setClientContactFixTelNumber]= useState('');
-  const [clientContactDesignation, setClientContactDesignation]= useState('');
-  const [clientContactDescription, setClientContactDescription]= useState('');
-  const [intermediantClientName, setIntermidiantClientName]= useState('');
-  const [intermediantClientCountry, setIntermidiantClientCountry]= useState<Country | null>(null);
-  const [intermediantClientContactName, setIntermidiantClientContactName]= useState('');
-  const [intermediantClientContactEmail, setIntermidiantClientContactEmail]= useState('');
-  const [intermediantClientContactMobileNumber, setIntermidiantClientContactMobileNumber]= useState('');
-  const [intermediantClientContactFixTelNumber, setIntermidiantClientContactFixTelNumber]= useState('');
-  const [intermediantClientContactDesignation, setIntermidiantClientContactDesignation]= useState('');
-  const [intermediantClientContactDescription, setIntermidiantClientDescription]= useState('');
-  const [note, setNote] = useState('');
-  const [costTotalEffort, setTotalEffort]= useState(0);
-  const [costQuotedValue, setQuotedValue]= useState(0);
-  const [costQuotingRate, setQuotingRate]= useState(0);
-  const [costAmcValue, setAMCValue]= useState(0);
+  const [projectName, setProjectName] = useState(projectDetails?.name || '');
+  const [projectinitiationDate, setProjectInitiationDate] = useState(
+    projectDetails?.initiationDate ? new Date(projectDetails.initiationDate) : new Date()
+  )
+  const [projectPriority, setProjectPriority] = useState(projectDetails?.priority?.id || -1);
+  const [projectStatus, setProjectStatus] = useState(projectDetails?.projectStatus?.id || -1);
+  const [latestProjectStatus, setLatestProjectStatus] = useState(projectDetails?.statusHistoryList[0]?.description || '');
+  const [latestProjectStatusDate, setLatestProjectStatusDate] = useState(
+    projectDetails?.statusHistoryList[0]?.date ? new Date(projectDetails.statusHistoryList[0].date) : new Date()
+  );
+  const [projectProposalDueDate, setProposalDueDate] = useState(
+    projectDetails?.proposalDueDate ? new Date(projectDetails.proposalDueDate) : null
+  );
+  const [projectProposalSubDate, setProposalSubDate] = useState(
+    projectDetails?.proposalSubmittedDate ? new Date(projectDetails.proposalSubmittedDate) : null
+  );
+  const [projectProposedImpStartDate, setProposedImpStartDate] = useState(
+    projectDetails?.piStartDate ? new Date(projectDetails.piStartDate) : null
+  );
+  const [projectProposedImpEndDate, setProposedImpEndDate] = useState(
+    projectDetails?.piEndDate ? new Date(projectDetails.piEndDate) : null
+  );
+  const [projectActualImpStartDate, setActualImpStartDate] = useState(
+    projectDetails?.acStartDate ? new Date(projectDetails.acStartDate) : null
+  );
+  const [projectActualImpEndDate, setActualImpEndDate] = useState(
+    projectDetails?.acEndDate ? new Date(projectDetails.acEndDate) : null
+  );
+  const [projectImpDueDate, setImpDueDate] = useState(
+    projectDetails?.actualImplementationDueDate ? new Date(projectDetails.actualImplementationDueDate) : null
+  );
+  const [projectClarificationDiscussDetails, setClarificationDiscussDetails] = useState(
+    projectDetails?.cdDetails || ''
+  );
+  const [lessonsLearned, setLessonsLearned] = useState(projectDetails?.lessonsLearned || '');
+  const [selectedProjectLead, setSelectedProjectLead] = useState(
+    projectDetails?.projectLead?.id || -1
+  );
+
+ const [clientName, setClientName] = useState(projectDetails?.grantClient?.name || '');
+ const [clientCountry, setClientCountry] = useState<Country | null>(null);
+const [clientCurrentCountry, setClientCurrentCountry] = useState(projectDetails?.grantClient?.country || '');
+const [clientContactPersonName, setContactPersonName] = useState(projectDetails?.grantClient?.externalContactPerson?.name || '');
+const [clientContactEmail, setClientContactEmail] = useState(projectDetails?.grantClient?.externalContactPerson?.companyEmail || '');
+const [clientContactMobileNumber, setClientContactMobileNumber] = useState(projectDetails?.grantClient?.externalContactPerson?.mobile || '');
+const [clientContactFixTelNumber, setClientContactFixTelNumber] = useState(projectDetails?.grantClient?.externalContactPerson?.fixTel || '');
+const [clientContactDesignation, setClientContactDesignation] = useState(projectDetails?.grantClient?.externalContactPerson?.designation || '');
+const [clientContactDescription, setClientContactDescription] = useState(projectDetails?.grantClient?.externalContactPerson?.description || '');
+
+const [intermediantClientName, setIntermidiantClientName] = useState(projectDetails?.intermediateClient?.name || '');
+const [intermediantClientCountry, setIntermidiantClientCountry]= useState<Country | null>(null);
+const [intermediantCurrentClientCountry, setIntermidiantCurrentClientCountry] = useState(projectDetails?.intermediateClient?.country || '');
+const [intermediantClientContactName, setIntermidiantClientContactName] = useState(projectDetails?.intermediateClient?.externalContactPerson?.name || '');
+const [intermediantClientContactEmail, setIntermidiantClientContactEmail] = useState(projectDetails?.intermediateClient?.externalContactPerson?.companyEmail || '');
+const [intermediantClientContactMobileNumber, setIntermidiantClientContactMobileNumber] = useState(projectDetails?.intermediateClient?.externalContactPerson?.mobile || '');
+const [intermediantClientContactFixTelNumber, setIntermidiantClientContactFixTelNumber] = useState(projectDetails?.intermediateClient?.externalContactPerson?.fixTel || '');
+const [intermediantClientContactDesignation, setIntermidiantClientContactDesignation] = useState(projectDetails?.intermediateClient?.externalContactPerson?.designation || '');
+const [intermediantClientContactDescription, setIntermidiantClientDescription] = useState(projectDetails?.intermediateClient?.externalContactPerson?.description || '');
+
+const [note, setNote] = useState('');
+const [costTotalEffort, setTotalEffort] = useState(projectDetails?.cost?.totalEffortMh || 0);
+const [costQuotedValue, setQuotedValue] = useState(projectDetails?.cost?.quotedValue || 0);
+const [costQuotingRate, setQuotingRate] = useState(projectDetails?.cost?.quotedRate || 0);
+const [costAmcValue, setAMCValue] = useState(projectDetails?.cost?.amcValue || 0);
+
+
+
+
+
+  useEffect(() => {
+    if (projectDetails) {
+      setProjectName(projectDetails.name || '');
+      setProjectInitiationDate(projectDetails.initiationDate ? new Date(projectDetails.initiationDate) : new Date());
+      setProjectPriority(projectDetails.priority?.id || -1);
+      
+      setProjectStatus(projectDetails.projectStatus?.id || -1);
+      setLatestProjectStatus(projectDetails.statusHistoryList[0]?.description || '');
+      setLatestProjectStatusDate(
+        projectDetails.statusHistoryList[0]?.date
+          ? new Date(projectDetails.statusHistoryList[0].date)
+          : new Date()
+      );
+      setProposalDueDate(projectDetails.proposalDueDate ? new Date(projectDetails.proposalDueDate) : null);
+      setProposalSubDate(projectDetails.proposalSubmittedDate ? new Date(projectDetails.proposalSubmittedDate) : null);
+      setProposedImpStartDate(projectDetails.piStartDate ? new Date(projectDetails.piStartDate) : null);
+      setProposedImpEndDate(projectDetails.piEndDate ? new Date(projectDetails.piEndDate) : null);
+      setActualImpStartDate(projectDetails.acStartDate ? new Date(projectDetails.acStartDate) : null);
+      setActualImpEndDate(projectDetails.acEndDate ? new Date(projectDetails.acEndDate) : null);
+      setImpDueDate(projectDetails.actualImplementationDueDate ? new Date(projectDetails.actualImplementationDueDate) : null);
+      setClarificationDiscussDetails(projectDetails.cdDetails || '');
+      setLessonsLearned(projectDetails.lessonsLearned || '');
+
+
+
+      setSelectedProjectLead(projectDetails.projectLead?.id || -1);
+      handleProjectLeadsAdd(projectDetails.projectLead?.id);
+      const effortEstimatorIds: number[] = projectDetails.effortEstimators.map((estimator: EffortEstimator) => estimator.id);
+
+      for (const estimator of projectDetails.effortEstimators) {
+        handleEffortEstimators(estimator.id);
+      }
+
+
+
+
+       // Intermediate Client Details
+       setIntermidiantClientName(projectDetails.intermediateClient?.name || '');
+       setClientCurrentCountry(projectDetails.intermediateClient?.country || '');
+       setIntermidiantClientContactName(projectDetails.intermediateClient?.externalContactPerson?.name || '');
+       setIntermidiantClientContactEmail(projectDetails.intermediateClient?.externalContactPerson?.companyEmail || '');
+       setIntermidiantClientContactMobileNumber(projectDetails.intermediateClient?.externalContactPerson?.mobile || '');
+       setIntermidiantClientContactFixTelNumber(projectDetails.intermediateClient?.externalContactPerson?.fixTel || '');
+       setIntermidiantClientContactDesignation(projectDetails.intermediateClient?.externalContactPerson?.designation || '');
+       setIntermidiantClientDescription(projectDetails.intermediateClient?.externalContactPerson?.description || '');
+       if(projectDetails.intermediateClient !== null){
+        setVisible(true)
+      }
+       // Grant Client Details
+       setClientName(projectDetails.grantClient?.name || '');
+       setClientCountry(projectDetails.grantClient?.country || '');
+       setContactPersonName(projectDetails.grantClient?.externalContactPerson?.name || '');
+       setClientContactEmail(projectDetails.grantClient?.externalContactPerson?.companyEmail || '');
+       setClientContactMobileNumber(projectDetails.grantClient?.externalContactPerson?.mobile || '');
+       setClientContactFixTelNumber(projectDetails.grantClient?.externalContactPerson?.fixTel || '');
+       setClientContactDesignation(projectDetails.grantClient?.externalContactPerson?.designation || '');
+       setClientContactDescription(projectDetails.grantClient?.externalContactPerson?.description || '');
+
+       setNote(projectDetails.todo?.notes || '');
+       setTotalEffort(projectDetails.cost?.totalEffortMh || 0);
+       setQuotedValue(projectDetails.cost?.quotedValue || 0);
+       setQuotingRate(projectDetails.cost?.quotedRate || 0);
+       setAMCValue(projectDetails.cost?.amcValue || 0);
+
+       
+       setTodos((prevTodos) => [
+        ...prevTodos,
+        ...(projectDetails.todo?.tasks ?? []).map((task:Task) => ({
+          title: task.taskTitle,
+          description: task.taskDescription,
+          date: task.date,
+        })),
+      ]);
+      
+      
+
+
+    }
+
+
+    
+  }, [projectDetails]);
+
+
+
+
  
   const handleProjectStatusSelect = (selectedStatus: any) => {
     setProjectStatus(selectedStatus.id);
   };
-
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
-
-  const handleOpenSnackbar = (severity: 'success' | 'error', message: string) => {
-    setSnackbarSeverity(severity);
-    setSnackbarMessage(message);
-    setSnackbarOpen(true);
-  };
+ 
 
 
  
@@ -309,50 +459,31 @@ const CreateProject = () => {
         actualImplementationDueDate : projectImpDueDate || null,
         lessonsLearned : lessonsLearned || null,
         clarificationDiscussionDetails: projectClarificationDiscussDetails ||  null,
-        
-        
-        
-        intermediateClient:
-        intermediantClientName || intermediantClientCountry ||
-        intermediantClientContactName || intermediantClientContactMobileNumber ||
-        intermediantClientContactFixTelNumber || intermediantClientContactEmail ||
-        intermediantClientContactDesignation || intermediantClientContactDescription
-          ? {
-              name: intermediantClientName || null,
-              country: intermediantClientCountry?.label || null,
-              externalContactPerson:
-                intermediantClientContactName || intermediantClientContactMobileNumber ||
-                intermediantClientContactFixTelNumber || intermediantClientContactEmail ||
-                intermediantClientContactDesignation || intermediantClientContactDescription
-                  ? {
-                      name: intermediantClientContactName || null,
-                      mobile: intermediantClientContactMobileNumber || null,
-                      fixTel: intermediantClientContactFixTelNumber || null,
-                      companyEmail: intermediantClientContactEmail || null,
-                      designation: intermediantClientContactDesignation || null,
-                      description: intermediantClientContactDescription || null,
-                    }
-                  : null,
-            }
-          : null,
-          grantClient: {
-            name: clientName,
-            country: clientCountry?.label || "Sri Lanka",
-            isForeign: false,
-            externalContactPerson:
-              clientContactPersonName || clientContactMobileNumber ||
-              clientContactFixTelNumber || clientContactEmai ||
-              clientContactDesignation || clientContactDescription
-                ? {
-                    name: clientContactPersonName || null,
-                    mobile: clientContactMobileNumber || null,
-                    fixTel: clientContactFixTelNumber || null,
-                    companyEmail: clientContactEmai || null,
-                    designation: clientContactDesignation || null,
-                    description: clientContactDescription || null,
-                  }
-                : null,
+        intermediateClient: {
+          name: intermediantClientName || '',
+          country: intermediantClientCountry?.label || '',
+          externalContactPerson: {
+            name: intermediantClientContactName || '',
+            mobile: intermediantClientContactMobileNumber || '',
+            fixTel: intermediantClientContactFixTelNumber || '',
+            companyEmail: intermediantClientContactEmail || '',
+            designation: intermediantClientContactDesignation || '',
+            description: intermediantClientContactDescription || '',
           },
+        },
+        grantClient: {
+          name: clientName || '', 
+          country: clientCountry?.label || '', 
+          isForeign: false,
+          externalContactPerson: {
+            name: clientContactPersonName || '',
+            mobile: clientContactMobileNumber || '',
+            fixTel: clientContactFixTelNumber || '',
+            companyEmail: clientContactEmail || '',
+            designation: clientContactDesignation || '',
+            description: clientContactDescription || '',
+          },
+        },
         cost: {
           totalEffortMh: costTotalEffort || 0,
           quotedValue: costQuotedValue || 0,
@@ -361,14 +492,12 @@ const CreateProject = () => {
         },
         
         todo: {
-          notes: note || "Pending ...",
-          tasks: (todos.length > 0
-            ? todos.map((t) => ({
-                taskTitle: t.title || null,
-                taskDescription: t.description || null,
-                date: t.date ? new Date(t.date) : null,
-              }))
-            : null) ?? null,
+          notes: note || '',
+          tasks: todos.map((t) => ({
+            taskTitle: t.title || '',
+            taskDescription: t.description || '',
+            date: t.date ? new Date(t.date) : null,
+          })),
         },
         rfpResources : null,
         outputsFromInova : null,
@@ -377,9 +506,11 @@ const CreateProject = () => {
       };
      
       
-      const resp = await axios.post(url, projectData);
-      console.log(projectData);
-      handleOpenSnackbar('success', 'Project saved successfully');
+    //   const resp = await axios.post(url, projectData);
+    //   console.log(projectData);
+
+
+    //todo
 
 
 
@@ -393,7 +524,6 @@ const CreateProject = () => {
     }catch (error:any ) {
 
       console.log(error.response);
-      handleOpenSnackbar('error', 'Error saving project');
     }
 
   };
@@ -405,11 +535,11 @@ const CreateProject = () => {
     <div className="mt-8">
       <div>
         <div className="text text-3xl font-semibold text-zinc-600">
-          New Project
+          Update Project
         </div>
         <div className="mb-12 text-zinc-600">
           <Link to="/projects">Projects</Link> /{" "}
-          <Link to="/projects/create-new">Create Project</Link>
+          <Link to="#">Update Project</Link>
         </div>
         <form onSubmit={handleSubmit} >
           <h2 className="font-semibold text-lg mb-4 ">Project Details</h2>
@@ -463,11 +593,12 @@ const CreateProject = () => {
                 </label>
                 <div className="mt-2">
                   <DropDown
-                   
-                   data={projectPriorityData}
-                    dropdownFor="priority"
-                    onSelect={handleProjectPrioritySelect}
-                  />
+  data={projectPriorityData}
+  dropdownFor="priority"
+  onSelect={handleProjectPrioritySelect}
+  defaultSelectedId={projectDetails?.priority?.id } 
+  
+/>
                 </div>
               </div>
               <div className="sm:col-span-3 px-6">
@@ -482,60 +613,56 @@ const CreateProject = () => {
                     data={projectStatusData}
                     dropdownFor="status"
                     onSelect={handleProjectStatusSelect}
+                    defaultSelectedId={projectDetails?.projectStatus?.id } 
+                  />
+                </div>
+              </div>
+              <div className="sm:col-span-6">
+                <h2 className="font-semibold text-lg mt-8 mb-2 ">
+                  Latest Project Activities
+                </h2>
+              </div>
+
+              <div className="sm:col-span-3 px-6">
+                <label
+                  htmlFor=""
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Latest Project Status
+                </label>
+                <div className="mt-2">
+                  <input
+                   name="latestStatus"
+                   id="latestStatus"
+                    type="text"
+                    className="appearance-none w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
+                    onChange={(e) => setLatestProjectStatus(e.target.value)}
+                    value={latestProjectStatus}
                     
                   />
                 </div>
               </div>
-
-
-<div className="sm:col-span-6 mt-12">
-      {/* Button to open the AddLastActivityModal */}
-      <div className=" flex justify-center">
-      <button
-        type="button"
-        onClick={() => setShowLastActivityForm(true)}
-        className="bg-sky-400 mb-6 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer"
-      >
-        Add Last Activity
-      </button>
-      </div>
-
-      {/* Render AddLastActivityModal component */}
-      <AddLastActivityModal
-        isOpen={showLastActivityForm}
-        onClose={() => setShowLastActivityForm(false)}
-        onAddLastActivity={handleAddLastActivity}
-      />
-
-      {lastActivities.length > 0 && (
-       <table className="table-auto border-collapse border text-center  mt-2 w-full">
-       <thead>
-         <tr>
-           <th className="w-1/4 px-4 py-2">Latest Project Status</th>
-           <th className="w-1/4 px-4 py-2">Date</th>
-           <th className="w-1/4 px-4 py-2">Remove</th>
-         </tr>
-       </thead>
-       <tbody>
-         {lastActivities.map((activity, index) => (
-           <tr key={index} className="border">
-             <td className="w-1/4 px-4 py-2">{activity.status}</td>
-             <td className="w-1/4 px-4 py-2">{activity.date}</td>
-             <td className="w-1/4 px-4 py-2">
-          <button
-            onClick={() => handleRemoveActivity(index)}
-            className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
-          >
-            Remove
-          </button>
-        </td>
-           </tr>
-         ))}
-       </tbody>
-     </table>
-     
-      )}
-    </div>
+              <div className="sm:col-span-3 px-6">
+                <label
+                  htmlFor=""
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Status Date
+                </label>
+                <div className="mt-2">
+                 
+                  <input
+                   name="latestStatusDate"
+                   id="latestStatusDate"
+                    type="date"
+                    className="appearance-none w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
+                    onChange={(e) => setLatestProjectStatusDate(new Date(e.target.value))}
+                    value={latestProjectStatusDate.toISOString().split('T')[0]}
+                    // onChange={(e) => setLatestProjectStatusDate(new Date(e.target.value))}
+                    // value={latestProjectStatusDate ? formatDate(latestProjectStatusDate) : ''}
+                  />
+                </div>
+              </div>
               <div className="sm:col-span-6">
                 <h2 className="font-semibold text-lg mt-8 mb-2 ">
                   Special Dates
@@ -709,18 +836,20 @@ const CreateProject = () => {
                 </div>
               </div>
               <div className="sm:col-span-3 px-6">
+              <p className="-mt-6">Current Selected Country : {clientCurrentCountry} </p>
                 <label
                   htmlFor=""
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  Client Country
+                  Update Country With 
                 </label>
+               
                 <div className="mt-2">
                 <Select
       options={options}
       value={clientCountry}
       onChange={changeClientCountryHandler}
-      required
+  
     />
                 </div>
               </div>
@@ -756,7 +885,7 @@ const CreateProject = () => {
                     id="grantClientContactEmail"
                     className="appearance-none w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
                     onChange={(e) => setClientContactEmail(e.target.value)}
-                    value={clientContactEmai}
+                    value={clientContactEmail}
                   />
                 </div>
               </div>
@@ -876,11 +1005,13 @@ const CreateProject = () => {
                     </div>
                   </div>
                   <div className="sm:col-span-3 px-6">
+                  <p className="-mt-6">Current Selected Country : {intermediantCurrentClientCountry ?? "No country Selected"}
+ </p>
                     <label
                       htmlFor=""
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      Intermediary Client Country
+                      Update Ciuntry With
                     </label>
                     <div className="mt-2">
                     <Select
@@ -1186,8 +1317,7 @@ const CreateProject = () => {
               </div>
             </div>
 
-            <div>
-      <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6 mb-8">
+            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6 mb-8">
         <h2 className="font-semibold text-lg sm:col-span-3 px-6">To Do</h2>
         <div className="flex sm:col-span-3 justify-end">
           <button
@@ -1227,19 +1357,32 @@ const CreateProject = () => {
           </tbody>
         </table>
       )}
-    </div>
           </div>
 
-          <label>Notes: </label>
+          <label>Notes </label>
           <textarea
           name="todoNotes"
           id="todoNotes"
             rows={5}
-            className="appearance-none w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
+            className="appearance-none my-6 w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
             defaultValue={""}
             onChange={(e) => setNote(e.target.value)}
             value={note}
           />
+
+
+
+<h2 className="font-semibold text-lg mt-8">Lesson Learned </h2>
+          <textarea
+          name="lessonsLearned"
+          id="lessonsLearned"
+            rows={5}
+            className="appearance-none mt-6 w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
+            defaultValue={""}
+            onChange={(e) => setNote(e.target.value)}
+            value={lessonsLearned}
+          />
+
           {/*  */}
 
           <Dialog
@@ -1260,11 +1403,7 @@ const CreateProject = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}  >
-        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+
           <button
             type="submit"
             className="bg-sky-400 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer mt-12"
@@ -1277,4 +1416,4 @@ const CreateProject = () => {
   );
 };
 
-export default CreateProject;
+export default UpdateProjectForm;

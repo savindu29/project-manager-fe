@@ -16,6 +16,8 @@ const ProjectDetail = ({ projectId }: any) => {
   const [projectDetails, setProjectDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true); // Add loading state
 
+  
+
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -29,6 +31,8 @@ const ProjectDetail = ({ projectId }: any) => {
     };
     fetchProjects();
   }, [projectId]);
+
+  
 
   const [statusHistory, setStatusHistory] = useState(false);
   const handleStatusHistory = () => {
@@ -143,28 +147,123 @@ const ProjectDetail = ({ projectId }: any) => {
               </div>
 
               {/* client and responsible person contact cards */}
+              <div className="mt-16 mb-2  ">
+                <p className="font-medium	 text-xl underline">Employees who connect with the project</p></div>
               <div className="w-full   flex py-8">
                 <div className="flex w-full ">
                   <div>
-                    <h1 className="text-center mb-4 font-medium">
-                      Assigned Person
+                    <h1 className="mb-4 font-medium	">
+                      Project Lead At Home 
                     </h1>
                     <ContactCard personDetails={projectDetails.projectLead} />
                   </div>
                 </div>
-                <div className="flex w-full ">
-                  <div>
-                    <h1 className="text-center mb-4 font-medium">Client</h1>
-                    <ContactCard
-                      personDetails={
-                        projectDetails.grantClient.externalContactPerson
-                      }
-                    />
+               
+              </div>
+             
+              <div>
+                
+                <div className=" pb-16">
+                  <h1 className=" mb-4 font-medium  mb-6">
+                    Effort Estimators:
+                  </h1>
+                  <div className="w-full   flex ">
+                    {/* Assuming you are using React */}
+<table className="w-full">
+  <tbody>
+    {projectDetails.effortEstimators.map((person: any, index: number) => (
+      // Display two ContactCard components per row
+      index % 2 === 0 && (
+        <tr key={index} className="flex mt-4">
+          <td className="w-1/2">
+            <ContactCard personDetails={person} />
+          </td>
+          {/* Check if the next item exists before rendering */}
+          {projectDetails.effortEstimators[index + 1] && (
+            <td className="w-1/2">
+              <ContactCard personDetails={projectDetails.effortEstimators[index + 1]} />
+            </td>
+          )}
+        </tr>
+      )
+    ))}
+  </tbody>
+</table>
+
                   </div>
                 </div>
               </div>
+
+
+
+
+
+              <div>
+              <p className="font-medium	 text-xl underline">Clients</p>
+              <div className="flex  items-center  bg-white w-full">
+      {/* Grant Importer */}
+      
+      <div className=" text-sm my-4   rounded-md border mr-4 px-6 py-4 w-1/2 bg-gray-100">
+    <h2 className="text-2xl font-bold mb-4">Client Details</h2>
+    
+    <div className="mb-4">
+        <h3 className="font-bold mb-2">Organization Details</h3>
+        <p className="text-gray-700 mb-1">Name: {projectDetails.grantClient.name}</p>
+        <p className="text-gray-700 mb-1">Country: {projectDetails.grantClient.country}</p>
+    </div>
+
+    {projectDetails.grantClient.externalContactPerson && (
+  <div className="mb-4">
+    <h3 className="font-bold mb-1">Contact Person Details</h3>
+    <p className="text-gray-700 mb-1">Name: {projectDetails.grantClient.externalContactPerson.name}</p>
+    <p className="text-gray-700 mb-1">Mobile: {projectDetails.grantClient.externalContactPerson.mobile}</p>
+    <p className="text-gray-700 mb-1">Fixed Tel: {projectDetails.grantClient.externalContactPerson.fixedTel}</p>
+    <p className="text-gray-700 mb-1">Email: {projectDetails.grantClient.externalContactPerson.email}</p>
+    <p className="text-gray-700 mb-1">Designation: {projectDetails.grantClient.externalContactPerson.designation}</p>
+    <p className="text-gray-700 mb-1">Description: {projectDetails.grantClient.externalContactPerson.description}</p>
+  </div>
+    )}
+</div>
+
+
+
+      {/* Intermediate Importer */}
+
+      {projectDetails.intermediateClient && (
+      <div className=" text-sm my-4   rounded-md border mr-4 px-6 py-4 w-1/2 bg-white">
+      <h2 className="text-2xl font-bold mb-4">Intermediate Client Details</h2>
+    
+    <div className="mb-4">
+    <h3 className="font-bold mb-2">Organization Details</h3>
+        <p className="text-gray-700 mb-1">Name: {projectDetails.intermediateClient.name}</p>
+        <p className="text-gray-700 mb-1">Country: {projectDetails.intermediateClient.country}</p>
+    </div>
+
+    {projectDetails.intermediateClient.externalContactPerson && (
+  <div className="mb-4">
+   <h3 className="font-bold mb-1">Contact Person Details</h3>
+    <p className="text-gray-700 mb-1">Name: {projectDetails.intermediateClient.externalContactPerson.name}</p>
+    <p className="text-gray-700 mb-1">Mobile: {projectDetails.intermediateClient.externalContactPerson.mobile}</p>
+    <p className="text-gray-700 mb-1">Fixed Tel: {projectDetails.intermediateClient.externalContactPerson.fixedTel}</p>
+    <p className="text-gray-700 mb-1">Email: {projectDetails.intermediateClient.externalContactPerson.email}</p>
+    <p className="text-gray-700 mb-1">Designation: {projectDetails.intermediateClient.externalContactPerson.designation}</p>
+    <p className="text-gray-700 mb-1">Description: {projectDetails.intermediateClient.externalContactPerson.description}</p>
+  </div>
+    )}
+</div>
+      )}
+
+
+    
+
+    </div>
+              </div>
+
+              {/* Special Dates */}
+              <p className="font-medium	 text-xl underline mt-12">Special Days</p>
               <div className=" w-full  px-8 py-6">
-                <div className="flex w-full">
+
+              <div className="flex w-full">
                   <div className="w-full">
                     <p>Proposal Due Date: </p>
                     <p className=" text-sky-500">
@@ -178,57 +277,8 @@ const ProjectDetail = ({ projectId }: any) => {
                     </p>
                   </div>
                 </div>
+                {/* <div className="my-6"><hr /></div> */}
                 <div className="flex w-full mt-12">
-                  <div className="w-full">
-                    <p>Total Effort (MD/MH): </p>
-                    <p className=" text-sky-500">
-                      {projectDetails.cost.totalEffortMh || emptyData}{" "}
-                    </p>
-                  </div>
-                  <div className="w-full">
-                    <p>Quoted Value: </p>
-                    <p className=" text-sky-500">
-                      {projectDetails.cost.quotedValue || emptyData}{" "}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex w-full mt-12">
-                  <div className="w-full">
-                    <p>Quoted Rate:</p>
-                    <p className=" text-sky-500">
-                      {projectDetails.cost.quotedRate || emptyData}{" "}
-                    </p>
-                  </div>
-                  <div className="w-full">
-                    <p>AMC Value:</p>
-                    <p className=" text-sky-500">
-                      {projectDetails.cost.amcValue || emptyData}{" "}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div>
-                {/* client and responsible person contact cards */}
-                <div className="py-16">
-                  <h1 className=" mb-4 font-medium  mb-6">
-                    Effort Estimators:
-                  </h1>
-                  <div className="w-full   flex ">
-                    <div className="w-full flex ">
-                      {projectDetails.effortEstimators.map((person: any) => (
-                        <div className="w-full flex  ">
-                          <ContactCard key={person.id} personDetails={person} />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Special Dates */}
-
-              <div className=" w-full  px-8 py-6">
-                <div className="flex w-full">
                   <div className="w-full">
                     <p>Proposed Implementation Start Date: </p>
                     <p className=" text-sky-500">
@@ -268,6 +318,41 @@ const ProjectDetail = ({ projectId }: any) => {
                   </div>
                 </div>
               </div>
+
+
+              <div className=" w-full  px-8 py-6">
+                
+                <p className="font-medium	 text-xl underline mt-12">Cost</p>
+                <div className="flex w-full mt-12">
+                  <div className="w-full">
+                    <p>Total Effort (MD/MH): </p>
+                    <p className=" text-sky-500">
+                      {projectDetails.cost.totalEffortMh || emptyData}{" "}
+                    </p>
+                  </div>
+                  <div className="w-full">
+                    <p>Quoted Value: </p>
+                    <p className=" text-sky-500">
+                      {projectDetails.cost.quotedValue || emptyData}{" "}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex w-full mt-12">
+                  <div className="w-full">
+                    <p>Quoted Rate:</p>
+                    <p className=" text-sky-500">
+                      {projectDetails.cost.quotedRate || emptyData}{" "}
+                    </p>
+                  </div>
+                  <div className="w-full">
+                    <p>AMC Value:</p>
+                    <p className=" text-sky-500">
+                      {projectDetails.cost.amcValue || emptyData}{" "}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               <div>
       <ControlledAccordions
         title="ToDO"

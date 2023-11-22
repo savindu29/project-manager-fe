@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { DialogDefault } from './popupLogin';
+import { useAuth } from './useAuth'; 
 
 const LoginPage: React.FC = () => {
+<<<<<<< HEAD
   const [loggedIn, setLoggedIn] = useState(false);
+=======
+  const { login } = useAuth(); 
+>>>>>>> 97921c0df3474175926f11e87ddba095154d68f5
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showErrorDialog, setShowErrorDialog] = useState(false); // Added state for error dialog
@@ -36,8 +41,18 @@ const LoginPage: React.FC = () => {
         // Log the result to the console
         console.warn('Token:', result.token);
 
+<<<<<<< HEAD
         // Store the token in local storage
         localStorage.setItem('loginToken', result.token);
+=======
+      login(result.token);
+
+      window.location.href = '/dashboard';
+    } else {
+      // If the response status is not ok, log the error response
+      const errorResponse = await response.json();
+      console.error('Login failed:', errorResponse);
+>>>>>>> 97921c0df3474175926f11e87ddba095154d68f5
 
         // Set loggedIn to true for successful login
         setLoggedIn(true);
@@ -131,6 +146,23 @@ const LoginPage: React.FC = () => {
        
             </div>
         </div>
+<<<<<<< HEAD
+=======
+        <div className="flex-1 bg-indigo-100 text-center hidden lg:flex">
+          <div className="m-12 xl:m-16 w-full"
+            style={{ 
+              backgroundImage: `url('https://www.chicagoinstituteofbusiness.com/blog/project%20management.jpg')`,
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: 'contain',
+            }}
+          ></div>
+        </div>
+      </div>
+      <DialogDefault open={showErrorDialog} onClose={() => setShowErrorDialog(false)}>
+        Please check your email and password 
+      </DialogDefault>
+>>>>>>> 97921c0df3474175926f11e87ddba095154d68f5
     </div>
   );
 };

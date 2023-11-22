@@ -1,6 +1,10 @@
-import axios from "axios/index";
 
-type User = {
+import { getEmployeesOptions } from ".";
+import axios, { AxiosResponse } from "axios";
+
+
+type Person = {
+    id:number,
     name: string,
     mobile: string,
     companyEmail: string,
@@ -10,7 +14,7 @@ type User = {
 };
 
 
-export const saveUser = async (user:User) => {
+export const saveUser = async (user:Person) => {
     try {
         const url = "http://localhost:8000/api/v1/responsible-person/create";
 
@@ -20,3 +24,31 @@ export const saveUser = async (user:User) => {
         throw err;
     }
 };
+type responseType ={
+    count:number;
+    data:Person[];
+  
+  }
+type ApiResponse<T> = {
+    data: T;
+};
+
+export const getAllEmployees = async (
+    params: getEmployeesOptions
+  ): Promise<ApiResponse<responseType>> => {
+    try {
+        let str = Object.entries(params)
+        .map(([key, val]) => `${key}=${val}`)
+        .join('&');
+      const url = `http://localhost:8000/api/v1/responsible-person/search?${str}`;
+
+     
+      const result = await axios.get(url);
+      
+      const data= result.data; 
+      
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  };

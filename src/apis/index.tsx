@@ -6,7 +6,15 @@ export type getProjectsOptions = {
     page: number | null;
     
 
-  };
+};
+
+export type getEmployeesOptions = {
+  searchtext:string | "";
+  size: number | null;
+  page: number | null;
+  
+
+};
 
   export type projectStatus = {
     searchtext:string | "";
@@ -79,7 +87,7 @@ export type getProjectsOptions = {
   }
 
   export type  IntermediateClient ={
-    name  : string;
+    name  : string | null;
     country : string | null;
     externalContactPerson : ExternalContactPerson | null;
 
@@ -107,11 +115,12 @@ export type getProjectsOptions = {
     actualImplementationEndDate: Date | null;
     actualImplementationDueDate: Date | null;
     lessonsLearned: string | null;
-    effortEstimators: number[] | null; 
     clarificationDiscussionDetails: string | null;
+    effortEstimators: number[] | null;
     projectLead :number;
-    iintermediateClient : IntermediateClient | null;
-    grantClient : GrantClient | null;
+    intermediateClient : IntermediateClient | null;
+    grantClient : GrantClient ;
+    cost : Cost | null
     todo :Todo | null;
     rfpResources : RfpResources[] | null ;
     outputsFromInova : OutputsFromInova[] | null;

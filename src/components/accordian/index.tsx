@@ -13,7 +13,7 @@ export default function ControlledAccordions({ title, description, body, expande
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1bh-content"
           id="panel1bh-header"
-          sx={{ backgroundColor: 'rgb(226 232 240)' }} 
+          sx={{ backgroundColor: 'rgb(243 244 246)' }} 
         >
           <Typography sx={{ width: '33%', flexShrink: 0 }}>
             {title}
@@ -21,7 +21,7 @@ export default function ControlledAccordions({ title, description, body, expande
           <Typography sx={{ color: 'text.secondary' }}>{description}</Typography>
         </AccordionSummary>
         <AccordionDetails
-        sx={{ backgroundColor: 'rgb(241 245 249)' }} 
+        sx={{ backgroundColor: 'rgb(249 250 251)' }} 
         >
           <Typography>{body}</Typography>
         </AccordionDetails>

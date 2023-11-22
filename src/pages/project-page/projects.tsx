@@ -22,7 +22,7 @@ type Project = {
 
 const Projects: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
-
+  const [searchText, setSearchText] = useState('');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null); // Specify the initial state as null
   const [projectId, setProjectId] = useState<number>(0); // Specify the initial state as null
   const [page, setPage] = useState(1); // Initialize the active page
@@ -33,7 +33,7 @@ const Projects: React.FC = () => {
     const fetchProjects = async () => {
       try {
         const params: getProjectsOptions = {
-          searchtext: "",
+          searchtext: searchText,
           page,
           size: pageSize,
         };
@@ -48,11 +48,18 @@ const Projects: React.FC = () => {
     };
 
     fetchProjects();
-  }, [page]); // Listen to page changes
+  }, [searchText, page, pageSize]); // Listen to page changes
 
   const handleCardClick = (project: Project) => {
     setSelectedProject(project);
     setProjectId(project.id);
+  };
+  const handleSearchChange = (event:any) => {
+    setSearchText(event.target.value);
+  };
+  const handleFormSubmit = (event:any) => {
+    event.preventDefault();
+    // You can perform additional actions on form submission if needed
   };
 
   const handlePageChange = (
@@ -68,7 +75,7 @@ const Projects: React.FC = () => {
         <div className="w-96 h-screen ">
           <div>
             <div className="pl-5 pr-10 py-6   flex items-center justify-center">
-              <form className="flex items-center w-full">
+              <form className="flex items-center w-full" onSubmit={handleFormSubmit}>
                 <label htmlFor="simple-search" className="sr-only">
                   Search
                 </label>
@@ -101,6 +108,8 @@ const Projects: React.FC = () => {
                     id="simple-search"
                     className="bg-white border  text-gray-900 text-sm rounded-lg   block w-full pl-10 py-2.5 placeholder-gray-400 focus:outline-none  focus:border-blue-300"
                     placeholder="Search Project ..."
+                    value={searchText}
+                    onChange={handleSearchChange}
                     required
                   />
                 </div>
@@ -165,7 +174,7 @@ const Projects: React.FC = () => {
                 </div>
               </Link>
             )}
-            <Link to="/projects/create-new">
+            <Link to="/projects/new">
               <div className="bg-sky-400 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer">
                 Add New Project
               </div>
