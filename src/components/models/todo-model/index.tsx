@@ -4,6 +4,7 @@ interface TodoType {
   title: string;
   description: string;
   date: string;
+  isDone :boolean;
 }
 
 interface AddTodoModalProps {
@@ -16,12 +17,13 @@ const AddTodoModal: React.FC<AddTodoModalProps> = ({ isOpen, onClose, onAddTodo 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
+  const isDone = false;
 
   const handleAddTodo = () => {
     // Validate inputs if necessary
     if (title && description && date) {
       // Create a new todo object
-      const newTodo: TodoType = { title, description, date };
+      const newTodo: TodoType = { title, description, date,isDone };
 
       // Call the parent component's onAddTodo function
       onAddTodo(newTodo);

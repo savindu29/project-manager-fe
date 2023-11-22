@@ -1,5 +1,4 @@
-
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { RegisterSuccessDialog } from './popupregister';
 import { RegisterFailedDialog } from './popupFailedRegister';
 
@@ -8,11 +7,9 @@ const SignupPage: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
   const [show_Dialog, setShowDialog] = useState(false);
   const [show_Dialog1, setShowDialog1] = useState(false);
   const [error, setError] = useState('');
-
 
   const validateInputs = () => {
   if (!name || !email || !password) {
@@ -21,41 +18,40 @@ const SignupPage: React.FC = () => {
     return false;
   }
 
+        if (!/\S+@\S+\.\S+/.test(email)) {
+            setError('Please enter a valid email address');
+            setShowDialog1(true);
+            return false;
+        }
 
-  if (!/\S+@\S+\.\S+/.test(email)) {
-    setError('Please enter a valid email address');
-    setShowDialog1(true);
-    return false;
-  }
+        setError('');
+        return true;
+    };
 
-  setError('');
-  return true;
-};
+    const handleSignup = async () => {
+        try {
+            if (!validateInputs()) {
+                setShowDialog1(true);
+                return; // Don't proceed with the signup if validation fails
+            }
 
-const handleSignup = async () => {
-  try {
-    if (!validateInputs()) {
-      setShowDialog1(true);
-      return; // Don't proceed with the signup if validation fails
-    }
+            const response = await fetch('http://localhost:8000/api/v1/auth/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    displayName: name,
+                    email: email,
+                    password: password,
+                }),
+            });
 
-    const response = await fetch('http://localhost:8000/api/v1/auth/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        displayName: name,
-        email: email,
-        password: password,
-      }),
-    });
-
-    if (response.ok) {
-      // Signup successful, show the popup
-      setShowDialog(true);
-      // You can redirect the user to the login page after showing the popup
-      // window.location.href = '/login';
+            if (response.ok) {
+                // Signup successful, show the popup
+                setShowDialog(true);
+                // You can redirect the user to the login page after showing the popup
+                // window.location.href = '/login';
 
       // Continue with your sign-up logic for successful response
       setRegistered(true);
@@ -64,16 +60,7 @@ const handleSignup = async () => {
       const errorResponse = await response.json();
       console.error('Sign up failed:', errorResponse);
       // You can handle the error in some way or display a different popup
-
-      if (!response.ok) {
-        // If the response status is not ok, log the error response
-        const errorResponse = await response.json();
-        console.error('Sign up failed:', errorResponse);
-      }
-
-      // Continue with your sign-up logic for successful response
-      setRegistered(true);
-    } 
+    }
   } catch (error) {
     // Handle network errors or other exceptions
     console.error('Error during sign up:', error);
@@ -94,10 +81,12 @@ const handleSignup = async () => {
       <div className="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1">
         <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
           <div className="mt-1 flex flex-col items-center">
-          <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcGnVuY8VrtkzrFMILfX1nVkTqSSo_iFbhE9hRmrQS4oazGYHalTK9jPp0n3Lw0TKJWvw&usqp=CAU"
-            className="w-48 mx-auto"
-            style={{ margin: '-50px 0' }} />
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcGnVuY8VrtkzrFMILfX1nVkTqSSo_iFbhE9hRmrQS4oazGYHalTK9jPp0n3Lw0TKJWvw&usqp=CAU"
+              className="w-48 mx-auto"
+              style={{ margin: '-50px 0' }}
+              alt="Logo"
+            />
             <h1 className="text-xl xl:text-2xl font-extrabold text-center">
              <br></br> Sign up to Project Management System
             </h1>
@@ -124,7 +113,6 @@ const handleSignup = async () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-
     <button
   className="mt-5 tracking-wide font-semibold bg-sky-600 text-gray-100 w-full py-4 rounded-lg hover-bg-sky-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
   onClick={handleSignup}
@@ -137,49 +125,37 @@ const handleSignup = async () => {
 </button>
 
 
-                {/* <button
-            className="mt-5 tracking-wide font-semibold bg-sky-600 text-gray-100 w-full py-4 rounded-lg hover-bg-sky-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
-            onClick={handleSignup}
-            >
-            <svg className="w-6 h-6 -ml-2" fill="none" stroke="currentColor" strokeWidth="2"
-                strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-            </svg>
-            <span className="ml-3">Sign Up</span>
-            </button> */}
-
-
-              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="flex-1 bg-indigo-100 text-center hidden lg:flex">
+                    <div
+                        className="m-12 xl:m-16 w-full"
+                        style={{
+                            backgroundImage: `url('https://www.chicagoinstituteofbusiness.com/blog/project%20management.jpg')`,
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                            backgroundSize: 'contain',
+                        }}
+                    ></div>
+                </div>
             </div>
-          </div>
+            {/* Add the RegisterSuccessDialog component */}
+            {show_Dialog && (
+                <RegisterSuccessDialog
+                    open={show_Dialog}
+                    onClose={() => setShowDialog(false)}
+                />
+            )}
+            {show_Dialog1 && (
+                <RegisterFailedDialog
+                    open={show_Dialog1}
+                    onClose={() => setShowDialog1(false)}
+                />
+            )}
         </div>
-        <div className="flex-1 bg-indigo-100 text-center hidden lg:flex">
-          <div
-            className="m-12 xl:m-16 w-full"
-            style={{
-              backgroundImage: `url('https://www.chicagoinstituteofbusiness.com/blog/project%20management.jpg')`,
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-              backgroundSize: 'contain',
-            }}
-          ></div>
-        </div>
-      </div>
-       {/* Add the RegisterSuccessDialog component */}
-       {show_Dialog && (
-        <RegisterSuccessDialog
-          open={show_Dialog}
-          onClose={() => setShowDialog(false)}
-        />
-      )}
-      {show_Dialog1 && (
-        <RegisterFailedDialog
-          open={show_Dialog1}
-          onClose={() => setShowDialog1(false)}
-        />
-      )}
-    </div>
-  );
+    );
 };
 
 export default SignupPage;

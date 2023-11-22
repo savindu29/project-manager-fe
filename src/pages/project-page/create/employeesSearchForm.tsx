@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, FC} from 'react';
 import axios from 'axios';
 import { HiPlus } from 'react-icons/hi';
 
@@ -23,9 +23,10 @@ interface SearchResponse {
 
 interface SearchFormProps {
   onAddClick: (selectedResultId: number) => void;
+  disabled: boolean;
 }
 
-function SearchForm({ onAddClick }: SearchFormProps) {
+function SearchForm({ onAddClick, disabled }: SearchFormProps) {
   const [searchText, setSearchText] = useState<string>('');
   const [isFocus, setFocus] = useState(true);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
@@ -85,12 +86,16 @@ function SearchForm({ onAddClick }: SearchFormProps) {
           placeholder="Search Employee ..."
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
+          disabled={disabled}
           required
         />
       </div>
       <button
+
         className="p-2.5 ml-2 text-sm font-medium text-white bg-blue-500 rounded-lg border hover:bg-blue-600 focus:outline-none"
+        disabled={true}
       >
+
         <svg
           className="w-4 h-4"
           aria-hidden="true"

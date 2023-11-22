@@ -11,6 +11,8 @@ import UpdatePeoplePage from './pages/people/update';
 import AddProject from './pages/project-page/create/index';
 import UpdateProject from './pages/project-page/update';
 import { useAuth } from './pages/Login/useAuth';
+import SignupPage from "./pages/Login/Register";
+
 
 
 const App = () => {
@@ -20,11 +22,14 @@ const App = () => {
   return (
 
     <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<SignupPage />} />
+
       <Route
         path="/employees"
         element={isAuthenticated ? <UpdatePeoplePage /> : <Navigate to="/login" />}
       />
-      <Route path="/login" element={<LoginPage />} />
+
       <Route
         path="/projects"
         element={isAuthenticated ? <Projects /> : <Navigate to="/login" />}

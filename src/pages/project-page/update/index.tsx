@@ -5,16 +5,17 @@ import UpdateProjectForm from './update-form';
 import { getProject } from '../../../apis/project-api';
 
 const UpdateProject = () => {
-  const { projectId } = useParams();
+  const { id } = useParams();
   const [projectDetails, setProjectDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        // Check if projectId is defined before making the API call
-        if (projectId) {
-          const response = await getProject(parseInt(projectId));
+        console.log("out : ",id)
+        if (id) {
+          console.log("in : ",id)
+          const response = await getProject(parseInt(id));
           setProjectDetails(response.data);
           console.log(response.data)
           setLoading(false);
@@ -25,22 +26,23 @@ const UpdateProject = () => {
       }
     };
     fetchProjects();
-  }, [projectId]);
+  }, [id]);
 
   return (
     <div>
-      <div className='flex'>
+      <div className='flex '>
         <MiniDrawer />
-        <div className='px-12 py-2 w-full '>
-          <div className='justify-end fixed z-10 shadow right-8'>
+        <div className=' py-2 w-full  '>
+          <div className=' justify-end fixed z-10 bg-zinc-100  right-8'>
             <Link to="/projects">
-              <div className="bg-sky-400 text-semibold  text-white px-4 py-2 rounded hover:cursor-pointer">
+              <div className="bg-sky-400 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer">
                 Go Back
               </div>
             </Link>
           </div>
           <UpdateProjectForm projectDetails ={projectDetails}/>
         </div>
+
       </div>
     </div>
   );
