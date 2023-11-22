@@ -51,9 +51,18 @@ export type OutputsFromInova = {
     description: string | null;
 }
 export type  Task = {
+
     taskTitle: string | null;
     taskDescription: string | null;
     date: Date | null;
+    done:boolean | false;
+}
+export type  UpdateTask = {
+    id:number;
+    taskTitle: string | null;
+    taskDescription: string | null;
+    date: Date | null;
+    done:boolean | false;
 }
 
 export type  Todo = {
@@ -92,7 +101,10 @@ export type  GrantClient = {
     externalContactPerson: ExternalContactPerson | null;
 
 }
-
+export type Activity = {
+    date:Date | null;
+    description :string | null;
+}
 
 export type ProjectRequest = {
     name: string | null;
@@ -116,6 +128,7 @@ export type ProjectRequest = {
     todo: Todo | null;
     rfpResources: RfpResources[] | null;
     outputsFromInova: OutputsFromInova[] | null;
+    latestActivity: Activity[] | null;
 
 };
 

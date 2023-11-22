@@ -217,8 +217,8 @@ const ProjectDetail = ({ projectId }: any) => {
     <h3 className="font-bold mb-1">Contact Person Details</h3>
     <p className="text-gray-700 mb-1">Name: {projectDetails.grantClient.externalContactPerson.name}</p>
     <p className="text-gray-700 mb-1">Mobile: {projectDetails.grantClient.externalContactPerson.mobile}</p>
-    <p className="text-gray-700 mb-1">Fixed Tel: {projectDetails.grantClient.externalContactPerson.fixedTel}</p>
-    <p className="text-gray-700 mb-1">Email: {projectDetails.grantClient.externalContactPerson.email}</p>
+    <p className="text-gray-700 mb-1">Fixed Tel: {projectDetails.grantClient.externalContactPerson.fixTel}</p>
+    <p className="text-gray-700 mb-1">Email: {projectDetails.grantClient.externalContactPerson.companyEmail}</p>
     <p className="text-gray-700 mb-1">Designation: {projectDetails.grantClient.externalContactPerson.designation}</p>
     <p className="text-gray-700 mb-1">Description: {projectDetails.grantClient.externalContactPerson.description}</p>
   </div>
@@ -244,8 +244,8 @@ const ProjectDetail = ({ projectId }: any) => {
    <h3 className="font-bold mb-1">Contact Person Details</h3>
     <p className="text-gray-700 mb-1">Name: {projectDetails.intermediateClient.externalContactPerson.name}</p>
     <p className="text-gray-700 mb-1">Mobile: {projectDetails.intermediateClient.externalContactPerson.mobile}</p>
-    <p className="text-gray-700 mb-1">Fixed Tel: {projectDetails.intermediateClient.externalContactPerson.fixedTel}</p>
-    <p className="text-gray-700 mb-1">Email: {projectDetails.intermediateClient.externalContactPerson.email}</p>
+    <p className="text-gray-700 mb-1">Fixed Tel: {projectDetails.intermediateClient.externalContactPerson.fixTel}</p>
+    <p className="text-gray-700 mb-1">Email: {projectDetails.intermediateClient.externalContactPerson.companyEmail}</p>
     <p className="text-gray-700 mb-1">Designation: {projectDetails.intermediateClient.externalContactPerson.designation}</p>
     <p className="text-gray-700 mb-1">Description: {projectDetails.intermediateClient.externalContactPerson.description}</p>
   </div>

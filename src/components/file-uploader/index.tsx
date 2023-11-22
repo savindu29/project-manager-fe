@@ -3,9 +3,10 @@ import React, { useState, ChangeEvent } from 'react';
 interface MyFileInputProps {
     id: string;
     onSelectFiles: (id: string, files: File[]) => void;
+    isDisabled:boolean
 }
 
-const MyFileInput: React.FC<MyFileInputProps> = ({ id, onSelectFiles }) => {
+const MyFileInput: React.FC<MyFileInputProps> = ({ id, onSelectFiles }, isDisabled:boolean) => {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -55,9 +56,11 @@ const MyFileInput: React.FC<MyFileInputProps> = ({ id, onSelectFiles }) => {
                             >
                                 <span className="truncate mr-2">{`${file.name} - ${file.type}`}</span>
                                 <button
+
                                     type="button"
                                     className="text-red-500 hover:text-red-700"
                                     onClick={() => handleRemoveFile(index)}
+
                                 >
                                     Remove
                                 </button>

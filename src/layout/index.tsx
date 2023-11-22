@@ -190,19 +190,21 @@ export default function MiniDrawer() {
 
                 <Divider/>
                 <List
-                    sx={{backgroundColor: 'rgb(241 245 249)'}}
+                    className=" h-full"
+
                 >
 
                     <ListItem disablePadding sx={{display: "block", marginTop: 3}}>
 
 
                         {routes.map((route, index) => (
-                            <Link to={route.path} key={index} style={{textDecoration: 'none'}}>
+                            <Link to={route.path} key={index} style={{textDecoration: 'none',}}>
                                 <ListItemButton
                                     sx={{
                                         minHeight: 48,
                                         justifyContent: open ? 'initial' : 'center',
                                         px: 2.5,
+
                                     }}
                                 >
                                     <ListItemIcon
@@ -222,7 +224,7 @@ export default function MiniDrawer() {
 
                     </ListItem>
 
-
+<div className={"absolute bottom-0 py-2 bg-gray-200 w-full text-center"}>version : 1.0.0</div>
                 </List>
             </Drawer>
             <Box component="main"></Box>

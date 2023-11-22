@@ -353,20 +353,29 @@ const CreateProject = () => {
                             taskTitle: t.title || null,
                             taskDescription: t.description || null,
                             date: t.date ? new Date(t.date) : null,
+                            done:false
                         }))
                         : null) ?? null,
                 },
+
                 rfpResources: null,
                 outputsFromInova: null,
                 projectLead: selectedProjectLead,
-                effortEstimators: effortEstimatorIds
+                effortEstimators: effortEstimatorIds,
+                latestActivity : (lastActivities.length > 0
+                    ? lastActivities.map((a)=>({
+                            date:a.date ? new Date(a.date) :null,
+                            description :a.status
+                        }))
+                        : null  ) ?? null
             };
 
 
             const resp = await axios.post(url, projectData);
             console.log(projectData);
+            const id =resp.data.data.id;
             handleOpenSnackbar('success', 'Project saved successfully');
-
+            window.location.href = `/projects/update/${id}`;
 
         } catch (error: any) {
 
@@ -989,7 +998,7 @@ const CreateProject = () => {
                                     Project Lead's Name
                                 </label>
                                 <div className="mt-2">
-                                    <SearchForm onAddClick={handleProjectLeadsAdd}/>
+                                    <SearchForm onAddClick={handleProjectLeadsAdd} disabled={false}/>
                                 </div>
                             </div>
                             <div className="sm:col-span-3 px-6 mb-6">
@@ -1033,7 +1042,7 @@ const CreateProject = () => {
                                     Project Estimator's Name
                                 </label>
                                 <div className="mt-2">
-                                    <SearchForm onAddClick={handleEffortEstimators}/>
+                                    <SearchForm onAddClick={handleEffortEstimators} disabled={false}/>
                                 </div>
                             </div>
                             <div className="sm:col-span-3 px-6 mb-6">
@@ -1146,6 +1155,7 @@ const CreateProject = () => {
                                     <MyFileInput
                                         id="rfpFiles"
                                         onSelectFiles={handleSelectedFiles}
+                                        isDisabled={false}
                                     />
                                 </div>
                                 <div className="sm:col-span-6">
@@ -1156,6 +1166,7 @@ const CreateProject = () => {
                                         <MyFileInput
                                             id="outputFromInovaFiles"
                                             onSelectFiles={handleSelectedFiles}
+                                            isDisabled={false}
                                         />
                                     </div>
                                 </div>
@@ -1242,12 +1253,14 @@ const CreateProject = () => {
                             {snackbarMessage}
                         </Alert>
                     </Snackbar>
-                    <button
-                        type="submit"
-                        className="bg-sky-400 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer mt-12"
-                    >
-                        Save
-                    </button>
+                    <div className={"w-full flex mb-12"}>
+                        <button
+                            type="submit"
+                            className="bg-sky-400 w-full text-semibold  text-white px-4 py-2 rounded hover:cursor-pointer mt-12"
+                        >
+                            Save
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
