@@ -52,11 +52,11 @@ const LoginPage: React.FC = () => {
 
         login(result.token);
 
-        window.location.href = '/dashboard';
-      } else {
-        // If the response status is not ok, log the error response
-        const errorResponse = await response.json();
-        console.error('Login failed:', errorResponse);
+      window.location.href = '/dashboard';
+    } else {
+      // If the response status is not ok, log the error response
+      const errorResponse = await response.json();
+      console.error('Login failed:', errorResponse);
 
         // Show the popup indicating login failure
         setShowErrorDialog(true);

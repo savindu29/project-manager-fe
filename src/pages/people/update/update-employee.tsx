@@ -427,5 +427,231 @@ export default function EmployeeUpdateForm() {
                 />
             </div>
         </div>
+<<<<<<< HEAD
     );
+=======
+
+        <ul className="mt-5 px-4 space-y-2">
+          {persons.map((person) => (
+            <li
+              key={person.id}
+              onClick={() => setSelectedPerson(person)}
+              className={`cursor-pointer transition duration-300 ease-in-out transform hover:scale-105 ${
+                selectedPerson?.id === person.id
+                  ? "text-blue-500 font-semibold"
+                  : "text-gray-700"
+              } bg-white rounded-lg py-4 px-6 text-sm shadow-md hover:shadow-lg`}
+            >
+              {person.name} - <span className="text-xs">{person.designation}</span> 
+            </li>
+          ))}
+        </ul>
+        <div className="h-16 flex items-center justify-center absolute bottom-2 w-96">
+        <Pagination
+                  count={Math.ceil(dataCount / pageSize)}
+                  page={page}
+                  color="primary"
+                  onChange={handlePageChange}
+                />
+        </div>
+      </div>
+
+      <div className="w-2/3 p-4 flex flex-col gap-8">
+        <h2 className="text-base font-semibold leading-7 text-gray-900 text-lg">
+          Details
+        </h2>
+        {selectedPerson && (
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col w-full sm:w-1/2 px-4 mt-4">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  autoComplete="given-name"
+                  className="block w-full mt-3 rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset sm:text-sm sm:leading-6"
+                  value={selectedPerson ? selectedPerson.name : ""}
+                  onChange={(e) =>
+                    setSelectedPerson(
+                      selectedPerson
+                        ? { ...selectedPerson, name: e.target.value }
+                        : null
+                    )
+                  }
+                />
+              </div>
+
+              <div className="flex flex-col w-full sm:w-1/2 px-4 mt-4">
+                <label
+                  htmlFor="mobile"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Mobile Number
+                </label>
+                <input
+                  id="mobile"
+                  name="mobile"
+                  type="text"
+                  autoComplete="tel"
+                  className="block w-full rounded-md border-0 mt-3 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset sm:text-sm sm:leading-6"
+                  value={selectedPerson ? selectedPerson.mobile : ""}
+                  onChange={(e) =>
+                    setSelectedPerson(
+                      selectedPerson
+                        ? { ...selectedPerson, mobile: e.target.value }
+                        : null
+                    )
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col w-full px-4 mt-4">
+              <label
+                htmlFor="personalEmail"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Personal Email address
+              </label>
+              <input
+                id="personalEmail"
+                name="personalEmail"
+                type="email"
+                autoComplete="email"
+                className="block w-full rounded-md border-0 mt-3 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset sm:text-sm sm:leading-6"
+                value={selectedPerson ? selectedPerson.privateEmail : ""}
+                onChange={(e) =>
+                  setSelectedPerson(
+                    selectedPerson
+                      ? { ...selectedPerson, privateEmail: e.target.value }
+                      : null
+                  )
+                }
+              />
+            </div>
+
+            <div className="flex flex-col w-full px-4 mt-4">
+              <label
+                htmlFor="companyEmail"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Company Email Address
+              </label>
+              <input
+                type="text"
+                name="companyEmail"
+                id="companyEmail"
+                autoComplete="tel"
+                className="block w-full rounded-md border-0 mt-3 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset sm:text-sm sm:leading-6"
+                value={selectedPerson ? selectedPerson.companyEmail : ""}
+                onChange={(e) =>
+                  setSelectedPerson(
+                    selectedPerson
+                      ? { ...selectedPerson, companyEmail: e.target.value }
+                      : null
+                  )
+                }
+              />
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col w-full sm:w-1/2 px-4 mt-4">
+                <label
+                  htmlFor="designation"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Designation
+                </label>
+                <input
+                  type="text"
+                  name="designation"
+                  id="designation"
+                  autoComplete="designation"
+                  className="block w-full rounded-md border-0 mt-3 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset sm:text-sm sm:leading-6"
+                  value={selectedPerson ? selectedPerson.designation : ""}
+                  onChange={(e) =>
+                    setSelectedPerson(
+                      selectedPerson
+                        ? { ...selectedPerson, designation: e.target.value }
+                        : null
+                    )
+                  }
+                />
+              </div>
+
+              <div className="flex flex-col w-full sm:w-1/2 px-4 mt-4">
+                <label
+                  htmlFor="specializedField"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Specialized Areas
+                </label>
+                <input
+                  type="text"
+                  name="specializedField"
+                  id="specializedField"
+                  autoComplete="skills"
+                  className="block w-full rounded-md border-0 mt-3 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset sm:text-sm sm:leading-6"
+                  value={selectedPerson ? selectedPerson.specializedField : ""}
+                  onChange={(e) =>
+                    setSelectedPerson(
+                      selectedPerson
+                        ? {
+                            ...selectedPerson,
+                            specializedField: e.target.value,
+                          }
+                        : null
+                    )
+                  }
+                />
+              </div>
+            </div>
+            <div className="mt-4 flex items-center justify-end gap-x-6">
+          <button
+            onClick={handleUpdateDetails}
+            className="bg-sky-400 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer">
+            
+            Update
+          </button>
+        </div>
+          </div>
+          
+        )}
+        
+         {/* Update Confirmation Dialog */}
+      <Dialog
+        open={isConfirmationOpen}
+        onClose={() => setConfirmationOpen(false)}
+      >
+        <DialogTitle>Confirm Update</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to update this employee?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmationOpen(false)}>Cancel</Button>
+          <Button onClick={handleConfirmUpdate} variant="contained" color="primary">
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Snackbar for Notification */}
+      <Snackbar
+        open={isSnackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        message="Employee details updated successfully."
+      />
+      </div>
+    </div>
+  );
+>>>>>>> main
 }
