@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import { GoPencil } from "react-icons/go";
 import { IoSaveOutline } from "react-icons/io5";
 import SearchForm from "../create/employeesSearchForm";
-import {EmployeeSearchResult} from "../../../apis";
+import {APP_API_BASE_URL, EmployeeSearchResult} from "../../../apis";
 import axios from "axios";
 interface EffortEstimator {
     id: number;
@@ -42,7 +42,7 @@ const EffortEstimators = ({projectDetails}: { projectDetails: any }) => {
         if (!isAlreadySelected) {
             try {
                 // Fetch details for the selected employee
-                axios.get(`http://localhost:8000/api/v1/responsible-person/${selectedResultId}`)
+                axios.get(`${APP_API_BASE_URL}/api/v1/responsible-person/${selectedResultId}`)
                     .then((response) => {
                         if (response.data && response.data.code === 200 && response.data.data) {
                             const estimatorData = response.data.data;
