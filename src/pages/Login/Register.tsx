@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {RegisterSuccessDialog} from './popupregister';
 import {RegisterFailedDialog} from './popupFailedRegister';
-
+import {APP_API_BASE_URL} from '../../apis/index'
 const SignupPage: React.FC = () => {
     const [registered, setRegistered] = useState(false);
     const [name, setName] = useState('');
@@ -35,7 +35,7 @@ const SignupPage: React.FC = () => {
                 return; // Don't proceed with the signup if validation fails
             }
 
-            const response = await fetch('http://localhost:8000/api/v1/auth/signup', {
+            const response = await fetch(`${APP_API_BASE_URL}api/v1/auth/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

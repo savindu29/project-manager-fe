@@ -10,7 +10,7 @@ import {
     Pagination,
     Snackbar,
 } from "@mui/material";
-import {getEmployeesOptions} from "../../../apis";
+import {APP_API_BASE_URL, getEmployeesOptions} from "../../../apis";
 import {getAllEmployees} from "../../../apis/emplyee";
 import ProjectCard from "../../../components/project-card";
 
@@ -110,7 +110,7 @@ export default function EmployeeUpdateForm() {
             const {id, ...dataWithoutId} = selectedPerson as Person;
 
             const response = await axios.put(
-                `http://localhost:8000/api/v1/responsible-person/update/${selectedPerson?.id}`,
+                `${APP_API_BASE_URL}/api/v1/responsible-person/update/${selectedPerson?.id}`,
                 dataWithoutId
             );
 

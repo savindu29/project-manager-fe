@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {DialogDefault} from './popupLogin';
 import {useAuth} from './useAuth';
-
+import {APP_API_BASE_URL} from '../../apis/index'
 const LoginPage: React.FC = () => {
     const {login} = useAuth();
     const [username, setUsername] = useState('');

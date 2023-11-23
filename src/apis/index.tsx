@@ -1,3 +1,5 @@
+export const APP_API_BASE_URL = "http://localhost:8000";
+
 export type getProjectsOptions = {
     searchtext: string | "";
     size: number | null;

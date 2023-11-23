@@ -4,7 +4,7 @@ import DropDown from "../../../components/drop-down";
 import MyFileInput from "../../../components/file-uploader";
 import axios from "axios";
 import SearchForm from "./employeesSearchForm";
-import {EmployeeSearchResult, ProjectRequest} from "../../../apis";
+import {APP_API_BASE_URL, EmployeeSearchResult, ProjectRequest} from "../../../apis";
 import countryList from 'react-select-country-list';
 import Select from 'react-select';
 import {
@@ -105,14 +105,14 @@ const CreateProject = () => {
     useEffect(() => {
         // Fetch project status data
         axios
-            .get("http://localhost:8000/api/v1/project-status/list")
+            .get(`${APP_API_BASE_URL}/api/v1/project-status/list`)
             .then((response) => setProjectStatusData(response.data.data))
             .catch((error) =>
                 console.error("Error fetching project status data:", error)
             );
 
         axios
-            .get("http://localhost:8000/api/v1/priority/list")
+            .get(`${APP_API_BASE_URL}/api/v1/priority/list`)
             .then((response) => setProjectPriorityData(response.data.data))
             .catch((error) =>
                 console.error("Error fetching project proiority data:", error)
@@ -129,7 +129,7 @@ const CreateProject = () => {
         console.log('Selected Result ID in ParentComponent:', selectedResultId);
 
         try {
-            const response = await axios.get(`http://localhost:8000/api/v1/responsible-person/${selectedResultId}`);
+            const response = await axios.get(`${APP_API_BASE_URL}api/v1/responsible-person/${selectedResultId}`);
 
             if (response.data && response.data.code === 200 && response.data.data) {
                 const responsiblePersonData = response.data.data;
@@ -167,7 +167,7 @@ const CreateProject = () => {
         if (!isAlreadySelected) {
             try {
                 // Fetch details for the selected employee
-                axios.get(`http://localhost:8000/api/v1/responsible-person/${selectedResultId}`)
+                axios.get(`${APP_API_BASE_URL}/api/v1/responsible-person/${selectedResultId}`)
                     .then((response) => {
                         if (response.data && response.data.code === 200 && response.data.data) {
                             const estimatorData = response.data.data;
@@ -281,7 +281,7 @@ const CreateProject = () => {
 
             const effortEstimatorIds = effortEstimators.map(estimator => estimator.id);
 
-            const url = "http://localhost:8000/api/v1/project/create";
+            const url = `${APP_API_BASE_URL}/api/v1/project/create`;
             const projectData: ProjectRequest = {
                 name: projectName,
                 priority: projectPriority,
