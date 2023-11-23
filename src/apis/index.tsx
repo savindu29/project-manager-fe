@@ -1,3 +1,5 @@
+export const APP_API_BASE_URL = "http://localhost:8000";
+
 export type getProjectsOptions = {
     searchtext: string | "";
     size: number | null;
@@ -90,13 +92,13 @@ export type ExternalContactPerson = {
 
 export type  IntermediateClient = {
     name: string | null;
-    country: string | null;
+    country: string | null | undefined;
     externalContactPerson: ExternalContactPerson | null;
 
 }
 export type  GrantClient = {
     name: string;
-    country: string | null;
+    country: string | null | undefined;
     isForeign: boolean;
     externalContactPerson: ExternalContactPerson | null;
 

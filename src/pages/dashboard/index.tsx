@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import MiniDrawer from '../../layout';
 import { PieChart, Pie, Cell, Legend, Tooltip } from 'recharts';
-
+import {APP_API_BASE_URL} from '../../apis/index'
 interface Project {
   impStatusList: string;
   priority: string;
@@ -16,7 +16,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/v1/project/list');
+        const response = await axios.get(`${APP_API_BASE_URL}/api/v1/project/list`);
         setProjects(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);

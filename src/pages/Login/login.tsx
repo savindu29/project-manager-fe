@@ -52,7 +52,7 @@ const LoginPage: React.FC = () => {
 
         login(result.token);
 
-      window.location.href = '/dashboard';
+      window.location.href = '/';
     } else {
       // If the response status is not ok, log the error response
       const errorResponse = await response.json();

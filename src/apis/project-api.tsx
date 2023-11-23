@@ -1,5 +1,6 @@
 import {getProjectsOptions} from ".";
 import axios from "axios";
+import {APP_API_BASE_URL} from '../apis/index'
 
 type Project = {
     id: number;
@@ -30,7 +31,7 @@ export const getAllProjects = async (
         let str = Object.entries(params)
             .map(([key, val]) => `${key}=${val}`)
             .join('&');
-        const url = `http://localhost:8000/api/v1/project/search?${str}`;
+        const url = `${APP_API_BASE_URL}/api/v1/project/search?${str}`;
 
 
         const result = await axios.get(url);
@@ -44,7 +45,7 @@ export const getAllProjects = async (
 };
 export const getProject = async (id: number) => {
     try {
-        const url = `http://localhost:8000/api/v1/project/${id}`;
+        const url = `${APP_API_BASE_URL}/api/v1/project/${id}`;
 
         const result = await axios.get(url);
         return result.data;
@@ -55,7 +56,7 @@ export const getProject = async (id: number) => {
 
 export const updateProject = async (id: number, updatedData: any) => {
     try {
-        const url = `http://localhost:8000/api/v1/project/${id}`;
+        const url = `${APP_API_BASE_URL}/api/v1/project/${id}`;
         const result = await axios.put(url, updatedData); // Assuming you're using a PUT request for updates
         return result.data;
     } catch (error: any) {

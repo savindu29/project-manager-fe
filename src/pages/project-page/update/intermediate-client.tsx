@@ -3,6 +3,11 @@ import {GoPencil} from "react-icons/go";
 import {IoSaveOutline} from "react-icons/io5";
 import Select from "react-select";
 import countryList from "react-select-country-list";
+import {APP_API_BASE_URL, GrantClient, IntermediateClient} from "../../../apis";
+import axios from "axios";
+import {MdOutlineCancel} from "react-icons/md";
+import ConfirmationDialog from "../../../components/update-confirm";
+import {Alert, Snackbar} from "@mui/material";
 
 interface Country {
     label: string;
@@ -10,25 +15,90 @@ interface Country {
 }
 
 const IntermediateClienet = ({projectDetails}: { projectDetails: any }) => {
-    function formatDate(date: Date): string {
-        const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const day = date.getDate().toString().padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    }
+
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
+    };
+
+    const handleOpenSnackbar = (severity: 'success' | 'error', message: string) => {
+        setSnackbarSeverity(severity);
+        setSnackbarMessage(message);
+        setSnackbarOpen(true);
+    };
+
+    const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+
+    const handleConfirmationDialogOpen = () => {
+        setOpenConfirmationDialog(true);
+    };
+
+    const handleConfirmationDialogClose = () => {
+        setOpenConfirmationDialog(false);
+    };
+
+
     const handleEditClick = () => {
-        setEditMode(!editMode);
+        setEditMode(true)
+    };
+    const handleUpdateAndSave = async () => {
+        const url = `${APP_API_BASE_URL}/api/v1/intermediateClient/update?projectId=${projectDetails.id}`;
+        if( intermediantClientName ===null ){
+
+            handleOpenSnackbar('error', 'Please enter Intermediate ClientName.');
+            return;
+        }
+
+        const requestData: IntermediateClient = {
+            name: intermediantClientName, // Provide a client name
+            country: intermediantClientCountry?.label, // Provide a client country
+            externalContactPerson: {
+                name: intermediantClientContactName, // Provide a contact name
+                mobile: intermediantClientContactEmail, // Provide a contact mobile
+                fixTel: intermediantClientContactFixTelNumber, // Provide a contact fixTel
+                companyEmail: intermediantClientContactMobileNumber, // Provide a contact email
+                designation: intermediantClientContactDesignation, // Provide a contact designation
+                description: intermediantClientContactDescription, // Provide a contact description
+            },
+        };
+
+        try {
+            const resp = await axios.put(url, requestData);
+            setEditMode(false);
+            handleOpenSnackbar('success', 'Successfully updated!');
+            window.location.reload();
+        } catch (error) {
+            handleOpenSnackbar('error', 'Failed to update. Please try again.');
+        }
+    };
+
+    const handleCancel = () => {
+        setEditMode(false);
+        // Restore previous values
+        setIntermidiantClientName(projectDetails.intermediateClient?.name || null);
+        setIntermidiantCurrentClientCountry(projectDetails.intermediateClient?.country || '');
+        setIntermidiantClientCountry(projectDetails.intermediateClient?.country || '');
+
+        setIntermidiantClientContactName(projectDetails.intermediateClient?.externalContactPerson?.name || '');
+        setIntermidiantClientContactEmail(projectDetails.intermediateClient?.externalContactPerson?.companyEmail || '');
+        setIntermidiantClientContactMobileNumber(projectDetails.intermediateClient?.externalContactPerson?.mobile || '');
+        setIntermidiantClientContactFixTelNumber(projectDetails.intermediateClient?.externalContactPerson?.fixTel || '');
+        setIntermidiantClientContactDesignation(projectDetails.intermediateClient?.externalContactPerson?.designation || '');
+        setIntermidiantClientDescription(projectDetails.intermediateClient?.externalContactPerson?.description || '');
+
     };
     const handleSaveClick = () => {
-        // Add logic to save the data
-        setEditMode(false);
+        handleConfirmationDialogOpen();
     };
 
     const options = useMemo(() => countryList().getData(), []);
 
 
     const [editMode, setEditMode] = useState(false);
-    const [intermediantClientName, setIntermidiantClientName] = useState(projectDetails?.intermediateClient?.name || '');
+    const [intermediantClientName, setIntermidiantClientName] = useState(projectDetails?.intermediateClient?.name || null);
     const [intermediantClientCountry, setIntermidiantClientCountry] = useState<Country | null>(null);
     const [intermediantCurrentClientCountry, setIntermidiantCurrentClientCountry] = useState(projectDetails?.intermediateClient?.country || '');
     const [intermediantClientContactName, setIntermidiantClientContactName] = useState(projectDetails?.intermediateClient?.externalContactPerson?.name || '');
@@ -41,7 +111,7 @@ const IntermediateClienet = ({projectDetails}: { projectDetails: any }) => {
 
     useEffect(() => {
         if (projectDetails) {
-            setIntermidiantClientName(projectDetails.intermediateClient?.name || '');
+            setIntermidiantClientName(projectDetails.intermediateClient?.name || null);
             setIntermidiantCurrentClientCountry(projectDetails.intermediateClient?.country || '');
             setIntermidiantClientCountry(projectDetails.intermediateClient?.country || '');
 
@@ -77,8 +147,23 @@ const IntermediateClienet = ({projectDetails}: { projectDetails: any }) => {
                                 <GoPencil /> <span className={"text-sm mx-2"}>Update</span>
                             </div>
                             :
-                            <div className={'border rounded-full bg-gray-100  px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'} onClick={handleEditClick}>
-                                <IoSaveOutline /> <span className={"text-sm mx-2"}>Save</span>
+                            <div className={"flex"}>
+                                <div
+                                    className={
+                                        'border rounded-full bg-gray-100 mr-6 px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'
+                                    }
+                                    onClick={handleSaveClick}
+                                >
+                                    <IoSaveOutline /> <span className={'text-sm mx-2'}>Save</span>
+                                </div>
+                                <div
+                                    className={
+                                        'border rounded-full bg-gray-100  px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'
+                                    }
+                                    onClick={handleCancel}
+                                >
+                                    <MdOutlineCancel /> <span className={'text-sm mx-2'}>Cancel</span>
+                                </div>
                             </div>
                         }
 
@@ -150,6 +235,7 @@ const IntermediateClienet = ({projectDetails}: { projectDetails: any }) => {
                                     onChange={(e) => setIntermidiantClientContactName(e.target.value)}
                                     value={intermediantClientContactName}
                                     disabled={!editMode}
+                                    required
                                 />
                             </div>
                         </div>
@@ -253,7 +339,20 @@ const IntermediateClienet = ({projectDetails}: { projectDetails: any }) => {
 
 
 
+                    {/* Confirmation Dialog */}
+                    <ConfirmationDialog
+                        open={openConfirmationDialog}
+                        onClose={handleConfirmationDialogClose}
+                        onConfirm={handleUpdateAndSave}
+                    />
 
+
+
+                    <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+                        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+                            {snackbarMessage}
+                        </Alert>
+                    </Snackbar>
 
 
 
