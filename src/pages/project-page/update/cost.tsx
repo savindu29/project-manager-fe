@@ -7,12 +7,6 @@ import { Alert, Snackbar, Dialog, DialogActions, DialogContent, DialogContentTex
 import { MdOutlineCancel } from "react-icons/md";
 import ConfirmationDialog from "../../../components/update-confirm";
 const SpecialDates = ({ projectDetails }: { projectDetails: any }) => {
-    const formatDate = (date: Date): string => {
-        const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const day = date.getDate().toString().padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    };
 
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
@@ -88,8 +82,8 @@ const SpecialDates = ({ projectDetails }: { projectDetails: any }) => {
     }, [projectDetails]);
 
     return (
-        <div className={editMode ? 'px-12 py-8 white' : 'px-12 py-8 bg-zinc-100'}>
-            <form action="">
+        <div className={ editMode ? 'px-12 py-8 white duration-500' : 'px-12 py-8 bg-zinc-100 duration-500 '}>
+            <form >
                 <div className={'flex w-full h-12 mb-4'}>
                     <div className={'w-full flex items-center '}>
                         <h2 className="font-semibold text-lg ">Cost</h2>
@@ -97,7 +91,7 @@ const SpecialDates = ({ projectDetails }: { projectDetails: any }) => {
                     <div className={'w-full flex justify-end mr-12 text-xl '}>
                         {!editMode ? (
                             <div
-                                className={' border rounded-full px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28 '}
+                                className={' border  rounded-full px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28 '}
                                 onClick={handleEditClick}
                             >
                                 <GoPencil /> <span className={'text-sm mx-2'}>Update</span>

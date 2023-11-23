@@ -92,13 +92,13 @@ export type ExternalContactPerson = {
 
 export type  IntermediateClient = {
     name: string | null;
-    country: string | null;
+    country: string | null | undefined;
     externalContactPerson: ExternalContactPerson | null;
 
 }
 export type  GrantClient = {
     name: string;
-    country: string | null;
+    country: string | null | undefined;
     isForeign: boolean;
     externalContactPerson: ExternalContactPerson | null;
 

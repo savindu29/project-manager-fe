@@ -1,9 +1,9 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import MainData from "./main-data";
 import SpecialDates from "./special-dates";
 import ClarificationDiscussionDetails from "./clarification-discussion-details";
-import GrantClient from "./grant-client";
+
 import IntermediateClienet from "./intermediate-client";
 import ProjectLead from "./project-lead";
 import EffortEstimators from "./effort-estimators";
@@ -12,6 +12,7 @@ import RFPResources from "./rfp-resources";
 import OutputFromInova from "./output-from-inova";
 import Todo from "./todo";
 import LessonLearned from "./lesson-learned";
+import GrantClientDetails from "./grant-client-details";
 
 interface Country {
     label: string;
@@ -137,6 +138,11 @@ const UpdateProjectForm = ({projectDetails}: { projectDetails: any }) => {
 
 
     //todo
+    useEffect(() => {
+        if(projectDetails?.intermediateClient){
+            setVisible(true);
+        }
+    }, [projectDetails]);
 
 
     return (
@@ -157,7 +163,7 @@ const UpdateProjectForm = ({projectDetails}: { projectDetails: any }) => {
                     <MainData projectDetails={projectDetails}/>
                     <SpecialDates projectDetails={projectDetails}/>
                     <ClarificationDiscussionDetails projectDetails={projectDetails}/>
-                    <GrantClient projectDetails={projectDetails}/>
+                    <GrantClientDetails projectDetails={projectDetails}/>
 
 
                     <div className="sm:col-span-4 flex items-center pt-6 px-12 bg-zinc-100">

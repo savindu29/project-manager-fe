@@ -3,25 +3,89 @@ import {GoPencil} from "react-icons/go";
 import {IoSaveOutline} from "react-icons/io5";
 import Select from "react-select";
 import countryList from "react-select-country-list";
+import {MdOutlineCancel} from "react-icons/md";
+import ConfirmationDialog from "../../../components/update-confirm";
+import {Alert, Snackbar} from "@mui/material";
+import {APP_API_BASE_URL, Cost, GrantClient} from "../../../apis";
+import axios from "axios";
 
 interface Country {
     label: string;
     value: string;
 }
 
-const GrantClient = ({projectDetails}: { projectDetails: any }) => {
-    function formatDate(date: Date): string {
-        const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const day = date.getDate().toString().padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    }
+const GrantClientDetails = ({projectDetails}: { projectDetails: any }) => {
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
+    };
+
+    const handleOpenSnackbar = (severity: 'success' | 'error', message: string) => {
+        setSnackbarSeverity(severity);
+        setSnackbarMessage(message);
+        setSnackbarOpen(true);
+    };
+
+    const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+
+    const handleConfirmationDialogOpen = () => {
+        setOpenConfirmationDialog(true);
+    };
+
+    const handleConfirmationDialogClose = () => {
+        setOpenConfirmationDialog(false);
+    };
+
+
     const handleEditClick = () => {
-        setEditMode(!editMode);
+        setEditMode(true)
+    };
+
+    const handleUpdateAndSave = async () => {
+        const url = `${APP_API_BASE_URL}/api/v1/grantClient/update?projectId=${projectDetails.id}`;
+        const requestData: GrantClient = {
+            name: clientName, // Provide a client name
+            country: clientCountry?.label, // Provide a client country
+            isForeign: false,
+            externalContactPerson: {
+                name: clientContactPersonName, // Provide a contact name
+                mobile: clientContactEmail, // Provide a contact mobile
+                fixTel: clientContactFixTelNumber, // Provide a contact fixTel
+                companyEmail: clientContactMobileNumber, // Provide a contact email
+                designation: clientContactDesignation, // Provide a contact designation
+                description: clientContactDescription, // Provide a contact description
+            },
+        };
+
+        try {
+            const resp = await axios.put(url, requestData);
+            setEditMode(false);
+            handleOpenSnackbar('success', 'Successfully updated!');
+            window.location.reload();
+        } catch (error) {
+            handleOpenSnackbar('error', 'Failed to update. Please try again.');
+        }
+    };
+
+
+    const handleCancel = () => {
+        setEditMode(false);
+        // Restore previous values
+        setClientName(projectDetails.grantClient?.name || '');
+        setClientCurrentCountry(projectDetails.grantClient?.country || '');
+        setClientCountry(projectDetails.grantClient?.country || '');
+        setContactPersonName(projectDetails.grantClient?.externalContactPerson?.name || '');
+        setClientContactEmail(projectDetails.grantClient?.externalContactPerson?.companyEmail || '');
+        setClientContactMobileNumber(projectDetails.grantClient?.externalContactPerson?.mobile || '');
+        setClientContactFixTelNumber(projectDetails.grantClient?.externalContactPerson?.fixTel || '');
+        setClientContactDesignation(projectDetails.grantClient?.externalContactPerson?.designation || '');
+        setClientContactDescription(projectDetails.grantClient?.externalContactPerson?.description || '');
     };
     const handleSaveClick = () => {
-        // Add logic to save the data
-        setEditMode(false);
+        handleConfirmationDialogOpen();
     };
 
     const options = useMemo(() => countryList().getData(), []);
@@ -66,8 +130,8 @@ const GrantClient = ({projectDetails}: { projectDetails: any }) => {
 
     return (
         <div className={editMode ? "px-12 py-8 white" : "px-12 py-8 bg-zinc-100"}>
-            <form action="">
-                <div className={"flex w-full h-12 mb-4"}>
+            <form >
+                <div className={"flex w-full h-12 mb-12"}>
                     <div className={"w-full flex items-center "}><h2 className="font-semibold text-lg ">Client Details</h2></div>
                     <div className={"w-full flex justify-end mr-12 text-xl "}>
                         {!editMode ?
@@ -75,8 +139,23 @@ const GrantClient = ({projectDetails}: { projectDetails: any }) => {
                                 <GoPencil /> <span className={"text-sm mx-2"}>Update</span>
                             </div>
                             :
-                            <div className={'border rounded-full bg-gray-100  px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'} onClick={handleEditClick}>
-                                <IoSaveOutline /> <span className={"text-sm mx-2"}>Save</span>
+                            <div className={"flex"}>
+                                <div
+                                    className={
+                                        'border rounded-full bg-gray-100 mr-6 px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'
+                                    }
+                                    onClick={handleSaveClick}
+                                >
+                                    <IoSaveOutline /> <span className={'text-sm mx-2'}>Save</span>
+                                </div>
+                                <div
+                                    className={
+                                        'border rounded-full bg-gray-100  px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'
+                                    }
+                                    onClick={handleCancel}
+                                >
+                                    <MdOutlineCancel /> <span className={'text-sm mx-2'}>Cancel</span>
+                                </div>
                             </div>
                         }
 
@@ -255,13 +334,20 @@ const GrantClient = ({projectDetails}: { projectDetails: any }) => {
 
 
 
+                    {/* Confirmation Dialog */}
+                    <ConfirmationDialog
+                        open={openConfirmationDialog}
+                        onClose={handleConfirmationDialogClose}
+                        onConfirm={handleUpdateAndSave}
+                    />
 
 
 
-
-
-
-
+                    <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+                        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+                            {snackbarMessage}
+                        </Alert>
+                    </Snackbar>
 
 
                 </div>
@@ -274,4 +360,4 @@ const GrantClient = ({projectDetails}: { projectDetails: any }) => {
 
 };
 
-export default GrantClient;
+export default GrantClientDetails;
