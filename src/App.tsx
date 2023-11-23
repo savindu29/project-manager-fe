@@ -1,3 +1,4 @@
+
 // App.tsx
 import React from 'react';
 import { Routes,Route,Navigate  } from 'react-router-dom';
@@ -49,6 +50,10 @@ const App = () => {
         path="/employees/new"
         element={isAuthenticated ? <PeoplePage	 /> : <Navigate to="/login" />}
       />
+          <Route
+    path="/dashboard"
+    element={isAuthenticated ? <Navigate to="/" /> : <Navigate to="/login" />}
+/>
       
     </Routes>
 
@@ -57,3 +62,4 @@ const App = () => {
 
 
 export default App;
+
