@@ -129,7 +129,7 @@ const CreateProject = () => {
         console.log('Selected Result ID in ParentComponent:', selectedResultId);
 
         try {
-            const response = await axios.get(`${APP_API_BASE_URL}api/v1/responsible-person/${selectedResultId}`);
+            const response = await axios.get(`${APP_API_BASE_URL}/api/v1/responsible-person/${selectedResultId}`);
 
             if (response.data && response.data.code === 200 && response.data.data) {
                 const responsiblePersonData = response.data.data;

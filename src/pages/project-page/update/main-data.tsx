@@ -3,6 +3,7 @@ import DropDown from "../../../components/drop-down";
 import axios from "axios";
 import { GoPencil } from "react-icons/go";
 import { IoSaveOutline } from "react-icons/io5";
+import { APP_API_BASE_URL } from '../../../apis';
 
 const MainData = ({projectDetails}: { projectDetails: any }) => {
     function formatDate(date: Date): string {
@@ -19,14 +20,14 @@ const MainData = ({projectDetails}: { projectDetails: any }) => {
     useEffect(() => {
         // Fetch project status data
         axios
-            .get("http://localhost:8000/api/v1/project-status/list")
+            .get(`${APP_API_BASE_URL}/api/v1/project-status/list`)
             .then((response) => setProjectStatusData(response.data.data))
             .catch((error) =>
                 console.error("Error fetching project status data:", error)
             );
 
         axios
-            .get("http://localhost:8000/api/v1/priority/list")
+            .get(`${APP_API_BASE_URL}/api/v1/priority/list`)
             .then((response) => setProjectPriorityData(response.data.data))
             .catch((error) =>
                 console.error("Error fetching project proiority data:", error)

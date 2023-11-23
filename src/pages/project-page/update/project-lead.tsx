@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import { GoPencil } from "react-icons/go";
 import { IoSaveOutline } from "react-icons/io5";
 import SearchForm from "../create/employeesSearchForm";
-import {EmployeeSearchResult} from "../../../apis";
+import {APP_API_BASE_URL, EmployeeSearchResult} from "../../../apis";
 import axios from "axios";
 
 const SpecialDates = ({projectDetails}: { projectDetails: any }) => {
@@ -28,7 +28,7 @@ const SpecialDates = ({projectDetails}: { projectDetails: any }) => {
         console.log('Selected Result ID in ParentComponent:', selectedResultId);
 
         try {
-            const response = await axios.get(`http://localhost:8000/api/v1/responsible-person/${selectedResultId}`);
+            const response = await axios.get(`${APP_API_BASE_URL}/api/v1/responsible-person/${selectedResultId}`);
 
             if (response.data && response.data.code === 200 && response.data.data) {
                 const responsiblePersonData = response.data.data;

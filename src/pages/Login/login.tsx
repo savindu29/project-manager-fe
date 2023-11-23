@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { DialogDefault } from './popupLogin';
 import { useAuth } from './useAuth'; 
 import { useNavigate } from 'react-router-dom';
+import { APP_API_BASE_URL } from '../../apis';
 // Create a variable to store the email globally
 let globalEmail: string | null = null;
 
@@ -23,7 +24,7 @@ const LoginPage: React.FC = () => {
         return;
       }
 
-      const response = await fetch('http://localhost:8000/api/v1/auth/signin', {
+      const response = await fetch(`${APP_API_BASE_URL}/api/v1/auth/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
