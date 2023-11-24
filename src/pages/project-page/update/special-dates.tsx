@@ -3,21 +3,65 @@ import DropDown from "../../../components/drop-down";
 import axios from "axios";
 import { GoPencil } from "react-icons/go";
 import { IoSaveOutline } from "react-icons/io5";
+import { MdOutlineCancel } from 'react-icons/md';
+import ConfirmationDialog from '../../../components/update-confirm';
+import { Alert, Snackbar } from '@mui/material';
+import { APP_API_BASE_URL, ProjectUpdateType } from '../../../apis';
 
 const SpecialDates = ({projectDetails}: { projectDetails: any }) => {
+
+
+
+
+
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
+    };
+
+    const handleOpenSnackbar = (severity: 'success' | 'error', message: string) => {
+        setSnackbarSeverity(severity);
+        setSnackbarMessage(message);
+        setSnackbarOpen(true);
+    };
+
+    const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+
+    const handleConfirmationDialogOpen = () => {
+        setOpenConfirmationDialog(true);
+    };
+
+    const handleConfirmationDialogClose = () => {
+        setOpenConfirmationDialog(false);
+    };
+
+
+    const handleEditClick = () => {
+        setEditMode(!editMode);
+    };
+    const handleSaveClick = () => {
+        handleConfirmationDialogOpen();
+    };
+
+
+
+
+
+
+
+
+
+
     function formatDate(date: Date): string {
         const year = date.getFullYear();
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const day = date.getDate().toString().padStart(2, '0');
         return `${year}-${month}-${day}`;
     }
-    const handleEditClick = () => {
-        setEditMode(!editMode);
-    };
-    const handleSaveClick = () => {
-        // Add logic to save the data
-        setEditMode(false);
-    };
+    
 
 
     const [editMode, setEditMode] = useState(false);
@@ -60,6 +104,59 @@ const SpecialDates = ({projectDetails}: { projectDetails: any }) => {
     }, [projectDetails]);
 
 
+    const handleUpdateAndSave = async () => {
+        const url = `${APP_API_BASE_URL}/api/v1/project/update?projectId=${projectDetails.id}`;
+        const effortEstimatorIds = projectDetails.effortEstimators.map((estimator: { id: number; }) => estimator.id);
+        const requestData:ProjectUpdateType  = {
+            projectStatus: projectDetails?.projectStatus?.id || -1,
+            initiationDate: new Date(projectDetails.initiationDate),
+
+            proposalDueDate: projectProposalDueDate || null,
+            proposalSubmittedDate: projectProposalSubDate ||  null,
+            proposedImplementStartDate: projectProposedImpStartDate ||null,
+            proposedImplementEndDate: projectProposedImpEndDate ||  null,
+            actualImplementationStartDate: projectActualImpStartDate|| null,
+            actualImplementationEndDate: projectActualImpEndDate || null,
+            actualImplementationDueDate: projectImpDueDate||  null,
+            lessonsLearned: projectDetails.lessonsLearned || '',
+            
+            effortEstimators: effortEstimatorIds,
+            projectLead: projectDetails.projectLead?.id,
+            clarificationDiscussionDetails : projectDetails.cdDetails || '',
+        };
+
+        try {
+            const resp = await axios.put(url, requestData);
+            setEditMode(false);
+            handleOpenSnackbar('success', 'Successfully updated!');
+        } catch (error) {
+            handleOpenSnackbar('error', 'Failed to update. Please try again.');
+        }
+    };
+    const handleCancel = () => {
+        setEditMode(false);
+        // Restore previous values
+        setProposalDueDate(projectDetails.proposalDueDate ? new Date(projectDetails.proposalDueDate) : null);
+        setProposalSubDate(projectDetails.proposalSubmittedDate ? new Date(projectDetails.proposalSubmittedDate) : null);
+        setProposedImpStartDate(projectDetails.piStartDate ? new Date(projectDetails.piStartDate) : null);
+        setProposedImpEndDate(projectDetails.piEndDate ? new Date(projectDetails.piEndDate) : null);
+        setActualImpStartDate(projectDetails.acStartDate ? new Date(projectDetails.acStartDate) : null);
+        setActualImpEndDate(projectDetails.acEndDate ? new Date(projectDetails.acEndDate) : null);
+        setImpDueDate(projectDetails.actualImplementationDueDate ? new Date(projectDetails.actualImplementationDueDate) : null);
+
+       
+    };
+
+
+
+
+
+
+
+
+
+
+
 
 
     return (
@@ -68,15 +165,34 @@ const SpecialDates = ({projectDetails}: { projectDetails: any }) => {
                 <div className={"flex w-full h-12 mb-4"}>
                     <div className={"w-full flex items-center "}><h2 className="font-semibold text-lg ">Special Dates</h2></div>
                     <div className={"w-full flex justify-end mr-12 text-xl "}>
-                        {!editMode ?
-                            <div className={' border rounded-full px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28 '} onClick={handleEditClick}>
-                                <GoPencil /> <span className={"text-sm mx-2"}>Update</span>
+                    {!editMode ? (
+                            <div
+                                className={' border  rounded-full px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28 '}
+                                onClick={handleEditClick}
+                            >
+                                <GoPencil /> <span className={'text-sm mx-2'}>Update</span>
                             </div>
-                            :
-                            <div className={'border rounded-full bg-gray-100  px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'} onClick={handleEditClick}>
-                                <IoSaveOutline /> <span className={"text-sm mx-2"}>Save</span>
+                        ) : (
+                        <div className={"flex"}>
+                            <div
+                                className={
+                                    'border rounded-full bg-gray-100 mr-6 px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'
+                                }
+                                onClick={handleSaveClick}
+                            >
+                                <IoSaveOutline /> <span className={'text-sm mx-2'}>Save</span>
                             </div>
-                        }
+                            <div
+                                className={
+                                    'border rounded-full bg-gray-100  px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'
+                                }
+                                onClick={handleCancel}
+                            >
+                                <MdOutlineCancel /> <span className={'text-sm mx-2'}>Cancel</span>
+                            </div>
+                        </div>
+
+                        )}
 
 
 
@@ -159,7 +275,7 @@ const SpecialDates = ({projectDetails}: { projectDetails: any }) => {
                                 id="proposedImplementEndDate"
                                 className="appearance-none w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
                                 onChange={(e) => setProposedImpEndDate(new Date(e.target.value))}
-                                value={projectProposedImpStartDate ? formatDate(projectProposedImpStartDate) : ''}
+                                value={projectProposedImpEndDate ? formatDate(projectProposedImpEndDate) : ''}
                                 disabled={!editMode}
 
                             />
@@ -225,7 +341,19 @@ const SpecialDates = ({projectDetails}: { projectDetails: any }) => {
 
                 </div>
 
+                <ConfirmationDialog
+                        open={openConfirmationDialog}
+                        onClose={handleConfirmationDialogClose}
+                        onConfirm={handleUpdateAndSave}
+                    />
 
+
+
+                    <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+                        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+                            {snackbarMessage}
+                        </Alert>
+                    </Snackbar>
             </form>
 
         </div>

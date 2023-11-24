@@ -107,6 +107,27 @@ export type Activity = {
     date:Date | null;
     description :string | null;
 }
+export type ProjectUpdateType ={
+    
+    projectStatus: number;
+    initiationDate: Date;
+    proposalDueDate: Date | null;
+    proposalSubmittedDate: Date | null;
+    proposedImplementStartDate: Date | null;
+    proposedImplementEndDate: Date | null;
+    actualImplementationStartDate: Date | null;
+    actualImplementationEndDate: Date | null;
+    actualImplementationDueDate: Date | null;
+    lessonsLearned: string | null;
+    clarificationDiscussionDetails: string | null;
+    effortEstimators: number[] | null;
+    projectLead: number;
+    
+   
+    // rfpResources: RfpResources[] | null;
+    // outputsFromInova: OutputsFromInova[] | null;
+    // latestActivity: Activity[] | null;
+}
 
 export type ProjectRequest = {
     name: string | null;
