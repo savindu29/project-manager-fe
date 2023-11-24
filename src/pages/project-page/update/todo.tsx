@@ -137,9 +137,11 @@ const Todo = ({ projectDetails }: { projectDetails: any }) => {
   };
 
   const handleRemoveClick = (index: number) => {
-    const updatedTodos = [...todos];
-    updatedTodos.splice(index, 1);
-    setTodos(updatedTodos);
+    handleOpenSnackbar('error', 'Currently not avilable');
+        
+    // const updatedTodos = [...todos];
+    // updatedTodos.splice(index, 1);
+    // setTodos(updatedTodos);
   };
 
   const handleEditClick = () => {
@@ -452,7 +454,7 @@ const Todo = ({ projectDetails }: { projectDetails: any }) => {
 
         <Snackbar
           open={snackbarOpen}
-          autoHideDuration={6000}
+          autoHideDuration={2000}
           onClose={handleSnackbarClose}
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
         >
