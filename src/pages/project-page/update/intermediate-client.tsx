@@ -68,8 +68,9 @@ const IntermediateClienet = ({projectDetails}: { projectDetails: any }) => {
         try {
             const resp = await axios.put(url, requestData);
             setEditMode(false);
+            setIntermidiantCurrentClientCountry(intermediantClientCountry?.label)
             handleOpenSnackbar('success', 'Successfully updated!');
-            window.location.reload();
+            
         } catch (error) {
             handleOpenSnackbar('error', 'Failed to update. Please try again.');
         }
@@ -139,18 +140,18 @@ const IntermediateClienet = ({projectDetails}: { projectDetails: any }) => {
     return (
         <div className={editMode ? "px-12 py-8 white" : "px-12 py-8 bg-zinc-100"}>
             <form action="">
-                <div className={"flex w-full h-12 mb-4"}>
+                <div className={"flex w-full h-12 mb-12"}>
                     <div className={"w-full flex items-center "}><h2 className="font-semibold text-lg ">Intermediary client Details</h2></div>
                     <div className={"w-full flex justify-end mr-12 text-xl "}>
                         {!editMode ?
-                            <div className={' border rounded-full px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28 '} onClick={handleEditClick}>
+                            <div className={' border-2 rounded-full px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28 '} onClick={handleEditClick}>
                                 <GoPencil /> <span className={"text-sm mx-2"}>Update</span>
                             </div>
                             :
                             <div className={"flex"}>
                                 <div
                                     className={
-                                        'border rounded-full bg-gray-100 mr-6 px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'
+                                        'border-2 rounded-full bg-gray-100 mr-6 px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'
                                     }
                                     onClick={handleSaveClick}
                                 >
@@ -158,7 +159,7 @@ const IntermediateClienet = ({projectDetails}: { projectDetails: any }) => {
                                 </div>
                                 <div
                                     className={
-                                        'border rounded-full bg-gray-100  px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'
+                                        'border-2 rounded-full bg-gray-100  px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'
                                     }
                                     onClick={handleCancel}
                                 >
