@@ -38,7 +38,7 @@ export default function ContactCard( personDetails : any) {
  
 
   return (
-    <Card sx={{ width:350 ,bgcolor: "#f5f5f5" , paddingX:4} } elevation={0} >
+    <Card  sx={{ width:350 ,bgcolor: "#f5f5f5" , paddingX:4} } elevation={0} >
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: "#ef5350" }} aria-label="recipe">
@@ -51,7 +51,7 @@ export default function ContactCard( personDetails : any) {
       />
      
       <div>
-        <Typography variant="body2" color="text.secondary" >
+        <Typography variant="body2" color="text.secondary"  >
           <div>
             <p className=' text-black mb-2'>Contact Details :</p>
           </div>

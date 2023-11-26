@@ -215,13 +215,19 @@ const CreateProject = () => {
     const [projectStatus, setProjectStatus] = useState(-1);
     const [latestProjectStatus, setLatestProjectStatus] = useState<string | null>(null);
     const [latestProjectStatusDate, setLatestProjectStatusDate] = useState(new Date());
+
     const [projectProposalDueDate, setProposalDueDate] = useState<Date | null>(null);
     const [projectProposalSubDate, setProposalSubDate] = useState<Date | null>(null);
+
     const [projectProposedImpStartDate, setProposedImpStartDate] = useState<Date | null>(null);
     const [projectProposedImpEndDate, setProposedImpEndDate] = useState<Date | null>(null);
     const [projectActualImpStartDate, setActualImpStartDate] = useState<Date | null>(null);
     const [projectActualImpEndDate, setActualImpEndDate] = useState<Date | null>(null);
     const [projectImpDueDate, setImpDueDate] = useState<Date | null>(null);
+
+
+
+
     const [projectClarificationDiscussDetails, setClarificationDiscussDetails] = useState('');
     const [lessonsLearned, setLessonsLearned] = useState('');
     const [selectedProjectLead, setSelectedProjectLead] = useState(-1);
@@ -595,7 +601,7 @@ const CreateProject = () => {
                                         id="proposedImplementEndDate"
                                         className="appearance-none w-full px-4 py-2 border rounded-md text-gray-700 leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-300"
                                         onChange={(e) => setProposedImpEndDate(new Date(e.target.value))}
-                                        value={projectProposedImpStartDate ? formatDate(projectProposedImpStartDate) : ''}
+                                        value={projectProposedImpEndDate ? formatDate(projectProposedImpEndDate) : ''}
 
                                     />
                                 </div>
@@ -1173,7 +1179,7 @@ const CreateProject = () => {
                             </div>
                         </div>
 
-                        <div>
+                        <div className="mb-6" >
                             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6 mb-8">
                                 <h2 className="font-semibold text-lg sm:col-span-3 px-6">To Do</h2>
                                 <div className="flex sm:col-span-3 justify-end">
@@ -1195,7 +1201,7 @@ const CreateProject = () => {
                             />
 
                             {todos.length > 0 && (
-                                <table className="table-auto mt-2 w-full mb-6">
+                                <table className="table-auto border-collapse border text-center  mt-2 w-full">
                                     <thead>
                                     <tr>
                                         <th className="px-4 py-2">Task</th>

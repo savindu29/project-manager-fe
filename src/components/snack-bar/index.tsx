@@ -17,7 +17,9 @@ const PositionedSnackbar: React.FC<PositionedSnackbarProps> = ({ open, onClose,m
     <Snackbar anchorOrigin={{ vertical, horizontal }}
     open={open}
     autoHideDuration={1000}
-    onClose={onClose}>
+    onClose={onClose}
+    
+    >
         <Alert >
           {message}
         </Alert>

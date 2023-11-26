@@ -96,7 +96,7 @@ const SpecialDates = ({projectDetails}: { projectDetails: any }) => {
             setProposedImpEndDate(projectDetails.piEndDate ? new Date(projectDetails.piEndDate) : null);
             setActualImpStartDate(projectDetails.acStartDate ? new Date(projectDetails.acStartDate) : null);
             setActualImpEndDate(projectDetails.acEndDate ? new Date(projectDetails.acEndDate) : null);
-            setImpDueDate(projectDetails.actualImplementationDueDate ? new Date(projectDetails.actualImplementationDueDate) : null);
+            setImpDueDate(projectDetails.acImpDueDate ? new Date(projectDetails.acImpDueDate) : null);
 
         }
 

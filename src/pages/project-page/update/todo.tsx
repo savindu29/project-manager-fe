@@ -13,7 +13,7 @@ import {
   Alert,
 } from "@mui/material";
 import AddTodoModal from "../../../components/models/todo-model";
-import { APP_API_BASE_URL,  UpdateTask } from "../../../apis";
+import { APP_API_BASE_URL, UpdateTask } from "../../../apis";
 import ConfirmationDialog from "../../../components/update-confirm";
 import { MdOutlineCancel } from "react-icons/md";
 import axios from "axios";
@@ -26,81 +26,78 @@ interface TaskType {
   isDone: boolean;
 }
 interface TodoType {
-    notes: string | null;
-    tasks: UpdateTask[] | null;
+  notes: string | null;
+  tasks: UpdateTask[] | null;
 }
 const Todo = ({ projectDetails }: { projectDetails: any }) => {
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
-    const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  );
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
-    const handleSnackbarClose = () => {
-        setSnackbarOpen(false);
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const handleOpenSnackbar = (
+    severity: "success" | "error",
+    message: string
+  ) => {
+    setSnackbarSeverity(severity);
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+  };
+
+  const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+
+  const handleConfirmationDialogOpen = () => {
+    setOpenConfirmationDialog(true);
+  };
+
+  const handleConfirmationDialogClose = () => {
+    setOpenConfirmationDialog(false);
+  };
+
+  const handleCancel = () => {
+    setEditMode(false);
+    setTodos(
+      (projectDetails.todo?.tasks ?? []).map((task: UpdateTask) => ({
+        id: task.id,
+        title: task.taskTitle,
+        description: task.taskDescription,
+        date: task.date,
+        isDone: task.done,
+      }))
+    );
+
+    setNote(projectDetails.todo?.notes || "");
+  };
+  const handleSaveClick = () => {
+    handleConfirmationDialogOpen();
+  };
+
+  const handleUpdateAndSave = async () => {
+    const url = `${APP_API_BASE_URL}/api/v1/todo/update?projectId=${projectDetails.id}`;
+    const requestData: TodoType = {
+      notes: note,
+      tasks: todos.map((t) => ({
+        id: t.id || -1,
+        taskTitle: t.title || "",
+        taskDescription: t.description || "",
+        date: t.date ? new Date(t.date) : null,
+        done: t.isDone || false,
+      })),
     };
 
-    const handleOpenSnackbar = (severity: 'success' | 'error', message: string) => {
-        setSnackbarSeverity(severity);
-        setSnackbarMessage(message);
-        setSnackbarOpen(true);
-    };
-
-
-    const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
-
-    const handleConfirmationDialogOpen = () => {
-        setOpenConfirmationDialog(true);
-    };
-
-    const handleConfirmationDialogClose = () => {
-        setOpenConfirmationDialog(false);
-    };
-
-
-
-    const handleCancel = () => {
-        setEditMode(false);
-        setTodos(
-            (projectDetails.todo?.tasks ?? []).map((task: UpdateTask) => ({
-              id: task.id,
-              title: task.taskTitle,
-              description: task.taskDescription,
-              date: task.date,
-              isDone: task.done,
-            }))
-          );
-    
-          setNote(projectDetails.todo?.notes || "");
-    };
-    const handleSaveClick = () => {
-        handleConfirmationDialogOpen();
-    };
-
-    const handleUpdateAndSave = async () => {
-        const url = `${APP_API_BASE_URL}/api/v1/todo/update?projectId=${projectDetails.id}`;
-        const requestData: TodoType = {
-            notes: note, 
-            tasks: todos.map((t) => ({
-                id :t.id || -1,
-                taskTitle: t.title || '',
-                taskDescription: t.description || '',
-                date: t.date ? new Date(t.date) : null,
-                done: t.isDone || false
-            })),
-        };
-
-        try {
-            const resp = await axios.put(url, requestData);
-            setEditMode(false);
-            handleOpenSnackbar('success', 'Successfully updated!');
-            
-        } catch (error) {
-            handleOpenSnackbar('error', 'Failed to update. Please try again.');
-        }
-    };
-
-
-
-
+    try {
+      const resp = await axios.put(url, requestData);
+      setEditMode(false);
+      handleOpenSnackbar("success", "Successfully updated!");
+    } catch (error) {
+      handleOpenSnackbar("error", "Failed to update. Please try again.");
+    }
+  };
 
   const [todos, setTodos] = useState<TaskType[]>([]);
   const [editMode, setEditMode] = useState(false);
@@ -128,7 +125,7 @@ const Todo = ({ projectDetails }: { projectDetails: any }) => {
   // New state for managing the visibility of the add task modal
   const [openAddTaskDialog, setOpenAddTaskDialog] = useState(false);
 
-  const [note, setNote] = useState(projectDetails?.todo?.notes || '');
+  const [note, setNote] = useState(projectDetails?.todo?.notes || "");
 
   const handleToggleSwitch = (index: number) => {
     const updatedTodos = [...todos];
@@ -137,8 +134,8 @@ const Todo = ({ projectDetails }: { projectDetails: any }) => {
   };
 
   const handleRemoveClick = (index: number) => {
-    handleOpenSnackbar('error', 'Currently not avilable');
-        
+    handleOpenSnackbar("error", "Currently not avilable");
+
     // const updatedTodos = [...todos];
     // updatedTodos.splice(index, 1);
     // setTodos(updatedTodos);
@@ -216,45 +213,49 @@ const Todo = ({ projectDetails }: { projectDetails: any }) => {
             <h2 className="font-semibold text-lg ">Todo</h2>
           </div>
           <div className={" "}>
-            
             {editMode && (
-                <button
-              type="button"
-              className="bg-sky-400 w-24 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer"
-              // onClick={() => setShowForm(!showForm)}
-              onClick={handleAddTaskClick}
-              disabled={!editMode}
-            >
-                
-              {showForm ? "Hide Form" : "Add Task"}
-            </button>
+              <button
+                type="button"
+                className="bg-sky-400 w-24 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer"
+                // onClick={() => setShowForm(!showForm)}
+                onClick={handleAddTaskClick}
+                disabled={!editMode}
+              >
+                {showForm ? "Hide Form" : "Add Task"}
+              </button>
             )}
           </div>
           <div className={"w-full flex justify-end mr-12 text-xl "}>
-          {!editMode ?
-                            <div className={' border-2 rounded-full px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28 '} onClick={handleEditClick}>
-                                <GoPencil /> <span className={"text-sm mx-2"}>Update</span>
-                            </div>
-                            :
-                            <div className={"flex"}>
-                                <div
-                                    className={
-                                        'border-2 rounded-full bg-gray-100 mr-6 px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'
-                                    }
-                                    onClick={handleSaveClick}
-                                >
-                                    <IoSaveOutline /> <span className={'text-sm mx-2'}>Save</span>
-                                </div>
-                                <div
-                                    className={
-                                        'border-2 rounded-full bg-gray-100  px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'
-                                    }
-                                    onClick={handleCancel}
-                                >
-                                    <MdOutlineCancel /> <span className={'text-sm mx-2'}>Cancel</span>
-                                </div>
-                            </div>
-                        }
+            {!editMode ? (
+              <div
+                className={
+                  " border-2 rounded-full px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28 "
+                }
+                onClick={handleEditClick}
+              >
+                <GoPencil /> <span className={"text-sm mx-2"}>Update</span>
+              </div>
+            ) : (
+              <div className={"flex"}>
+                <div
+                  className={
+                    "border-2 rounded-full bg-gray-100 mr-6 px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28"
+                  }
+                  onClick={handleSaveClick}
+                >
+                  <IoSaveOutline /> <span className={"text-sm mx-2"}>Save</span>
+                </div>
+                <div
+                  className={
+                    "border-2 rounded-full bg-gray-100  px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28"
+                  }
+                  onClick={handleCancel}
+                >
+                  <MdOutlineCancel />{" "}
+                  <span className={"text-sm mx-2"}>Cancel</span>
+                </div>
+              </div>
+            )}
             {/*<div className={'border rounded-full px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28 '} onClick={handleAddTaskClick}>*/}
             {/*    <GoPencil /> <span className={"text-sm mx-2"}>Add Task</span>*/}
             {/*</div>*/}
@@ -375,7 +376,6 @@ const Todo = ({ projectDetails }: { projectDetails: any }) => {
           </Dialog>
         )}
 
-        {/* Modal for adding a new task */}
         <Dialog
           open={openAddTaskDialog}
           onClose={() => setOpenAddTaskDialog(false)}
@@ -390,6 +390,9 @@ const Todo = ({ projectDetails }: { projectDetails: any }) => {
                 setNewTaskDetails({ ...newTaskDetails, title: e.target.value })
               }
               margin="normal"
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
             <TextField
               label="Description"
@@ -404,6 +407,9 @@ const Todo = ({ projectDetails }: { projectDetails: any }) => {
                 })
               }
               margin="normal"
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
             <TextField
               label="Due Date"
@@ -414,25 +420,28 @@ const Todo = ({ projectDetails }: { projectDetails: any }) => {
                 setNewTaskDetails({ ...newTaskDetails, date: e.target.value })
               }
               margin="normal"
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
           </DialogContent>
           <DialogActions>
-            <Button
+            <button
               onClick={handleAddTaskSubmit}
-              variant="contained"
               color="primary"
+              className="bg-sky-400 text-white hover:bg-sky-500 px-4 py-2 text-xs rounded"
             >
               Add Task
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() => setOpenAddTaskDialog(false)}
-              variant="outlined"
+              // variant="outlined"
+              className="border-sky-400  border px-4 py-2 text-xs rounded text-sky-400 hover:border-sky-500 hover:text-sky-500"
             >
               Cancel
-            </Button>
+            </button>
           </DialogActions>
         </Dialog>
-
         <label>Notes </label>
         <textarea
           name="todoNotes"
