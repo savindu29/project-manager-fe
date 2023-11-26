@@ -9,6 +9,9 @@ import MiniDrawer from "../../layout";
 import BlankPage from "../../components/black-page";
 import { Link } from "react-router-dom";
 
+// Add import for spinner
+import { CircularProgress } from "@mui/material";
+
 type Project = {
   id: number;
   projectName: string;
@@ -21,13 +24,14 @@ type Project = {
 };
 
 const Projects: React.FC = () => {
-  const [projects, setProjects] = useState<Project[] >([]);
-  const [searchText, setSearchText] = useState('');
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null); // Specify the initial state as null
-  const [projectId, setProjectId] = useState<number>(0); // Specify the initial state as null
-  const [page, setPage] = useState(1); // Initialize the active page
-  const pageSize = 3; // Specify the fixed page size
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [searchText, setSearchText] = useState("");
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [projectId, setProjectId] = useState<number>(0);
+  const [page, setPage] = useState(1);
+  const pageSize = 3;
   const [dataCount, setDatacount] = useState<number>(0);
+  const [loading, setLoading] = useState(false); // Add loading state
 
   const fetchProjects = async () => {
     try {
@@ -39,60 +43,64 @@ const Projects: React.FC = () => {
 
       const response = await getAllProjects(params);
 
-      // Check if the response is null
       if (response && response.data) {
-        console.log(response.data);
         setProjects(response.data.data);
         setDatacount(response.data.count);
       } else {
-        // If the response is null, set data count to 0
         setDatacount(0);
-
       }
     } catch (error) {
       console.error("Error fetching projects:", error);
     }
   };
 
-// Call fetchProjects when the component mounts or when searchText, page, or pageSize changes
   useEffect(() => {
     fetchProjects();
   }, [searchText, page, pageSize]);
-  // Listen to page changes
 
   const handleCardClick = (project: Project) => {
-    setSelectedProject(project);
-    setProjectId(project.id);
+    setLoading(true);
+
+    setTimeout(() => {
+      setSelectedProject(project);
+      setProjectId(project.id);
+      setLoading(false);
+    }, 500); //  second delay
   };
-  const handleSearchChange = (event:any) => {
+
+  const handleSearchChange = (event: any) => {
     setSearchText(event.target.value);
   };
-  const handleFormSubmit = (event:any) => {
+
+  const handleFormSubmit = (event: any) => {
     event.preventDefault();
-    // You can perform additional actions on form submission if needed
   };
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     newPage: number
   ) => {
-    setPage(newPage); // Update the active page when the page changes
+    setPage(newPage);
   };
+
   return (
-    <div className="flex ">
+    <div className="flex  ">
       <MiniDrawer />
       <div className="h-screen w-full flex justify-center items-center">
         <div className="w-96 h-screen ">
-          <div>
-            <div className="pl-5 pr-10 py-6   flex items-center justify-center">
-              <form className="flex items-center w-full" onSubmit={handleFormSubmit}>
+          <div className=" ">
+            <div className="pl-5 pr-6 py-6   flex items-center justify-center">
+              <form
+                className="flex items-center w-full drop-shadow-lg"
+                onSubmit={handleFormSubmit}
+              >
                 <label htmlFor="simple-search" className="sr-only">
                   Search
                 </label>
                 <div className="relative w-full">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <svg
-                      className="w-4 h-4 text-gray-500"
+                      className="w-4 h-4 text-gray-700" // Change color to gray-700
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       fill="none"
@@ -101,16 +109,8 @@ const Projects: React.FC = () => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     >
-                      <rect
-                        x="2"
-                        y="2"
-                        width="20"
-                        height="20"
-                        rx="2.18"
-                        ry="2.18"
-                      />
-                      <line x1="12" y1="2" x2="12" y2="22" />
-                      <path d="M12 2v20" />
+                      <circle cx="11" cy="11" r="8" />
+                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
                     </svg>
                   </div>
                   <input
@@ -123,54 +123,36 @@ const Projects: React.FC = () => {
                     required
                   />
                 </div>
-                <button
-                  type="submit"
-                  className="p-2.5 ml-2 text-sm font-medium text-white bg-blue-500 rounded-lg border  hover:bg-blue-600  focus:outline-none "
-                >
-                  <svg
-                    className="w-4 h-4"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                    />
-                  </svg>
-                  <span className="sr-only">Search</span>
-                </button>
               </form>
             </div>
           </div>
 
-          <div className="h-auto ">
-            <div className="w-96">
+          <div className="h-auto">
+            <div className="w-[22rem]">
               <div className="mx-8 text-xs text-sky-500 underline hover:cursor-pointer">
                 {dataCount} Results
               </div>
-
-              <div className="overflow-hidden">
-                {dataCount > 0 ? (
+              <div className="flex justify-center">
+                <div className="overflow-hidden ">
+                  {dataCount > 0 ? (
                     projects.map((project) => (
-                        <ProjectCard
-                            key={project.id}
-                            cardDetails={project}
-                            onCardClick={handleCardClick}
-                        />
+                      <ProjectCard
+                        key={project.id}
+                        cardDetails={project}
+                        onCardClick={handleCardClick}
+                      />
                     ))
-                ) : (
+                  ) : (
                     <div className="flex items-center justify-center h-20">
-                      <p className="text-gray-500 font-bold">No results found!</p>
+                      <p className="text-gray-500 font-bold">
+                        No results found!
+                      </p>
                     </div>
-                )}
+                  )}
+                </div>
               </div>
 
-              <div className="h-16 flex items-center justify-center absolute bottom-2 w-96">
+              <div className="h-16 flex items-center justify-center absolute bottom-0 w-96">
                 <Pagination
                   count={Math.ceil(dataCount / pageSize)}
                   page={page}
@@ -182,7 +164,7 @@ const Projects: React.FC = () => {
           </div>
         </div>
 
-        <div className="w-full h-full overflow-hidden">
+        <div className="w-full h-full overflow-hidden ">
           <div className=" w-full flex  justify-end items-end mt-2 px-12">
             {selectedProject && (
               <Link to={`/projects/update/${selectedProject.id}`}>
@@ -197,7 +179,17 @@ const Projects: React.FC = () => {
               </div>
             </Link>
           </div>
-          {selectedProject ? (
+          {loading ? (
+            // Display a spinner while loading
+            <div className="flex items-center justify-center h-full">
+              <CircularProgress
+                color="primary"
+                size={75}
+                thickness={2}
+                variant="indeterminate"
+              />
+            </div>
+          ) : selectedProject ? (
             <ProjectDetail projectId={selectedProject.id} />
           ) : (
             <BlankPage />

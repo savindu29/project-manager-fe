@@ -54,6 +54,7 @@ export const getProject = async (id: number) => {
     }
 };
 
+
 export const updateProject = async (id: number, updatedData: any) => {
     try {
         const url = `${APP_API_BASE_URL}/api/v1/project/${id}`;
@@ -62,5 +63,17 @@ export const updateProject = async (id: number, updatedData: any) => {
     } catch (error: any) {
         console.error("error update: ", error.message)
         throw error;
+    }
+};
+
+
+export const getStatusHistory = async (id: number) => {
+    try {
+        const url = `${APP_API_BASE_URL}/api/v1/statusHistory/list?projectId=${id}`;
+
+        const result = await axios.get(url);
+        return result.data;
+    } catch (err) {
+        throw err;
     }
 };

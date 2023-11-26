@@ -11,52 +11,34 @@ import TimelineOppositeContent, {
 import { Divider } from '@mui/material';
 
 const formatDate = (dateString: string) => {
-    const options = { year: 'numeric', month: 'short', day: '2-digit' };
-    return new Date(dateString).toLocaleDateString(undefined, options as any);
-  };
+  const options = { year: 'numeric', month: 'short', day: '2-digit' };
+  return new Date(dateString).toLocaleDateString(undefined, options as any);
+};
 
-  const formatDateTime = (dateString: string) => {
-    const options = { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-    return new Date(dateString).toLocaleDateString(undefined, options as any);
-  };
-export default function LeftAlignedTimeline({statusHistoryList}:any) {
+const formatDateTime = (dateString: string) => {
+  const options = { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+  return new Date(dateString).toLocaleDateString(undefined, options as any);
+};
+
+export default function CenterAlignedTimeline({ statusHistoryList }: any) {
   return (
-    <Timeline
-      sx={{
-        [`& .${timelineOppositeContentClasses.root}`]: {
-          flex: 0.2,
-        },
-      }}
-    >
-
-        {statusHistoryList.map((status: any) => (
-                <TimelineItem key={status.id}>
-                <TimelineOppositeContent color="textSecondary">
-               
-               
-                 {formatDateTime(status.date)}
-                </TimelineOppositeContent>
-                <TimelineSeparator>
-                  <TimelineDot />
-                  <TimelineConnector />
-                </TimelineSeparator>
-                <TimelineContent>
-                    <div className='text-sm mb-4'>
-                    {status.description}
-                
-                
-                 
-                </div>
-               
-                </TimelineContent>
-                
-              </TimelineItem>
-              ))}
-
-
-
-      
-
+    <Timeline>
+      {statusHistoryList.slice().map((status: any, index: number, array: any[]) => (
+        <TimelineItem key={status.id} className="text-center">
+          <TimelineOppositeContent color="textSecondary">
+            {formatDateTime(status.date)}
+          </TimelineOppositeContent>
+          <TimelineSeparator>
+            <TimelineDot />
+            {index < array.length - 1 ? <TimelineConnector /> : null}
+          </TimelineSeparator>
+          <TimelineContent>
+            <div className='text-sm mb-4'>
+              {status.description}
+            </div>
+          </TimelineContent>
+        </TimelineItem>
+      ))}
     </Timeline>
   );
 }
