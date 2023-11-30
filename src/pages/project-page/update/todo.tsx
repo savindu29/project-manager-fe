@@ -4,6 +4,7 @@ import { IoSaveOutline } from 'react-icons/io5';
 import { Switch, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
 import AddTodoModal from '../../../components/models/todo-model';
 import { Task, UpdateTask } from '../../../apis';
+import { updateTodo } from '../../../apis/project-api';
 
 interface TodoType {
     id: number;
@@ -125,9 +126,30 @@ const Todo = ({ projectDetails }: { projectDetails: any }) => {
         }
     }, [projectDetails]);
 
-    const handleSave = () => {
-        console.log(todos);
-    };
+    const handleSave = async () => {
+        try {
+          const projectId = projectDetails.id;
+    
+          // Prepare the data to send to the server
+          const todoData = {
+            notes: note,
+            tasks: todos.map((task) => ({
+              id: task.id,
+              taskTitle: task.title,
+              taskDescription: task.description,
+              date: task.date,
+              done: task.isDone,
+            })),
+          };
+
+          await updateTodo(projectId, todoData);
+    
+          console.log('Todo updated successfully');
+        } catch (error) {
+      
+          console.error('Error updating todo:', error);
+        }
+      };
 
     return (
         <div className={editMode ? "px-12 py-8 white" : "px-12 py-8 bg-zinc-100"}>

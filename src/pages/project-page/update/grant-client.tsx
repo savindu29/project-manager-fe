@@ -3,6 +3,7 @@ import {GoPencil} from "react-icons/go";
 import {IoSaveOutline} from "react-icons/io5";
 import Select from "react-select";
 import countryList from "react-select-country-list";
+import { updateIntermediateClient } from '../../../apis/project-api';
 
 interface Country {
     label: string;
@@ -17,13 +18,31 @@ const GrantClient = ({projectDetails}: { projectDetails: any }) => {
         return `${year}-${month}-${day}`;
     }
     const handleEditClick = () => {
-        setEditMode(!editMode);
-    };
-    const handleSaveClick = () => {
-        // Add logic to save the data
-        setEditMode(false);
-    };
-
+    
+        const updatedData = {
+          name: clientName,
+          country: clientCountry?.value || null,
+          externalContactPerson: {
+            name: clientContactPersonName,
+            mobile: clientContactMobileNumber,
+            fixTel: clientContactFixTelNumber,
+            companyEmail: clientContactEmail,
+            designation: clientContactDesignation,
+            description: clientContactDescription,
+          },
+        };
+    
+        // Make the API call
+        updateIntermediateClient(1, updatedData)
+          .then((data: any) => {
+            console.log('Update successful:', data);
+            setEditMode(!editMode); 
+          })
+          .catch(error => {
+            console.error('Error updating data:', error);
+          });
+      };
+  
     const options = useMemo(() => countryList().getData(), []);
 
 
@@ -87,10 +106,6 @@ const GrantClient = ({projectDetails}: { projectDetails: any }) => {
                 </div>
 
                 <div className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
-
-
-
-
 
                     <div className="sm:col-span-3 px-6">
                         <label
@@ -247,28 +262,8 @@ const GrantClient = ({projectDetails}: { projectDetails: any }) => {
                             />
                         </div>
                     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 </div>
-
-
             </form>
-
         </div>
     );
 

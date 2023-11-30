@@ -1,113 +1,100 @@
-
-import React, { useState, useEffect } from 'react';
+// Dashboard.js
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import MiniDrawer from '../../layout';
-import { PieChart, Pie, Cell, Legend, Tooltip } from 'recharts';
-
-interface Project {
-  impStatusList: string;
-  priority: string;
-  lessonsLearned: string;
-}
 
 const Dashboard = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [proposalStats, setProposalStats] = useState({
+    propOnGoingCount: 0,
+    propLostCount: 0,
+    propWonCount: 0,
+  });
+
+  const [implementationStats, setImplementationStats] = useState({
+    implenetaionSucess: 0,
+    implementationFailed: 0,
+    implementationInProgress: 0,
+  });
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://localhost:8000/api/v1/project/list');
-        setProjects(response.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        
-      }
-    };
+    // Fetch data for Proposals' Statuses
+    axios.get('http://localhost:8000/api/v1/project/proposalStats')
+      .then(response => {
+        setProposalStats(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching proposal data:', error);
+      });
 
-    fetchData();
+    // Fetch data for Implementation Statuses
+    axios.get('http://localhost:8000/api/v1/project/ImplementationStats')
+      .then(response => {
+        setImplementationStats(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching implementation data:', error);
+      });
   }, []);
 
-  const totalOngoingProjects = projects.filter(project => project.impStatusList === 'status"').length;
-  const totalCompletedProjects = projects.filter(project => project.impStatusList === 'completed').length;
-  const totalFailedProjects = projects.filter(project => project.impStatusList  === 'failed').length;
- // Extracting project priority data
- const priorityCounts: Record<string, number> = {};
- projects.forEach(project => {
-   priorityCounts[project.priority] = (priorityCounts[project.priority] || 0) + 1;
- });
-
- // Data format for recharts
- const chartData = Object.keys(priorityCounts).map(key => ({
-   name: key,
-   value: priorityCounts[key],
- }));
-
- const COLORS = ['#FF6384', '#36A2EB', '#FFCE56']; // You can customize the colors
-
   return (
-    <div className="flex h-screen pb-16">
-      <MiniDrawer />
-
-      <div className="flex-1">
-        <div className="p-4">
-          <h2 className="text-3xl font-bold">Welcome to Project Dashboard</h2>
+    <div className="container mx-auto mt-8">
+        <MiniDrawer />
+      <div className="flex flex-wrap justify-between">
+        <div className="w-1/2">
+          <h1 className="text-2xl font-bold mb-2">Welcome to Dashboard</h1>
+          <div className="bg-white p-6 rounded shadow-md">
+            <h2 className="text-lg font-bold mb-2">Proposals' Statuses</h2>
+            <div className="grid grid-cols-2 gap-2">
+              {/* Card for Ongoing Proposals */}
+              <div className="bg-blue-200 p-2 rounded">
+                <h3 className="text-md font-bold mb-1">Ongoing</h3>
+                <p className="text-lg">{proposalStats.propOnGoingCount}</p>
+              </div>
+  
+              {/* Card for Lost Proposals */}
+              <div className="bg-red-200 p-2 rounded">
+                <h3 className="text-md font-bold mb-1">Lost</h3>
+                <p className="text-lg">{proposalStats.propLostCount}</p>
+              </div>
+  
+              {/* Card for Won Proposals */}
+              <div className="bg-green-200 p-2 rounded">
+                <h3 className="text-md font-bold mb-1">Won</h3>
+                <p className="text-lg">{proposalStats.propWonCount}</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <p className="text-lg ml-4">Project Progress</p>
-        <div className="flex flex-wrap">
-          {/* Project Progress Cards */}
-          <div className="w-1/3 p-2">
-            <div className="bg-slate-500 p-4 rounded-lg shadow-lg text-white">
-              <h2 className="text-lg font-bold mb-2">Ongoing Projects</h2>
-              <p className="text-xl">{totalOngoingProjects}</p>
+  
+        <div className="w-1/2">
+          <h1 className="text-2xl font-bold mb-2 text-white">ss</h1>
+          <div className="bg-white p-6 rounded shadow-md">
+            <h2 className="text-lg font-bold mb-2">Implementation Statuses</h2>
+            <div className="grid grid-cols-2 gap-2">
+              {/* Card for Successful Implementations */}
+              <div className="bg-green-200 p-2 rounded">
+                <h3 className="text-md font-bold mb-1">Successful</h3>
+                <p className="text-lg">{implementationStats.implenetaionSucess}</p>
+              </div>
+  
+              {/* Card for Failed Implementations */}
+              <div className="bg-red-200 p-2 rounded">
+                <h3 className="text-md font-bold mb-1">Failed</h3>
+                <p className="text-lg">{implementationStats.implementationFailed}</p>
+              </div>
+  
+              {/* Card for Implementations In Progress */}
+              <div className="bg-yellow-200 p-2 rounded">
+                <h3 className="text-md font-bold mb-1">In Progress</h3>
+                <p className="text-lg">{implementationStats.implementationInProgress}</p>
+              </div>
             </div>
           </div>
-
-          <div className="w-1/3 p-2">
-            <div className="bg-sky-500 p-4 rounded-lg shadow-lg text-white">
-              <h2 className="text-lg font-bold mb-2">Completed Projects</h2>
-              <p className="text-xl">{totalCompletedProjects}</p>
-            </div>
-          </div>
-
-          <div className="w-1/3 p-2">
-            <div className="bg-zinc-500 p-4 rounded-lg shadow-lg text-white">
-              <h2 className="text-lg font-bold mb-2">Failed Projects</h2>
-              <p className="text-xl">{totalFailedProjects}</p>
-            </div>
-          </div>
-
-      <div className="ml-4"><br></br>
-      <p className="text-lg ml-4">Project Progress</p>
-        <PieChart width={400} height={400}>
-          <Pie
-                data={chartData}
-                cx={200}
-                cy={200}
-                labelLine={false}
-                label={(entry) => entry.name}
-                outerRadius={80}
-                fill="#8884d8" dataKey={''}          >
-            {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-          <Tooltip />
-          <Legend />
-        </PieChart>
-                  {/* Lessons Learned */}
-          <div>
-            <p className="text-lg mb-2">Lessons Learned</p>
-            <ul>
-              {projects.map((project, index) => (
-                <li key={index}>{project.lessonsLearned}</li>
-              ))}
-            </ul>
-          </div>
+        </div>
       </div>
-      </div>
-    </div>
     </div>
   );
+  
 };
 
 export default Dashboard;

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-
+import { updateProjectCost } from '../../../apis/project-api';
 import { GoPencil } from "react-icons/go";
 import { IoSaveOutline } from "react-icons/io5";
 
@@ -13,10 +13,16 @@ const SpecialDates = ({projectDetails}: { projectDetails: any }) => {
     const handleEditClick = () => {
         setEditMode(!editMode);
     };
-    const handleSaveClick = () => {
-        // Add logic to save the data
+    const handleSaveClick = async () => {
+        await updateProjectCost(1, {
+            totalEffortMh: costTotalEffort,
+            quotedValue: costQuotedValue,
+            quotedRate: costQuotingRate,
+            amcValue: costAmcValue,
+        });
         setEditMode(false);
     };
+    
 
 
     const [editMode, setEditMode] = useState(false);
@@ -52,9 +58,10 @@ const SpecialDates = ({projectDetails}: { projectDetails: any }) => {
                                 <GoPencil /> <span className={"text-sm mx-2"}>Update</span>
                             </div>
                             :
-                            <div className={'border rounded-full bg-gray-100  px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'} onClick={handleEditClick}>
-                                <IoSaveOutline /> <span className={"text-sm mx-2"}>Save</span>
-                            </div>
+<div className={'border rounded-full bg-gray-100 px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'} onClick={handleSaveClick}>
+    <IoSaveOutline /> <span className={"text-sm mx-2"}>Save</span>
+</div>
+
                         }
 
 
