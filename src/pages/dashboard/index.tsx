@@ -42,69 +42,83 @@ useEffect(() => {
 
 
 //      <MiniDrawer />
-  return (
-    <div className="container mx-auto mt-8">
+return (
+  <div className="container mx-auto mt-8">
     {loading ? (
       <p>Loading...</p>
     ) : (
+      <div className="grid grid-cols-2 gap-8">
+        {/* Left Column */}
+        <div className="w-full">
+          {/* Proposal Status */}
+          <div className="mb-8">
+            <h1 className="text-2xl font-bold mb-2">Welcome to Dashboard</h1>
+            <div className="bg-white p-6 rounded shadow-md">
+            <h1 className="text-2xl font-bold mb-2">Proposal Statuses</h1>
+              <div className="grid grid-cols-2 gap-2">
+                {/* Card for Ongoing Proposals */}
+                <div className="bg-blue-200 p-2 rounded">
+                  <h3 className="text-md font-bold mb-1">Ongoing</h3>
+                  <p className="text-lg">{proposalStats.propOnGoingCount}</p>
+                </div>
   
-      <div className="flex flex-wrap justify-between">
-        <div className="w-1/2">
-          <h1 className="text-2xl font-bold mb-2">Welcome to Dashboard</h1>
-          <div className="bg-white p-6 rounded shadow-md">
-            <h2 className="text-lg font-bold mb-2">Proposals' Statuses</h2>
-            <div className="grid grid-cols-2 gap-2">
-              {/* Card for Ongoing Proposals */}
-              <div className="bg-blue-200 p-2 rounded">
-                <h3 className="text-md font-bold mb-1">Ongoing</h3>
-                <p className="text-lg">{proposalStats.propOnGoingCount}</p>
-              </div>
+                {/* Card for Won Proposals */}
+                <div className="bg-green-200 p-2 rounded">
+                  <h3 className="text-md font-bold mb-1">Won</h3>
+                  <p className="text-lg">{proposalStats.propWonCount}</p>
+                </div>
   
-              {/* Card for Won Proposals */}
-              <div className="bg-green-200 p-2 rounded">
-                <h3 className="text-md font-bold mb-1">Won</h3>
-                <p className="text-lg">{proposalStats.propWonCount}</p>
+                {/* Card for Lost Proposals */}
+                <div className="bg-red-200 p-2 rounded">
+                  <h3 className="text-md font-bold mb-1">Lost</h3>
+                  <p className="text-lg">{proposalStats.propLostCount}</p>
+                </div>
               </div>
-                
-              {/* Card for Lost Proposals */}
-              <div className="bg-red-200 p-2 rounded">
-                <h3 className="text-md font-bold mb-1">Lost</h3>
-                <p className="text-lg">{proposalStats.propLostCount}</p>
+            </div>
+          </div>
+  
+          {/* Implementation Status */}
+          <div>
+            <h1 className="text-2xl font-bold mb-2">Implementation Statuses</h1>
+            <div className="bg-white p-6 rounded shadow-md">
+              <div className="grid grid-cols-2 gap-2">
+                {/* Card for Implementations In Progress */}
+                <div className="bg-yellow-200 p-2 rounded">
+                  <h3 className="text-md font-bold mb-1">In Progress</h3>
+                  <p className="text-lg">{implementationStats.implementationInProgress}</p>
+                </div>
+  
+                {/* Card for Successful Implementations */}
+                <div className="bg-green-200 p-2 rounded">
+                  <h3 className="text-md font-bold mb-1">Successful</h3>
+                  <p className="text-lg">{implementationStats.implenetaionSucess}</p>
+                </div>
+  
+                {/* Card for Failed Implementations */}
+                <div className="bg-red-200 p-2 rounded">
+                  <h3 className="text-md font-bold mb-1">Failed</h3>
+                  <p className="text-lg">{implementationStats.implementationFailed}</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
   
-        <div className="w-1/2">
-          <h1 className="text-2xl font-bold mb-2 text-white">ss</h1>
-          <div className="bg-white p-6 rounded shadow-md">
-            <h2 className="text-lg font-bold mb-2">Implementation Statuses</h2>
-                <div className="grid grid-cols-2 gap-2">
-                                {/* Card for Implementations In Progress */}
-                                <div className="bg-yellow-200 p-2 rounded">
-                    <h3 className="text-md font-bold mb-1">In Progress</h3>
-                    <p className="text-lg">{implementationStats.implementationInProgress}</p>
-                  </div>
-              {/* Card for Successful Implementations */}
-              <div className="bg-green-200 p-2 rounded">
-                <h3 className="text-md font-bold mb-1">Successful</h3>
-                <p className="text-lg">{implementationStats.implenetaionSucess}</p>
-              </div>
-  
-              {/* Card for Failed Implementations */}
-              <div className="bg-red-200 p-2 rounded">
-                <h3 className="text-md font-bold mb-1">Failed</h3>
-                <p className="text-lg">{implementationStats.implementationFailed}</p>
-              </div>
-  
-
+        {/* Right Column */}
+        <div className="w-full">
+          {/* To-Do Tasks */}
+          <div>
+          <h1 className="text-2xl font-bold mb-2">Lesson Learned</h1>
+            <div className="bg-white p-6 rounded shadow-md">
+              {/* Add your beautiful rendering of to-do tasks here */}
             </div>
           </div>
         </div>
       </div>
-          )}
-    </div>
-  );
+    )}
+  </div>
+);
+
   
 };
 
