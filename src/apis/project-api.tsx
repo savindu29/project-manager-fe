@@ -125,3 +125,62 @@ export const updateIntermediateClient = (projectId: any, data: any) => {
       throw error; 
     });
   };
+
+
+//clarificationDiscussionDetails
+export const updateClarificationDiscussionDetails = async (
+  projectId: number,
+  clarificationDiscussionDetails: string
+): Promise<void> => {
+  try {
+    const updatedData = {
+      clarificationDiscussionDetails,
+    };
+
+    await axios.put(
+      `http://localhost:8000/api/v1/project/update?projectId=${projectId}`,
+      updatedData,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  } catch (error) {
+    console.error('Error updating clarificationDiscussionDetails:', error);
+  
+    // Log the response content if available
+    if (axios.isAxiosError(error)) {
+      console.error('Response:', error.response?.data);
+    }
+  }
+};
+
+// Update lessonsLearned in updateLessonsLearned function
+export const updateLessonsLearned = async (
+  projectId: number,
+  lessonsLearned: string
+): Promise<void> => {
+  try {
+      const updatedData = {
+          lessonsLearned,
+      };
+
+      await axios.put(
+          `http://localhost:8000/api/v1/project/update?projectId=${projectId}`,
+          updatedData,
+          {
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+          }
+      );
+  } catch (error) {
+      console.error('Error updating lessonsLearned:', error);
+
+      // Log the response content if available
+      if (axios.isAxiosError(error)) {
+          console.error('Response:', error.response?.data);
+      }
+  }
+};

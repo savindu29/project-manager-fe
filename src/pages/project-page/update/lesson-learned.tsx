@@ -1,7 +1,9 @@
+import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 
 import { GoPencil } from "react-icons/go";
 import { IoSaveOutline } from "react-icons/io5";
+import { updateLessonsLearned } from '../../../apis/project-api';
 
 const LessonLearned = ({projectDetails}: { projectDetails: any }) => {
     function formatDate(date: Date): string {
@@ -13,10 +15,23 @@ const LessonLearned = ({projectDetails}: { projectDetails: any }) => {
     const handleEditClick = () => {
         setEditMode(!editMode);
     };
-    const handleSaveClick = () => {
-        // Add logic to save the data
+ // Update lessonsLearned in handleSaveClick function
+const handleSaveClick = async () => {
+    try {
+        await updateLessonsLearned(
+            projectDetails?.id, 
+            lessonsLearned || '');
         setEditMode(false);
-    };
+
+    } catch (error) {
+        console.error('Error updating lessonsLearned:', error);
+
+        // Log the response content if available
+        if (axios.isAxiosError(error)) {
+            console.error('Response:', error.response?.data);
+        }
+    }
+};
     const [lessonsLearned, setLessonsLearned] = useState(projectDetails?.lessonsLearned || '');
 
     const [editMode, setEditMode] = useState(false);
@@ -47,9 +62,9 @@ const LessonLearned = ({projectDetails}: { projectDetails: any }) => {
                                 <GoPencil /> <span className={"text-sm mx-2"}>Update</span>
                             </div>
                             :
-                            <div className={'border rounded-full bg-gray-100  px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'} onClick={handleEditClick}>
-                                <IoSaveOutline /> <span className={"text-sm mx-2"}>Save</span>
-                            </div>
+                            <div className={'border rounded-full bg-gray-100 px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'} onClick={handleSaveClick}>
+                            <IoSaveOutline /> <span className={"text-sm mx-2"}>Save</span>
+                        </div>
                         }
 
 

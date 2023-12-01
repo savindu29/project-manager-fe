@@ -16,29 +16,38 @@ const Dashboard = () => {
     implementationInProgress: 0,
   });
 
-  useEffect(() => {
-    // Fetch data for Proposals' Statuses
-    axios.get('http://localhost:8000/api/v1/project/proposalStats')
-      .then(response => {
-        setProposalStats(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching proposal data:', error);
-      });
+  const [loading, setLoading] = useState(true);
 
-    // Fetch data for Implementation Statuses
-    axios.get('http://localhost:8000/api/v1/project/ImplementationStats')
-      .then(response => {
-        setImplementationStats(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching implementation data:', error);
-      });
-  }, []);
+useEffect(() => {
+  // Fetch data for Proposals' Statuses
+  axios.get('http://localhost:8000/api/v1/project/proposalStats')
+    .then(response => {
+      setProposalStats(response.data.data);
+    })
+    .catch(error => {
+      console.error('Error fetching proposal data:', error);
+    });
 
+  // Fetch data for Implementation Statuses
+  axios.get('http://localhost:8000/api/v1/project/ImplementationStats')
+    .then(response => {
+      setImplementationStats(response.data.data);
+      setLoading(false); 
+    })
+    .catch(error => {
+      console.error('Error fetching implementation data:', error);
+      setLoading(false); 
+    });
+}, []);
+
+
+//      <MiniDrawer />
   return (
     <div className="container mx-auto mt-8">
-        <MiniDrawer />
+    {loading ? (
+      <p>Loading...</p>
+    ) : (
+  
       <div className="flex flex-wrap justify-between">
         <div className="w-1/2">
           <h1 className="text-2xl font-bold mb-2">Welcome to Dashboard</h1>
@@ -51,16 +60,16 @@ const Dashboard = () => {
                 <p className="text-lg">{proposalStats.propOnGoingCount}</p>
               </div>
   
-              {/* Card for Lost Proposals */}
-              <div className="bg-red-200 p-2 rounded">
-                <h3 className="text-md font-bold mb-1">Lost</h3>
-                <p className="text-lg">{proposalStats.propLostCount}</p>
-              </div>
-  
               {/* Card for Won Proposals */}
               <div className="bg-green-200 p-2 rounded">
                 <h3 className="text-md font-bold mb-1">Won</h3>
                 <p className="text-lg">{proposalStats.propWonCount}</p>
+              </div>
+                
+              {/* Card for Lost Proposals */}
+              <div className="bg-red-200 p-2 rounded">
+                <h3 className="text-md font-bold mb-1">Lost</h3>
+                <p className="text-lg">{proposalStats.propLostCount}</p>
               </div>
             </div>
           </div>
@@ -70,7 +79,12 @@ const Dashboard = () => {
           <h1 className="text-2xl font-bold mb-2 text-white">ss</h1>
           <div className="bg-white p-6 rounded shadow-md">
             <h2 className="text-lg font-bold mb-2">Implementation Statuses</h2>
-            <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-2">
+                                {/* Card for Implementations In Progress */}
+                                <div className="bg-yellow-200 p-2 rounded">
+                    <h3 className="text-md font-bold mb-1">In Progress</h3>
+                    <p className="text-lg">{implementationStats.implementationInProgress}</p>
+                  </div>
               {/* Card for Successful Implementations */}
               <div className="bg-green-200 p-2 rounded">
                 <h3 className="text-md font-bold mb-1">Successful</h3>
@@ -83,15 +97,12 @@ const Dashboard = () => {
                 <p className="text-lg">{implementationStats.implementationFailed}</p>
               </div>
   
-              {/* Card for Implementations In Progress */}
-              <div className="bg-yellow-200 p-2 rounded">
-                <h3 className="text-md font-bold mb-1">In Progress</h3>
-                <p className="text-lg">{implementationStats.implementationInProgress}</p>
-              </div>
+
             </div>
           </div>
         </div>
       </div>
+          )}
     </div>
   );
   
