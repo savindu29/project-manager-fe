@@ -46,36 +46,6 @@ const EffortEstimators = ({projectDetails}: { projectDetails: any }) => {
     const handleEditClick = () => {
         setEditMode(!editMode);
     };
-<<<<<<< HEAD
-    const handleSaveClick = async () => {
-        try {
-            const updatedProjectDetails = {
-                ...projectDetails,
-                effortEstimators: effortEstimators.map(estimator => estimator.id),
-            };
-    
-            const response = await fetch('http://localhost:8000/api/v1/project/update?projectId=1', {
-                method: 'PUT',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(updatedProjectDetails),
-            });
-    
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-    
-            const data = await response.json();
-            console.log('Project details updated successfully:', data);
-            setEditMode(false);
-        } catch (error) {
-            console.error('Error updating project details:', error);
-        }
-    };
-    
-=======
     const handleSaveClick = () => {
         handleConfirmationDialogOpen();
     };
@@ -84,7 +54,6 @@ const EffortEstimators = ({projectDetails}: { projectDetails: any }) => {
    
 
 
->>>>>>> origin/main
     const [editMode, setEditMode] = useState(false);
 
     const [effortEstimators, setEffortEstimators] = useState<EmployeeSearchResult[]>([]);
@@ -132,9 +101,6 @@ const EffortEstimators = ({projectDetails}: { projectDetails: any }) => {
         }
 
 
-<<<<<<< HEAD
-    }, [projectDetails])
-=======
     }, [projectDetails]);
 
 
@@ -181,7 +147,6 @@ const EffortEstimators = ({projectDetails}: { projectDetails: any }) => {
        
     };
 
->>>>>>> origin/main
     return (
         <div className={editMode ? "px-12 py-8 white" : "px-12 py-8 bg-zinc-100"}>
             <form action="">
@@ -195,14 +160,6 @@ const EffortEstimators = ({projectDetails}: { projectDetails: any }) => {
                             >
                                 <GoPencil /> <span className={'text-sm mx-2'}>Update</span>
                             </div>
-<<<<<<< HEAD
-                            :
-                            <div className={'border rounded-full bg-gray-100 px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'} onClick={handleSaveClick}>
-                            <IoSaveOutline /> <span className={"text-sm mx-2"}>Save</span>
-                        </div>
-                        
-                        }
-=======
                         ) : (
                         <div className={"flex"}>
                             <div
@@ -222,7 +179,6 @@ const EffortEstimators = ({projectDetails}: { projectDetails: any }) => {
                                 <MdOutlineCancel /> <span className={'text-sm mx-2'}>Cancel</span>
                             </div>
                         </div>
->>>>>>> origin/main
 
                         )}
 

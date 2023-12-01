@@ -1,14 +1,6 @@
-// Dashboard.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import MiniDrawer from '../../layout';
-import { PieChart, Pie, Cell, Legend, Tooltip } from 'recharts';
-
-interface Project {
-  impStatusList: string;
-  priority: string;
-  lessonsLearned: string;
-}
 
 const Dashboard = () => {
   const [proposalStats, setProposalStats] = useState({
@@ -23,29 +15,32 @@ const Dashboard = () => {
     implementationInProgress: 0,
   });
 
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://localhost:8000/api/v1/project/list');
-        setProjects(response.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        
-      }
-    };
-
-    fetchData();
+    // Fetch data for Proposals' Statuses
+    axios.get('http://localhost:8000/api/v1/project/proposalStats')
+      .then(response => {
+        console.log('Proposal Stats:', response.data.data);
+        setProposalStats(response.data.data);
+      })
+      .catch(error => {
+        console.error('Error fetching proposal data:', error);
+      });
+  
+    // Fetch data for Implementation Statuses
+    axios.get('http://localhost:8000/api/v1/project/implementationStats')
+      .then(response => {
+        console.log('Implementation Stats:', response.data.data);
+        setImplementationStats(response.data.data);
+      })
+      .catch(error => {
+        console.error('Error fetching implementation data:', error);
+      });
   }, []);
-
-
+  
 //      <MiniDrawer />
 return (
   <div className="container mx-auto mt-8">
-    {loading ? (
-      <p>Loading...</p>
-    ) : (
+ 
       <div className="grid grid-cols-2 gap-8">
         {/* Left Column */}
         <div className="w-full">
@@ -114,7 +109,7 @@ return (
           </div>
         </div>
       </div>
-    )}
+
   </div>
 );
 
@@ -122,3 +117,5 @@ return (
 };
 
 export default Dashboard;
+
+

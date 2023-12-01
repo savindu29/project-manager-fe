@@ -66,8 +66,6 @@ export const updateProject = async (id: number, updatedData: any) => {
     }
 };
 
-
-<<<<<<< HEAD
 //----UPDATE PROJECT----
 //todo
 export const updateTodo = async (projectId: any, todoData: any) => {
@@ -187,7 +185,7 @@ export const updateLessonsLearned = async (
       }
   }
 };
-=======
+
 export const getStatusHistory = async (id: number) => {
     try {
         const url = `${APP_API_BASE_URL}/api/v1/statusHistory/list?projectId=${id}`;
@@ -198,4 +196,4 @@ export const getStatusHistory = async (id: number) => {
         throw err;
     }
 };
->>>>>>> origin/main
+

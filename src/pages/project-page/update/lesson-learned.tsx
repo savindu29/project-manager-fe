@@ -1,20 +1,12 @@
-<<<<<<< HEAD
-import axios from 'axios';
-=======
 import { Alert, Snackbar } from '@mui/material';
->>>>>>> origin/main
 import React, {useEffect, useState} from 'react';
 
 import { GoPencil } from "react-icons/go";
 import { IoSaveOutline } from "react-icons/io5";
-<<<<<<< HEAD
-import { updateLessonsLearned } from '../../../apis/project-api';
-=======
 import ConfirmationDialog from '../../../components/update-confirm';
 import { APP_API_BASE_URL, ProjectUpdateType } from '../../../apis';
 import axios from 'axios';
 import { MdOutlineCancel } from 'react-icons/md';
->>>>>>> origin/main
 
 const LessonLearned = ({projectDetails}: { projectDetails: any }) => {
     
@@ -46,29 +38,9 @@ const LessonLearned = ({projectDetails}: { projectDetails: any }) => {
     const handleEditClick = () => {
         setEditMode(!editMode);
     };
-<<<<<<< HEAD
- // Update lessonsLearned in handleSaveClick function
-const handleSaveClick = async () => {
-    try {
-        await updateLessonsLearned(
-            projectDetails?.id, 
-            lessonsLearned || '');
-        setEditMode(false);
-
-    } catch (error) {
-        console.error('Error updating lessonsLearned:', error);
-
-        // Log the response content if available
-        if (axios.isAxiosError(error)) {
-            console.error('Response:', error.response?.data);
-        }
-    }
-};
-=======
     const handleSaveClick = () => {
         handleConfirmationDialogOpen();
     };
->>>>>>> origin/main
     const [lessonsLearned, setLessonsLearned] = useState(projectDetails?.lessonsLearned || '');
 
     const [editMode, setEditMode] = useState(false);
@@ -136,13 +108,6 @@ const handleSaveClick = async () => {
                             >
                                 <GoPencil /> <span className={'text-sm mx-2'}>Update</span>
                             </div>
-<<<<<<< HEAD
-                            :
-                            <div className={'border rounded-full bg-gray-100 px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'} onClick={handleSaveClick}>
-                            <IoSaveOutline /> <span className={"text-sm mx-2"}>Save</span>
-                        </div>
-                        }
-=======
                         ) : (
                         <div className={"flex"}>
                             <div
@@ -162,7 +127,6 @@ const handleSaveClick = async () => {
                                 <MdOutlineCancel /> <span className={'text-sm mx-2'}>Cancel</span>
                             </div>
                         </div>
->>>>>>> origin/main
 
                         )}
 

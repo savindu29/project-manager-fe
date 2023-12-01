@@ -3,15 +3,11 @@ import {GoPencil} from "react-icons/go";
 import {IoSaveOutline} from "react-icons/io5";
 import Select from "react-select";
 import countryList from "react-select-country-list";
-<<<<<<< HEAD:src/pages/project-page/update/grant-client.tsx
-import { updateIntermediateClient } from '../../../apis/project-api';
-=======
 import {MdOutlineCancel} from "react-icons/md";
 import ConfirmationDialog from "../../../components/update-confirm";
 import {Alert, Snackbar} from "@mui/material";
 import {APP_API_BASE_URL, Cost, GrantClient} from "../../../apis";
 import axios from "axios";
->>>>>>> origin/main:src/pages/project-page/update/grant-client-details.tsx
 
 interface Country {
     label: string;
@@ -45,33 +41,6 @@ const GrantClientDetails = ({projectDetails}: { projectDetails: any }) => {
 
 
     const handleEditClick = () => {
-<<<<<<< HEAD:src/pages/project-page/update/grant-client.tsx
-    
-        const updatedData = {
-          name: clientName,
-          country: clientCountry?.value || null,
-          externalContactPerson: {
-            name: clientContactPersonName,
-            mobile: clientContactMobileNumber,
-            fixTel: clientContactFixTelNumber,
-            companyEmail: clientContactEmail,
-            designation: clientContactDesignation,
-            description: clientContactDescription,
-          },
-        };
-    
-        // Make the API call
-        updateIntermediateClient(1, updatedData)
-          .then((data: any) => {
-            console.log('Update successful:', data);
-            setEditMode(!editMode); 
-          })
-          .catch(error => {
-            console.error('Error updating data:', error);
-          });
-      };
-  
-=======
         setEditMode(true)
     };
 
@@ -120,7 +89,6 @@ const GrantClientDetails = ({projectDetails}: { projectDetails: any }) => {
         handleConfirmationDialogOpen();
     };
 
->>>>>>> origin/main:src/pages/project-page/update/grant-client-details.tsx
     const options = useMemo(() => countryList().getData(), []);
 
 
@@ -199,6 +167,10 @@ const GrantClientDetails = ({projectDetails}: { projectDetails: any }) => {
                 </div>
 
                 <div className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
+
+
+
+
 
                     <div className="sm:col-span-3 px-6">
                         <label
@@ -355,8 +327,6 @@ const GrantClientDetails = ({projectDetails}: { projectDetails: any }) => {
                             />
                         </div>
                     </div>
-<<<<<<< HEAD:src/pages/project-page/update/grant-client.tsx
-=======
 
 
 
@@ -381,9 +351,11 @@ const GrantClientDetails = ({projectDetails}: { projectDetails: any }) => {
                     </Snackbar>
 
 
->>>>>>> origin/main:src/pages/project-page/update/grant-client-details.tsx
                 </div>
+
+
             </form>
+
         </div>
     );
 

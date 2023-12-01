@@ -1,19 +1,14 @@
 
 
-import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 
 import { GoPencil } from "react-icons/go";
 import { IoSaveOutline } from "react-icons/io5";
-<<<<<<< HEAD
-import { updateClarificationDiscussionDetails } from '../../../apis/project-api';
-=======
 import { APP_API_BASE_URL, EmployeeSearchResult, ProjectUpdateType } from '../../../apis';
 import { MdOutlineCancel } from 'react-icons/md';
 import ConfirmationDialog from '../../../components/update-confirm';
 import { Alert, Snackbar } from '@mui/material';
 import axios from 'axios';
->>>>>>> origin/main
 
 const ClarificationDiscussionDetails = ({projectDetails}: { projectDetails: any }) => {
     
@@ -45,29 +40,11 @@ const ClarificationDiscussionDetails = ({projectDetails}: { projectDetails: any 
     const handleEditClick = () => {
         setEditMode(!editMode);
     };
-<<<<<<< HEAD
-    const handleSaveClick = async () => {
-        try {
-            await updateClarificationDiscussionDetails(
-                projectDetails?.id,
-                projectClarificationDiscussDetails || ''
-            );
-            setEditMode(false);
-    
-        } catch (error) {
-            console.error('Error updating clarificationDiscussionDetails:', error);
-    
-            // Log the response content if available
-            if (axios.isAxiosError(error)) {
-                console.error('Response:', error.response?.data);
-            }
-        }
-=======
     const handleSaveClick = () => {
         handleConfirmationDialogOpen();
->>>>>>> origin/main
     };
-    
+
+
     const [editMode, setEditMode] = useState(false);
     const [projectClarificationDiscussDetails, setClarificationDiscussDetails] = useState(
         projectDetails?.cdDetails || ''
@@ -135,14 +112,6 @@ const ClarificationDiscussionDetails = ({projectDetails}: { projectDetails: any 
                             >
                                 <GoPencil /> <span className={'text-sm mx-2'}>Update</span>
                             </div>
-<<<<<<< HEAD
-                            :
-                            <div className={'border rounded-full bg-gray-100 px-3 flex justify-center items-center text-gray-700 hover:cursor-pointer hover:bg-gray-200 w-28'} onClick={handleSaveClick}>
-                            <IoSaveOutline /> <span className={"text-sm mx-2"}>Save</span>
-                        </div>
-                        
-                        }
-=======
                         ) : (
                         <div className={"flex"}>
                             <div
@@ -164,7 +133,6 @@ const ClarificationDiscussionDetails = ({projectDetails}: { projectDetails: any 
                         </div>
 
                         )}
->>>>>>> origin/main
 
 
 
