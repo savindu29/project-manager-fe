@@ -1,4 +1,4 @@
-import {getEmployeesOptions} from ".";
+import {APP_API_BASE_URL, getEmployeesOptions} from ".";
 import axios from "axios";
 
 
@@ -15,7 +15,7 @@ type Person = {
 
 export const saveUser = async (user: Person) => {
     try {
-        const url = "http://localhost:8000/api/v1/responsible-person/create";
+        const url = `${APP_API_BASE_URL}/api/v1/responsible-person/create`;
 
         const result = await axios.post(url, user);
         return result.data;
@@ -39,7 +39,7 @@ export const getAllEmployees = async (
         let str = Object.entries(params)
             .map(([key, val]) => `${key}=${val}`)
             .join('&');
-        const url = `http://localhost:8000/api/v1/responsible-person/search?${str}`;
+        const url = `${APP_API_BASE_URL}/api/v1/responsible-person/search?${str}`;
 
 
         const result = await axios.get(url);

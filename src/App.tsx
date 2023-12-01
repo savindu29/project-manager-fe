@@ -51,9 +51,9 @@ const App = () => {
         element={isAuthenticated ? <PeoplePage	 /> : <Navigate to="/login" />}
       />
           <Route
-        path="/dashboard"
-        element={isAuthenticated ? <PeoplePage	 /> : <Navigate to="/login" />}
-      />
+    path="/dashboard"
+    element={isAuthenticated ? <Navigate to="/" /> : <Navigate to="/login" />}
+/>
       
     </Routes>
 

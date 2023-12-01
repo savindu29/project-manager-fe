@@ -1,6 +1,7 @@
 import React, {useState, useEffect, FC} from 'react';
 import axios from 'axios';
 import { HiPlus } from 'react-icons/hi';
+import {APP_API_BASE_URL} from "../../../apis";
 
 interface SearchResult {
   id: number;
@@ -42,7 +43,7 @@ function SearchForm({ onAddClick, disabled }: SearchFormProps) {
   const fetchSearchResults = async (text: string) => {
     try {
       const response = await axios.get<SearchResponse>(
-        `http://localhost:8000/api/v1/responsible-person/search?page=1&size=5&searchtext=${text}`
+          `${APP_API_BASE_URL}/api/v1/responsible-person/search?page=1&size=5&searchtext=${text}`
       );
 
       setSearchResults(response.data.data.data);

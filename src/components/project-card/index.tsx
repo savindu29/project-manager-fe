@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PositionedSnackbar from '../snack-bar';
+import { GoProjectRoadmap } from 'react-icons/go';
 
 
 const formatDate = (dateString: string) => {
@@ -12,16 +13,10 @@ const ProjectCard = ({ cardDetails, onCardClick }: any) => {
  
   const handleCardClick = () => {
     onCardClick(cardDetails);
-    setSnackbarOpen(true);
+    
   };
   
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-  
-
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
+ 
 
   let backgroundClass = 'w-80 p-4 mx-5 my-3 rounded-xl';
 
@@ -34,10 +29,17 @@ const ProjectCard = ({ cardDetails, onCardClick }: any) => {
   }
 
   return (
-    <div className={`text-gray-700 h-auto ${backgroundClass} duration-200 hover:bg-zinc-200 cursor-pointer`} onClick={handleCardClick}>
-      <h1 className="text-sm font-medium">
-        {cardDetails.projectName} : <span className="text-xs">{cardDetails.code}</span>
+    <div className={`text-gray-700 h-auto mb-5 shadow-lg ${backgroundClass} duration-200  cursor-pointer transition duration-300 ease-in-out transform hover:scale-105`} onClick={handleCardClick}>
+      <div className='flex items-center'>
+      
+      <h1 className="text-sm  font-semibold">
+        {cardDetails.projectName} 
       </h1>
+      
+      </div>
+      
+      <span className="text-xs">{cardDetails.code}</span>
+      
 
       <div className="flex w-full text-xs mt-2">
         <div className="w-full text-left">Priority: {cardDetails.priority}</div>
@@ -46,7 +48,7 @@ const ProjectCard = ({ cardDetails, onCardClick }: any) => {
       <p className="text-sm mt-2">{cardDetails.todo}</p>
       <h1 className="mt-2 text-sm">Last Status Date:  {formatDate(cardDetails.latestStatusHistoryDate)} </h1>
 
-      <PositionedSnackbar open={snackbarOpen} onClose={handleSnackbarClose} message={"Loading the Project"} />
+      {/* <PositionedSnackbar open={snackbarOpen} onClose={handleSnackbarClose} message={"Loading the Project"} /> */}
     </div>
   );
 };

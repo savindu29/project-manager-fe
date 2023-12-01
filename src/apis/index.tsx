@@ -1,3 +1,5 @@
+export const APP_API_BASE_URL = "http://localhost:8000";
+
 export type getProjectsOptions = {
     searchtext: string | "";
     size: number | null;
@@ -90,13 +92,13 @@ export type ExternalContactPerson = {
 
 export type  IntermediateClient = {
     name: string | null;
-    country: string | null;
+    country: string | null | undefined;
     externalContactPerson: ExternalContactPerson | null;
 
 }
 export type  GrantClient = {
     name: string;
-    country: string | null;
+    country: string | null | undefined;
     isForeign: boolean;
     externalContactPerson: ExternalContactPerson | null;
 
@@ -104,6 +106,27 @@ export type  GrantClient = {
 export type Activity = {
     date:Date | null;
     description :string | null;
+}
+export type ProjectUpdateType ={
+    
+    projectStatus: number;
+    initiationDate: Date;
+    proposalDueDate: Date | null;
+    proposalSubmittedDate: Date | null;
+    proposedImplementStartDate: Date | null;
+    proposedImplementEndDate: Date | null;
+    actualImplementationStartDate: Date | null;
+    actualImplementationEndDate: Date | null;
+    actualImplementationDueDate: Date | null;
+    lessonsLearned: string | null;
+    clarificationDiscussionDetails: string | null;
+    effortEstimators: number[] | null;
+    projectLead: number;
+    
+   
+    // rfpResources: RfpResources[] | null;
+    // outputsFromInova: OutputsFromInova[] | null;
+    // latestActivity: Activity[] | null;
 }
 
 export type ProjectRequest = {
