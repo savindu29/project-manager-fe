@@ -66,6 +66,13 @@ export type  UpdateTask = {
     date: Date | null;
     done:boolean | false;
 }
+export type  UpdateStatusHistory = {
+    id:number;
+    
+    description: string | null;
+    date: Date | null;
+
+}
 
 export type  Todo = {
     notes: string | null;
