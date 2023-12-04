@@ -31,7 +31,7 @@ const Projects: React.FC = () => {
   const [page, setPage] = useState(1);
   const pageSize = 3;
   const [dataCount, setDatacount] = useState<number>(0);
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(true); // Add loading state
 
   const fetchProjects = async () => {
     try {
@@ -46,11 +46,18 @@ const Projects: React.FC = () => {
       if (response && response.data) {
         setProjects(response.data.data);
         setDatacount(response.data.count);
+
+        // If there are projects and no project is currently selected, select the first one
+        if (response.data.data.length > 0 && !selectedProject) {
+          handleCardClick(response.data.data[0]);
+        }
       } else {
         setDatacount(0);
       }
     } catch (error) {
       console.error("Error fetching projects:", error);
+    } finally {
+      setLoading(false); // Set loading to false after fetching projects
     }
   };
 
@@ -65,7 +72,7 @@ const Projects: React.FC = () => {
       setSelectedProject(project);
       setProjectId(project.id);
       setLoading(false);
-    }, 500); //  second delay
+    }, 500); // 0.5-second delay
   };
 
   const handleSearchChange = (event: any) => {
@@ -84,12 +91,12 @@ const Projects: React.FC = () => {
   };
 
   return (
-    <div className="flex  ">
+    <div className="flex">
       <MiniDrawer />
       <div className="h-screen w-full flex justify-center items-center">
-        <div className="w-96 h-screen ">
-          <div className=" ">
-            <div className="pl-5 pr-6 py-6   flex items-center justify-center">
+        <div className="w-96 h-screen">
+          <div className="">
+            <div className="pl-5 pr-6 py-6 flex items-center justify-center">
               <form
                 className="flex items-center w-full drop-shadow-lg"
                 onSubmit={handleFormSubmit}
@@ -100,7 +107,7 @@ const Projects: React.FC = () => {
                 <div className="relative w-full">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <svg
-                      className="w-4 h-4 text-gray-700" // Change color to gray-700
+                      className="w-4 h-4 text-gray-700" 
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       fill="none"
@@ -116,7 +123,7 @@ const Projects: React.FC = () => {
                   <input
                     type="text"
                     id="simple-search"
-                    className="bg-white border  text-gray-900 text-sm rounded-lg   block w-full pl-10 py-2.5 placeholder-gray-400 focus:outline-none  focus:border-blue-300"
+                    className="bg-white border text-gray-900 text-sm rounded-lg block w-full pl-10 py-2.5 placeholder-gray-400 focus:outline-none focus:border-blue-300"
                     placeholder="Search Project ..."
                     value={searchText}
                     onChange={handleSearchChange}
@@ -133,9 +140,9 @@ const Projects: React.FC = () => {
                 {dataCount} Results
               </div>
               <div className="flex justify-center">
-                <div className="overflow-hidden ">
+                <div className="overflow-hidden">
                   {dataCount > 0 ? (
-                    projects.map((project) => (
+                    projects.map((project, index) => (
                       <ProjectCard
                         key={project.id}
                         cardDetails={project}
@@ -143,11 +150,7 @@ const Projects: React.FC = () => {
                       />
                     ))
                   ) : (
-                    <div className="flex items-center justify-center h-20">
-                      <p className="text-gray-500 font-bold">
-                        No results found!
-                      </p>
-                    </div>
+                    <p>Loading ...</p>
                   )}
                 </div>
               </div>
@@ -164,8 +167,8 @@ const Projects: React.FC = () => {
           </div>
         </div>
 
-        <div className="w-full h-full overflow-hidden ">
-          <div className=" w-full flex  justify-end items-end mt-2 px-12">
+        <div className="w-full h-full overflow-hidden">
+          <div className="w-full flex justify-end items-end mt-2 px-12">
             {selectedProject && (
               <Link to={`/projects/update/${selectedProject.id}`}>
                 <div className="text-semibold text-xs border px-4 py-2 rounded mr-4 hover:cursor-pointer">
@@ -180,20 +183,19 @@ const Projects: React.FC = () => {
             </Link>
           </div>
           {loading ? (
-            // Display a spinner while loading
-            <div className="flex items-center justify-center h-full">
-              <CircularProgress
-                color="primary"
-                size={75}
-                thickness={2}
-                variant="indeterminate"
-              />
-            </div>
-          ) : selectedProject ? (
-            <ProjectDetail projectId={selectedProject.id} />
-          ) : (
-            <BlankPage />
-          )}
+  <div className="flex items-center justify-center h-full">
+    <CircularProgress
+      color="primary"
+      size={75}
+      thickness={2}
+      variant="indeterminate"
+    />
+  </div>
+) : dataCount > 0 ? (
+  <ProjectDetail projectId={projects[0].id} />
+) : (
+  <BlankPage />
+)}
         </div>
       </div>
     </div>
