@@ -51,7 +51,7 @@ const Dashboard = () => {
 //      <MiniDrawer />
 return (
   <div className="container mx-auto mt-8">
-    <MiniDrawer />
+   <MiniDrawer />
       <div className="grid grid-cols-2 gap-8">
         {/* Left Column */}
         <div className="w-full">
