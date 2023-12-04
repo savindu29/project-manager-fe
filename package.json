@@ -19,7 +19,7 @@
     "@types/node": "^16.18.59",
     "@types/react-select": "^5.0.1",
     "@types/recharts": "^1.8.28",
-    "axios": "^1.6.1",
+    "axios": "^1.6.2",
     "dayjs": "^1.11.10",
     "formik": "^2.4.5",
     "heroicons": "^2.0.18",
