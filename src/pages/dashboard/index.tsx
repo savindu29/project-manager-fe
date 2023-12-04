@@ -14,7 +14,7 @@ const Dashboard = () => {
     implementationFailed: 0,
     implementationInProgress: 0,
   });
-
+  const [lessonsLearned, setLessonsLearned] = useState([]);
   useEffect(() => {
     // Fetch data for Proposals' Statuses
     axios.get('http://localhost:8000/api/v1/project/proposalStats')
@@ -35,7 +35,18 @@ const Dashboard = () => {
       .catch(error => {
         console.error('Error fetching implementation data:', error);
       });
-  }, []);
+          // Fetch data for Lessons Learned
+    axios.get('http://localhost:8000/api/v1/project/lessonsLearned')
+    .then(response => {
+      console.log('Lessons Learned:', response.data.data);
+      setLessonsLearned(response.data.data);
+    })
+    .catch(error => {
+      console.error('Error fetching lessons learned data:', error);
+    });
+
+  }, 
+  []);
   
 //      <MiniDrawer />
 return (
@@ -97,14 +108,22 @@ return (
             </div>
           </div>
         </div>
-  
-        {/* Right Column */}
-        <div className="w-full">
-          {/* To-Do Tasks */}
+         {/* Right Column */}
+         <div className="w-full">
           <div>
-          <h1 className="text-2xl font-bold mb-2">Lesson Learned</h1>
+            <h1 className="text-2xl font-bold mb-2">Lesson Learned</h1>
             <div className="bg-white p-6 rounded shadow-md">
-              {/* Add your beautiful rendering of to-do tasks here */}
+                              <ul>
+                  {lessonsLearned && lessonsLearned.length > 0 && (
+                    (() => {
+                      const result = [];
+                      for (let index = 0; index < lessonsLearned.length; index++) {
+                        result.push(<li key={index}>{lessonsLearned[index]}</li>);
+                      }
+                      return result;
+                    })()
+                  )}
+                </ul>
             </div>
           </div>
         </div>
