@@ -190,8 +190,9 @@ const UpdateProjectForm = ({projectDetails}: { projectDetails: any }) => {
                     )}
                     <ProjectLead projectDetails={projectDetails}/>
                     <EffortEstimators projectDetails={projectDetails}/>
-                    <Cost projectDetails={projectDetails}/>
                     <RFPResources projectDetails={projectDetails}/>
+                    <Cost projectDetails={projectDetails}/>
+                    
                     <OutputFromInova projectDetails={projectDetails}/>
                     <Todo projectDetails={projectDetails}/>
                     <LessonLearned projectDetails={projectDetails}/>

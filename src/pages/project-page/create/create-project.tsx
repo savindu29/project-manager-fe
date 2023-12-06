@@ -20,6 +20,7 @@ import {
 import AddTodoModal from "../../../components/models/todo-model";
 import AddLastActivityModal from "../../../components/models/status-history-model";
 
+
 interface Country {
     label: string;
     value: string;
@@ -1154,17 +1155,15 @@ const CreateProject = () => {
                                         />
                                     </div>
                                 </div>
-                                <div className="sm:col-span-6">
+                                {/* <div className="sm:col-span-6">
                                     <h2 className="font-semibold text-lg mt-8 mb-4">
                                         RFP Resources
                                     </h2>
-                                    <MyFileInput
-                                        id="rfpFiles"
-                                        onSelectFiles={handleSelectedFiles}
-                                        isDisabled={false}
-                                    />
-                                </div>
-                                <div className="sm:col-span-6">
+                                    
+
+                                    
+                                </div> */}
+                                {/* <div className="sm:col-span-6">
                                     <h2 className="font-semibold text-lg mt-8 mb-4">
                                         Outout From Inova
                                     </h2>
@@ -1175,7 +1174,7 @@ const CreateProject = () => {
                                             isDisabled={false}
                                         />
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
 

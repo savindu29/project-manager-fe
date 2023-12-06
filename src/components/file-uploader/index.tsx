@@ -3,10 +3,10 @@ import React, { useState, ChangeEvent } from 'react';
 interface MyFileInputProps {
     id: string;
     onSelectFiles: (id: string, files: File[]) => void;
-    isDisabled:boolean
+    isDisabled: boolean;
 }
 
-const MyFileInput: React.FC<MyFileInputProps> = ({ id, onSelectFiles }, isDisabled:boolean) => {
+const MyFileInput: React.FC<MyFileInputProps> = ({ id, onSelectFiles, isDisabled }) => {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -26,8 +26,17 @@ const MyFileInput: React.FC<MyFileInputProps> = ({ id, onSelectFiles }, isDisabl
         <div className="mt-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">Choose Files</label>
             <div className="flex items-center space-x-4">
-                <label htmlFor={`fileInput-${id}`} className="relative flex items-center justify-center h-10 w-40 bg-gray-200 text-gray-600 rounded-md cursor-pointer hover:bg-sky-400 focus-within:outline-none focus-within:ring focus-within:border-sky-300">
-                    <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <label
+                    htmlFor={`fileInput-${id}`}
+                    className="relative flex items-center justify-center h-10 w-40 bg-gray-200 text-gray-600 rounded-md cursor-pointer hover:bg-sky-400 focus-within:outline-none focus-within:ring focus-within:border-sky-300"
+                >
+                    <svg
+                        className="w-6 h-6 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
                     </svg>
                     <span>Browse</span>
@@ -37,6 +46,7 @@ const MyFileInput: React.FC<MyFileInputProps> = ({ id, onSelectFiles }, isDisabl
                         className="sr-only"
                         multiple
                         onChange={handleFileChange}
+                        disabled={isDisabled}
                     />
                 </label>
                 <span className="text-gray-500">
@@ -56,11 +66,9 @@ const MyFileInput: React.FC<MyFileInputProps> = ({ id, onSelectFiles }, isDisabl
                             >
                                 <span className="truncate mr-2">{`${file.name} - ${file.type}`}</span>
                                 <button
-
                                     type="button"
                                     className="text-red-500 hover:text-red-700"
                                     onClick={() => handleRemoveFile(index)}
-
                                 >
                                     Remove
                                 </button>

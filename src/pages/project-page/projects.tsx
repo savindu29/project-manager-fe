@@ -72,7 +72,7 @@ const Projects: React.FC = () => {
       setSelectedProject(project);
       setProjectId(project.id);
       setLoading(false);
-    }, 500); // 0.5-second delay
+    }, 300); // 0.5-second delay
   };
 
   const handleSearchChange = (event: any) => {
@@ -183,19 +183,15 @@ const Projects: React.FC = () => {
             </Link>
           </div>
           {loading ? (
-  <div className="flex items-center justify-center h-full">
-    <CircularProgress
-      color="primary"
-      size={75}
-      thickness={2}
-      variant="indeterminate"
-    />
-  </div>
-) : dataCount > 0 ? (
-  <ProjectDetail projectId={projects[0].id} />
-) : (
-  <BlankPage />
-)}
+            // Display a spinner while loading
+            <div className="flex items-center justify-center h-full">
+              <BlankPage/>
+            </div>
+          ) : selectedProject ? (
+            <ProjectDetail projectId={selectedProject.id} />
+          ) : (
+            <BlankPage />
+          )}
         </div>
       </div>
     </div>
