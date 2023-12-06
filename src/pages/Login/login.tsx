@@ -113,7 +113,20 @@ const LoginPage: React.FC = () => {
   </span>
 </button>
 
-                <br></br>
+                            <div className="flex justify-center">
+                              <button
+                                className="text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-gray-900 focus:outline-none mt-2"
+                                onClick={() => {
+                                  // Handle the click event for the small button (redirect to sign-up page)
+                                  window.location.href = "/ForgotPasswordPage";
+                                }}
+                              >
+                                Forgot Password
+                              </button>
+                            </div>
+                            <div className="flex justify-center">
+                            </div>
+<br></br>
                 <button
                   className="mx-auto mt-2 text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-gray-900 focus:outline-none"
                   onClick={() => {
