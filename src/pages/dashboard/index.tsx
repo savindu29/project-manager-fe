@@ -1,20 +1,42 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import MiniDrawer from '../../layout';
 
+interface Project {
+  id: string;
+  projectName: string;
+  impStatusList: string;
+  priority: string;
+  lessonsLearned: string;
+}
 const Dashboard = () => {
   const [proposalStats, setProposalStats] = useState({
     propOnGoingCount: 0,
     propLostCount: 0,
     propWonCount: 0,
   });
-
   const [implementationStats, setImplementationStats] = useState({
     implenetaionSucess: 0,
     implementationFailed: 0,
     implementationInProgress: 0,
   });
   const [lessonsLearned, setLessonsLearned] = useState([]);
+  const [greeting, setGreeting] = useState<string>('');
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [selectedCard, setSelectedCard] = useState<string | null>(null);
+
+
+  const handleCardClick = (cardId: string) => {
+    axios.get(`http://localhost:8000/api/v1/project/details/${cardId}`)
+      .then(response => {
+        setSelectedProject(response.data.data);
+      })
+      .catch(error => {
+        console.error('Error fetching detailed project data:', error);
+      });
+    setSelectedCard(cardId);
+  };
+
   useEffect(() => {
     // Fetch data for Proposals' Statuses
     axios.get('http://localhost:8000/api/v1/project/proposalStats')
@@ -45,73 +67,111 @@ const Dashboard = () => {
       console.error('Error fetching lessons learned data:', error);
     });
 
+       // Set greeting based on the time of day
+       const currentHour = new Date().getHours();
+       if (currentHour >= 0 && currentHour < 12) {
+         setGreeting('Good Morning');
+       } else if (currentHour >= 12 && currentHour < 18) {
+         setGreeting('Good Afternoon');
+       } else {
+         setGreeting('Good Evening');
+       }
   }, 
   []);
-  
-//      <MiniDrawer />
+  const DetailedProjectView = () => {
+    if (!selectedProject) {
+      return null;
+    }
+
+    return (
+      <div className="w-full p-4 mt-4 bg-white rounded-md shadow-md">
+        <div className="text-center">
+          <h2 className="text-xl font-bold">{selectedProject.projectName}</h2>
+          <p className="text-sm text-gray-500">Priority: {selectedProject.priority}</p>
+          <p className="text-sm text-gray-500">ID: {selectedProject.id}</p>
+        </div>
+      </div>
+    );
+  };
 return (
-  <div className="container mx-auto mt-8">
-   <MiniDrawer />
-      <div className="grid grid-cols-2 gap-8">
-        {/* Left Column */}
-        <div className="w-full">
-          {/* Proposal Status */}
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold mb-2">Welcome to Dashboard</h1>
-            <div className="bg-white p-6 rounded shadow-md">
-            <h1 className="text-2xl font-bold mb-2">Proposal Statuses</h1>
-              <div className="grid grid-cols-2 gap-2">
-                {/* Card for Ongoing Proposals */}
-                <div className="bg-blue-200 p-2 rounded">
-                  <h3 className="text-md font-bold mb-1">Ongoing</h3>
-                  <p className="text-lg">{proposalStats.propOnGoingCount}</p>
-                </div>
-  
-                {/* Card for Won Proposals */}
-                <div className="bg-green-200 p-2 rounded">
-                  <h3 className="text-md font-bold mb-1">Won</h3>
-                  <p className="text-lg">{proposalStats.propWonCount}</p>
-                </div>
-  
-                {/* Card for Lost Proposals */}
-                <div className="bg-red-200 p-2 rounded">
-                  <h3 className="text-md font-bold mb-1">Lost</h3>
-                  <p className="text-lg">{proposalStats.propLostCount}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-  
-          {/* Implementation Status */}
-          <div>
-            <h1 className="text-2xl font-bold mb-2">Implementation Statuses</h1>
-            <div className="bg-white p-6 rounded shadow-md">
-              <div className="grid grid-cols-2 gap-2">
-                {/* Card for Implementations In Progress */}
-                <div className="bg-yellow-200 p-2 rounded">
-                  <h3 className="text-md font-bold mb-1">In Progress</h3>
-                  <p className="text-lg">{implementationStats.implementationInProgress}</p>
-                </div>
-  
-                {/* Card for Successful Implementations */}
-                <div className="bg-green-200 p-2 rounded">
-                  <h3 className="text-md font-bold mb-1">Successful</h3>
-                  <p className="text-lg">{implementationStats.implenetaionSucess}</p>
-                </div>
-  
-                {/* Card for Failed Implementations */}
-                <div className="bg-red-200 p-2 rounded">
-                  <h3 className="text-md font-bold mb-1">Failed</h3>
-                  <p className="text-lg">{implementationStats.implementationFailed}</p>
-                </div>
-              </div>
-            </div>
+  <div className="flex h-screen pb-16">
+    <MiniDrawer />
+    <div className="flex-1">
+      <div className="p-4">
+        <h1 className="text-3xl font-bold mb-4">{greeting}!  Welcome to the Dashboard</h1>
+      </div>
+      <p className="text-lg ml-4">Proposal Statuses</p>
+      <div className="flex flex-wrap">
+        {/* Proposal Statuses */}
+        <div
+          className={`w-1/3 p-2 ${selectedCard === 'ongoing' ? 'bg-slate-200 shadow-lg' : ''}`}
+          onClick={() => handleCardClick('ongoing')}
+        >
+          <div className="bg-slate-500 p-4 rounded-lg shadow-lg text-white">
+            <h2 className="text-lg font-bold mb-2">Ongoing </h2>
+            <p className="text-lg">{proposalStats.propOnGoingCount}</p>
           </div>
         </div>
-         {/* Right Column */}
+        <div
+          className={`w-1/3 p-2 ${selectedCard === 'won' ? 'bg-sky-200 shadow-lg' : ''}`}
+          onClick={() => handleCardClick('won')}
+        >
+          <div className="bg-sky-500 p-4 rounded-lg shadow-lg text-white">
+            <h2 className="text-lg font-bold mb-2">Won</h2>
+            <p className="text-lg">{proposalStats.propWonCount}</p>
+          </div>
+        </div>
+        <div
+          className={`w-1/3 p-2 ${selectedCard === 'lost' ? 'bg-zinc-200 shadow-lg' : ''}`}
+          onClick={() => handleCardClick('lost')}
+        >
+          <div className="bg-zinc-500 p-4 rounded-lg shadow-lg text-white">
+            <h2 className="text-lg font-bold mb-2">Lost</h2>
+            <p className="text-lg">{proposalStats.propLostCount}</p>
+          </div>
+        </div>
+      </div>
+      <p className="text-lg ml-4">Implementation Statuses</p>
+      <div className="flex flex-wrap">
+        {/* Implementation Statuses */}
+        <div
+          className={`w-1/3 p-2 ${selectedCard === 'inprogress' ? 'bg-slate-200 shadow-lg' : ''}`}
+          onClick={() => handleCardClick('inprogress')}
+        >
+          <div className="bg-slate-500 p-4 rounded-lg shadow-lg text-white">
+            <h2 className="text-lg font-bold mb-2">In Progress </h2>
+            <p className="text-lg">{implementationStats.implementationInProgress}</p>
+          </div>
+        </div>
+        <div
+          className={`w-1/3 p-2 ${selectedCard === 'successful' ? 'bg-sky-200 shadow-lg' : ''}`}
+          onClick={() => handleCardClick('successful')}
+        >
+          <div className="bg-sky-500 p-4 rounded-lg shadow-lg text-white">
+            <h2 className="text-lg font-bold mb-2">Successful</h2>
+            <p className="text-lg">{implementationStats.implenetaionSucess}</p>
+          </div>
+        </div>
+        <div
+          className={`w-1/3 p-2 ${selectedCard === 'failed' ? 'bg-zinc-200 shadow-lg' : ''}`}
+          onClick={() => handleCardClick('failed')}
+        >
+          <div className="bg-zinc-500 p-4 rounded-lg shadow-lg text-white">
+            <h2 className="text-lg font-bold mb-2">Failed</h2>
+            <p className="text-lg">{implementationStats.implementationFailed}</p>
+          </div>
+        </div>
+      </div>
+      {/* Render DetailedProjectView conditionally */}
+      {selectedCard && (
+          <>
+            <DetailedProjectView />
+          </>
+        )}
+        <br></br>
          <div className="w-full">
           <div>
-            <h1 className="text-2xl font-bold mb-2">Lesson Learned</h1>
+            <h1 className="text-lg ml-1">Lesson Learned</h1>
             <div className="bg-white p-6 rounded shadow-md">
                               <ul>
                   {lessonsLearned && lessonsLearned.length > 0 && (
@@ -126,14 +186,10 @@ return (
                 </ul>
             </div>
           </div>
-        </div>
-      </div>
-
+    </div>
+  </div>
   </div>
 );
-
-  
 };
 
 export default Dashboard;
-
