@@ -51,31 +51,22 @@ const SignupPage: React.FC = () => {
             if (response.ok) {
                 // Signup successful, show the popup
                 setShowDialog(true);
-                // You can redirect the user to the login page after showing the popup
-                // window.location.href = '/login';
-
-      // Continue with your sign-up logic for successful response
+              
       setRegistered(true);
     } else {
       // If the response status is not ok, log the error response
       const errorResponse = await response.json();
       console.error('Sign up failed:', errorResponse);
-      // You can handle the error in some way or display a different popup
+    
     }
   } catch (error) {
-    // Handle network errors or other exceptions
+  
     console.error('Error during sign up:', error);
-    // You can display a popup for network errors as well
+  
   }
 };
 
 
-  useEffect(() => {
-    if (registered) {
-      // Redirect to "/login" or any other page after successful sign up
-      window.location.href = "/login";
-    }
-  }, [registered]);
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
@@ -118,7 +109,7 @@ const SignupPage: React.FC = () => {
   className="mt-5 tracking-wide font-semibold bg-sky-600 text-gray-100 w-full py-4 rounded-lg hover-bg-sky-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
   onClick={handleSignup}
 >
-  {/* Replace the existing SVG with your provided SVG code */}
+ 
   <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4H1m3 4H1m3 4H1m3 4H1m6.071.286a3.429 3.429 0 1 1 6.858 0M4 1h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Zm9 6.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"/>
   </svg>

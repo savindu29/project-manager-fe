@@ -11,7 +11,9 @@ import UpdatePeoplePage from './pages/people/update';
 import AddProject from './pages/project-page/create/index';
 import UpdateProject from './pages/project-page/update';
 import { useAuth } from './pages/Login/useAuth';
-import SignupPage from "./pages/Login/Register";
+import ForgotPasswordPage from './pages/Login/ForgotPassword';
+import SignupPage from './pages/Login/RegisterUaerAdmin';
+import AccRequest from './pages/Login/accRequest';
 
 
 
@@ -24,6 +26,8 @@ const App = () => {
     <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<SignupPage />} />
+        <Route path="/ForgotPasswordPage" element={<ForgotPasswordPage />} />
+        <Route path="/accRequest" element={<AccRequest />} />
 
       <Route
         path="/employees"
