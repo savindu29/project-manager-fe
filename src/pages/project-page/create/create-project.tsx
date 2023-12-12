@@ -530,7 +530,7 @@ const CreateProject = () => {
                             </div>
                             <div className="sm:col-span-6">
                                 <h2 className="font-semibold text-lg mt-8 mb-2 ">
-                                    Special Dates
+                                Key Milestone Dates
                                 </h2>
                             </div>
                             <div className="sm:col-span-3 px-6">

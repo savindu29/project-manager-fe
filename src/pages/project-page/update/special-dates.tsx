@@ -163,7 +163,7 @@ const SpecialDates = ({projectDetails}: { projectDetails: any }) => {
         <div className={editMode ? "px-12 py-8 white" : "px-12 py-8 bg-zinc-100"}>
             <form action="">
                 <div className={"flex w-full h-12 mb-4"}>
-                    <div className={"w-full flex items-center "}><h2 className="font-semibold text-lg ">Special Dates</h2></div>
+                    <div className={"w-full flex items-center "}><h2 className="font-semibold text-lg ">Key Milestone Dates</h2></div>
                     <div className={"w-full flex justify-end mr-12 text-xl "}>
                     {!editMode ? (
                             <div

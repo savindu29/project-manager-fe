@@ -364,9 +364,9 @@ const ProjectDetail = ({ projectId }: any) => {
                 </div>
               </div>
 
-              {/* Special Dates */}
+              {/* Key Milestone Dates */}
               <p className="font-medium	 text-xl underline mt-12">
-                Special Days
+                Key Milestone Dates
               </p>
               <div className=" w-full  px-8 py-6">
                 <div className="flex w-full">
