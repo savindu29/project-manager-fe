@@ -46,6 +46,12 @@ const Projects: React.FC = () => {
       if (response && response.data) {
         setProjects(response.data.data);
         setDatacount(response.data.count);
+        if (response.data.data.length > 0) {
+          const firstProject = response.data.data[0];
+          setSelectedProject(firstProject);
+          setProjectId(firstProject.id);
+        }
+       
       } else {
         setDatacount(0);
       }
