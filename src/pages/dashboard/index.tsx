@@ -1,113 +1,195 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import MiniDrawer from '../../layout';
-import { PieChart, Pie, Cell, Legend, Tooltip } from 'recharts';
-import {APP_API_BASE_URL} from '../../apis/index'
+
 interface Project {
+  id: string;
+  projectName: string;
   impStatusList: string;
   priority: string;
   lessonsLearned: string;
 }
-
 const Dashboard = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [proposalStats, setProposalStats] = useState({
+    propOnGoingCount: 0,
+    propLostCount: 0,
+    propWonCount: 0,
+  });
+  const [implementationStats, setImplementationStats] = useState({
+    implenetaionSucess: 0,
+    implementationFailed: 0,
+    implementationInProgress: 0,
+  });
+  const [lessonsLearned, setLessonsLearned] = useState([]);
+  const [greeting, setGreeting] = useState<string>('');
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [selectedCard, setSelectedCard] = useState<string | null>(null);
+
+
+  const handleCardClick = (cardId: string) => {
+    axios.get(`http://localhost:8000/api/v1/project/details/${cardId}`)
+      .then(response => {
+        setSelectedProject(response.data.data);
+      })
+      .catch(error => {
+        console.error('Error fetching detailed project data:', error);
+      });
+    setSelectedCard(cardId);
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${APP_API_BASE_URL}/api/v1/project/list`);
-        setProjects(response.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        
-      }
-    };
+    // Fetch data for Proposals' Statuses
+    axios.get('http://localhost:8000/api/v1/project/proposalStats')
+      .then(response => {
+        console.log('Proposal Stats:', response.data.data);
+        setProposalStats(response.data.data);
+      })
+      .catch(error => {
+        console.error('Error fetching proposal data:', error);
+      });
+  
+    // Fetch data for Implementation Statuses
+    axios.get('http://localhost:8000/api/v1/project/implementationStats')
+      .then(response => {
+        console.log('Implementation Stats:', response.data.data);
+        setImplementationStats(response.data.data);
+      })
+      .catch(error => {
+        console.error('Error fetching implementation data:', error);
+      });
+          // Fetch data for Lessons Learned
+    axios.get('http://localhost:8000/api/v1/project/lessonsLearned')
+    .then(response => {
+      console.log('Lessons Learned:', response.data.data);
+      setLessonsLearned(response.data.data);
+    })
+    .catch(error => {
+      console.error('Error fetching lessons learned data:', error);
+    });
 
-    fetchData();
-  }, []);
+       // Set greeting based on the time of day
+       const currentHour = new Date().getHours();
+       if (currentHour >= 0 && currentHour < 12) {
+         setGreeting('Good Morning');
+       } else if (currentHour >= 12 && currentHour < 18) {
+         setGreeting('Good Afternoon');
+       } else {
+         setGreeting('Good Evening');
+       }
+  }, 
+  []);
+  const DetailedProjectView = () => {
+    if (!selectedProject) {
+      return null;
+    }
 
-  const totalOngoingProjects = projects.filter(project => project.impStatusList === 'status"').length;
-  const totalCompletedProjects = projects.filter(project => project.impStatusList === 'completed').length;
-  const totalFailedProjects = projects.filter(project => project.impStatusList  === 'failed').length;
- // Extracting project priority data
- const priorityCounts: Record<string, number> = {};
- projects.forEach(project => {
-   priorityCounts[project.priority] = (priorityCounts[project.priority] || 0) + 1;
- });
-
- // Data format for recharts
- const chartData = Object.keys(priorityCounts).map(key => ({
-   name: key,
-   value: priorityCounts[key],
- }));
-
- const COLORS = ['#FF6384', '#36A2EB', '#FFCE56']; // You can customize the colors
-
-  return (
-    <div className="flex h-screen pb-16">
-      <MiniDrawer />
-
-      <div className="flex-1">
-        <div className="p-4">
-          <h2 className="text-3xl font-bold">Welcome to Project Dashboard</h2>
+    return (
+      <div className="w-full p-4 mt-4 bg-white rounded-md shadow-md">
+        <div className="text-center">
+          <h2 className="text-xl font-bold">{selectedProject.projectName}</h2>
+          <p className="text-sm text-gray-500">Priority: {selectedProject.priority}</p>
+          <p className="text-sm text-gray-500">ID: {selectedProject.id}</p>
         </div>
-        <p className="text-lg ml-4">Project Progress</p>
-        <div className="flex flex-wrap">
-          {/* Project Progress Cards */}
-          <div className="w-1/3 p-2">
-            <div className="bg-slate-500 p-4 rounded-lg shadow-lg text-white">
-              <h2 className="text-lg font-bold mb-2">Ongoing Projects</h2>
-              <p className="text-xl">{totalOngoingProjects}</p>
-            </div>
+      </div>
+    );
+  };
+return (
+  <div className="flex h-screen pb-16">
+    <MiniDrawer />
+    <div className="flex-1">
+      <div className="p-4">
+        <h1 className="text-3xl font-bold mb-4">{greeting}!  Welcome to the Dashboard</h1>
+      </div>
+      <p className="text-lg ml-4">Proposal Statuses</p>
+      <div className="flex flex-wrap">
+        {/* Proposal Statuses */}
+        <div
+          className={`w-1/3 p-2 ${selectedCard === 'ongoing' ? 'bg-slate-200 shadow-lg' : ''}`}
+          onClick={() => handleCardClick('ongoing')}
+        >
+          <div className="bg-slate-500 p-4 rounded-lg shadow-lg text-white">
+            <h2 className="text-lg font-bold mb-2">Ongoing </h2>
+            <p className="text-lg">{proposalStats.propOnGoingCount}</p>
           </div>
-
-          <div className="w-1/3 p-2">
-            <div className="bg-sky-500 p-4 rounded-lg shadow-lg text-white">
-              <h2 className="text-lg font-bold mb-2">Completed Projects</h2>
-              <p className="text-xl">{totalCompletedProjects}</p>
-            </div>
+        </div>
+        <div
+          className={`w-1/3 p-2 ${selectedCard === 'won' ? 'bg-sky-200 shadow-lg' : ''}`}
+          onClick={() => handleCardClick('won')}
+        >
+          <div className="bg-sky-500 p-4 rounded-lg shadow-lg text-white">
+            <h2 className="text-lg font-bold mb-2">Won</h2>
+            <p className="text-lg">{proposalStats.propWonCount}</p>
           </div>
-
-          <div className="w-1/3 p-2">
-            <div className="bg-zinc-500 p-4 rounded-lg shadow-lg text-white">
-              <h2 className="text-lg font-bold mb-2">Failed Projects</h2>
-              <p className="text-xl">{totalFailedProjects}</p>
-            </div>
+        </div>
+        <div
+          className={`w-1/3 p-2 ${selectedCard === 'lost' ? 'bg-zinc-200 shadow-lg' : ''}`}
+          onClick={() => handleCardClick('lost')}
+        >
+          <div className="bg-zinc-500 p-4 rounded-lg shadow-lg text-white">
+            <h2 className="text-lg font-bold mb-2">Lost</h2>
+            <p className="text-lg">{proposalStats.propLostCount}</p>
           </div>
-
-      <div className="ml-4"><br></br>
-      <p className="text-lg ml-4">Project Progress</p>
-        <PieChart width={400} height={400}>
-          <Pie
-                data={chartData}
-                cx={200}
-                cy={200}
-                labelLine={false}
-                label={(entry) => entry.name}
-                outerRadius={80}
-                fill="#8884d8" dataKey={''}          >
-            {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-          <Tooltip />
-          <Legend />
-        </PieChart>
-                  {/* Lessons Learned */}
+        </div>
+      </div>
+      <p className="text-lg ml-4">Implementation Statuses</p>
+      <div className="flex flex-wrap">
+        {/* Implementation Statuses */}
+        <div
+          className={`w-1/3 p-2 ${selectedCard === 'inprogress' ? 'bg-slate-200 shadow-lg' : ''}`}
+          onClick={() => handleCardClick('inprogress')}
+        >
+          <div className="bg-slate-500 p-4 rounded-lg shadow-lg text-white">
+            <h2 className="text-lg font-bold mb-2">In Progress </h2>
+            <p className="text-lg">{implementationStats.implementationInProgress}</p>
+          </div>
+        </div>
+        <div
+          className={`w-1/3 p-2 ${selectedCard === 'successful' ? 'bg-sky-200 shadow-lg' : ''}`}
+          onClick={() => handleCardClick('successful')}
+        >
+          <div className="bg-sky-500 p-4 rounded-lg shadow-lg text-white">
+            <h2 className="text-lg font-bold mb-2">Successful</h2>
+            <p className="text-lg">{implementationStats.implenetaionSucess}</p>
+          </div>
+        </div>
+        <div
+          className={`w-1/3 p-2 ${selectedCard === 'failed' ? 'bg-zinc-200 shadow-lg' : ''}`}
+          onClick={() => handleCardClick('failed')}
+        >
+          <div className="bg-zinc-500 p-4 rounded-lg shadow-lg text-white">
+            <h2 className="text-lg font-bold mb-2">Failed</h2>
+            <p className="text-lg">{implementationStats.implementationFailed}</p>
+          </div>
+        </div>
+      </div>
+      {/* Render DetailedProjectView conditionally */}
+      {selectedCard && (
+          <>
+            <DetailedProjectView />
+          </>
+        )}
+        <br></br>
+         <div className="w-full">
           <div>
-            <p className="text-lg mb-2">Lessons Learned</p>
-            <ul>
-              {projects.map((project, index) => (
-                <li key={index}>{project.lessonsLearned}</li>
-              ))}
-            </ul>
+            <h1 className="text-lg ml-1">Lesson Learned</h1>
+            <div className="bg-white p-6 rounded shadow-md">
+                              <ul>
+                  {lessonsLearned && lessonsLearned.length > 0 && (
+                    (() => {
+                      const result = [];
+                      for (let index = 0; index < lessonsLearned.length; index++) {
+                        result.push(<li key={index}>{lessonsLearned[index]}</li>);
+                      }
+                      return result;
+                    })()
+                  )}
+                </ul>
+            </div>
           </div>
-      </div>
-      </div>
     </div>
-    </div>
-  );
+  </div>
+  </div>
+);
 };
 
 export default Dashboard;

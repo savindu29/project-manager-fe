@@ -7,7 +7,6 @@ import { APP_API_BASE_URL } from '../../apis';
 // Create a variable to store the email globally
 let globalEmail: string | null = null;
 
-// Your component
 const LoginPage: React.FC = () => {
   const { login } = useAuth(); 
   const navigate = useNavigate(); 
@@ -47,12 +46,19 @@ const LoginPage: React.FC = () => {
 
         // Log the email to the console
         console.log("Email:", globalEmail);
-
+    
         // Store the token in local storage
         localStorage.setItem('loginToken', result.token);
-
+    
+        // Schedule the local storage clearing after 30 minutes
+        setTimeout(() => {
+          // Clear user email and login token from local storage
+          localStorage.removeItem('userEmail');
+          localStorage.removeItem('loginToken');
+        }, 30 * 60 * 1000);  
+    
         login(result.token);
-
+    
       window.location.href = '/';
     } else {
       // If the response status is not ok, log the error response
@@ -104,7 +110,7 @@ const LoginPage: React.FC = () => {
   className="mt-5 tracking-wide font-semibold bg-sky-600 text-gray-100 w-full py-4 rounded-lg hover-bg-sky-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
   onClick={handleLogin}
 >
-  {/* Replace the existing SVG with your provided SVG code */}
+
   <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h11m0 0-4-4m4 4-4 4m-5 3H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h3"/>
   </svg>
@@ -113,15 +119,28 @@ const LoginPage: React.FC = () => {
   </span>
 </button>
 
-                <br></br>
+                            <div className="flex justify-center">
+                              <button
+                                className="text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-gray-900 focus:outline-none mt-2"
+                                onClick={() => {
+                                  // Handle the click event for the small button (redirect to sign-up page)
+                                  window.location.href = "/ForgotPasswordPage";
+                                }}
+                              >
+                                Forgot Password
+                              </button>
+                            </div>
+                            <div className="flex justify-center">
+                            </div>
+<br></br>
                 <button
                   className="mx-auto mt-2 text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-gray-900 focus:outline-none"
                   onClick={() => {
                     // Handle the click event for the small button (redirect to sign-up page)
-                    window.location.href = "/register";
+                    window.location.href = "/accRequest";
                   }}
                 >
-                  Don't have an account? <span className="underline text-sky-600">Sign Up</span>
+                  Don't have an account? <span className="underline text-sky-600">Request a account</span>
                 </button>
               </div>
             </div>

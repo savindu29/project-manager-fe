@@ -47,10 +47,19 @@ const Projects: React.FC = () => {
         setProjects(response.data.data);
         setDatacount(response.data.count);
 
+
         // If there are projects and no project is currently selected, select the first one
         if (response.data.data.length > 0 && !selectedProject) {
           handleCardClick(response.data.data[0]);
         }
+
+        if (response.data.data.length > 0) {
+          const firstProject = response.data.data[0];
+          setSelectedProject(firstProject);
+          setProjectId(firstProject.id);
+        }
+       
+
       } else {
         setDatacount(0);
       }

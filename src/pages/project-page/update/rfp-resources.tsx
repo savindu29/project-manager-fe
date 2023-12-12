@@ -16,6 +16,14 @@ interface FileType {
     resource: string;
     type: string;
 }
+interface JsonFileFormat {
+    id: number;
+   
+    description: string;
+    documentReference: string;
+    
+    
+  }
 
 const RFPResources = ({projectDetails}: { projectDetails: any }) => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -48,7 +56,18 @@ const RFPResources = ({projectDetails}: { projectDetails: any }) => {
 
 
 
-
+    useEffect(() => {
+        if (projectDetails) {
+          setCurrentFiles(
+            (projectDetails.rfpResource?? []).map((status: JsonFileFormat) => ({
+              id: status.id,
+              description: status.description,
+           
+            }))
+          );
+    
+        }
+      }, [projectDetails]);
 
 
 
@@ -63,7 +82,7 @@ const RFPResources = ({projectDetails}: { projectDetails: any }) => {
 
 
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-
+    const [currnetFiles, setCurrentFiles] = useState<JsonFileFormat[]>([]);
     const handleSelectedFiles = (id: string, files: File[]) => {
         setSelectedFiles(files);
     };
@@ -187,8 +206,62 @@ const RFPResources = ({projectDetails}: { projectDetails: any }) => {
                     <div className="sm:col-span-6">
 
                     <div className="">
-                    <MyFileInput id="outputFromInovaFiles" onSelectFiles={handleSelectedFiles} isDisabled={!editMode} />
+                    <MyFileInput id="rfpResources" onSelectFiles={handleSelectedFiles} isDisabled={!editMode} />
                 </div>
+
+
+                <table className="table-auto border  w-full mt-10 mb-6">
+            <thead>
+              <tr>
+               
+                
+                <th className="px-4 py-2">Name</th>
+                <th className="px-4 py-2">Type</th>
+               
+                <th className="px-4 py-2">Option</th>
+              </tr>
+            </thead>
+            <tbody className='text-center'>
+             
+            {currnetFiles.map((status, index) => (
+                <tr className="border" key={index}>
+                  
+                  
+                  <td className="px-4 py-2">{status.description}</td>
+                  <td className="px-4 py-2">type</td>
+                  
+                  <td className="px-4 py-2">
+                    <div className='flex justify-center'>
+                    <div
+                      className={`ml-2 text-indigo-500 mr-8 ${
+                        !editMode && "opacity-50 pointer-events-none"
+                      } ${editMode && "hover:cursor-pointer"}`}
+                    //   onClick={() => handleUpdateClick(index)}
+                    >
+                      View
+                    </div>
+                    <div
+                      className={`ml-2 text-red-500 ${
+                        !editMode && "opacity-50 pointer-events-none"
+                      } ${editMode && "hover:cursor-pointer"}`}
+                    //   onClick={() => handleRemoveClick(index)}
+                    >
+                      Remove
+                    </div>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+
+
+            </tbody>
+          </table>
+
+
+
+
+
+
                     </div>
                 </div>
                 <ConfirmationDialog

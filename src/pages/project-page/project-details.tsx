@@ -476,7 +476,7 @@ const ProjectDetail = ({ projectId }: any) => {
                 <ControlledAccordions
                   title="Documents"
                   description="Special Documents"
-                  body={<SpecialDocs />}
+                  body={<SpecialDocs projectDetails={projectDetails} />}
                   expanded={expanded === "panel2"}
                   onChange={handleChange("panel2")}
                 />
