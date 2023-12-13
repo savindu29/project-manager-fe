@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { APP_API_BASE_URL } from '../../apis';
+import axios from 'axios';
 
-const ForgotPasswordPage: React.FC = () => {
+const ForgotPasswordPage2: React.FC = () => {
   const [email, setEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [stage, setStage] = useState('email'); // 'email', 'verification', 'newPassword'
+  const [stage, setStage] = useState('email'); 
   const [error, setError] = useState('');
 
   const validateEmail = (email: string) => {
@@ -18,23 +19,14 @@ const ForgotPasswordPage: React.FC = () => {
         setError('Please enter a valid email address');
         return;
       }
-
-      //  API  for sending the verification code
-      const response = await fetch(`${APP_API_BASE_URL}/api/v1/auth/send-verification-code`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-        }),
-      });
-
-      if (response.ok) {
+    let url = `${APP_API_BASE_URL}/api/password/reset-request?email=${email}`
+    const response = await axios.post(url)
+      console.log(response);
+      if (response.data.code==200) {
+     
         setStage('verification');
       } else {
-        const errorResponse = await response.json();
-        console.error('Verification code sending failed:', errorResponse);
+        console.error('Verification code sending failed:');
         setError('Failed to send verification code. Please try again.');
       }
     } catch (error) {
@@ -43,61 +35,29 @@ const ForgotPasswordPage: React.FC = () => {
     }
   };
 
-  const handleVerifyCodeAndSetPassword = async () => {
-    try {
-      // API  for verifying the code and setting the new password
-      const response = await fetch(`${APP_API_BASE_URL}/api/v1/auth/verify-code-and-set-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          verificationCode: verificationCode,
-          newPassword: newPassword,
-        }),
-      });
-
-      if (response.ok) {
-        setStage('newPassword');
-      } else {
-        const errorResponse = await response.json();
-        console.error('Verification failed:', errorResponse);
-        setError('Verification failed. Please check your code and try again.');
-      }
-    } catch (error) {
-      console.error('Error during verification:', error);
-      setError('An unexpected error occurred. Please try again.');
-    }
-  };
-
   const handleSetNewPassword = async () => {
     try {
-      //change the API
-      const response = await fetch(`${APP_API_BASE_URL}/api/v1/auth/set-new-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          newPassword: newPassword,
-        }),
-      });
-
-      if (response.ok) {
-        setStage('success');
+      const response = await axios.post(
+        `${APP_API_BASE_URL}/api/password/reset?resetCode=${verificationCode}&newPassword=${newPassword}`
+      );
+      console.log(response);
+      if (response.data.code === 200) {
+        setStage('passwordSetSuccessfully');
       } else {
-        const errorResponse = await response.json();
-        console.error('Setting new password failed:', errorResponse);
-        setError('Failed to set a new password. Please try again.');
+        console.error('Setting new password failed:');
+        if (response.data.code === 401) {
+          setError('Verification code does not match. Please check and try again.');
+        } else if (response.data.code === 400) {
+          setError('Weak password. Please enter a stronger password.');
+        } else {
+          setError('Failed to set a new password. Please try again.');
+        }
       }
     } catch (error) {
       console.error('Error during setting new password:', error);
       setError('An unexpected error occurred. Please try again.');
     }
   };
-
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
       <div className="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1">
@@ -151,12 +111,20 @@ const ForgotPasswordPage: React.FC = () => {
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                     />
-                    <button
-                      className="mt-5 tracking-wide font-semibold bg-blue-500 text-white w-full py-4 rounded-lg hover:bg-blue-600 transition-all duration-300 ease-in-out focus:shadow-outline focus:outline-none"
-                      onClick={stage === 'verification' ? handleVerifyCodeAndSetPassword : handleSetNewPassword}
-                    >
-                      {stage === 'verification' ? 'Verify Code' : 'Set New Password'}
-                    </button>
+  <button
+  className="mt-5 tracking-wide font-semibold bg-blue-500 text-white w-full py-4 rounded-lg hover:bg-blue-600 transition-all duration-300 ease-in-out focus:shadow-outline focus:outline-none"
+  onClick={() => {
+    if (stage === 'verification') {
+      handleSendVerificationCode();
+    } else if (stage === 'newPassword') {
+    
+      handleSetNewPassword();
+    }
+  }}
+>
+  {stage === 'verification' ? 'Recover Account' : 'Set New Password'}
+</button>
+
                   </div>
                 </div>
               </>
@@ -171,4 +139,4 @@ const ForgotPasswordPage: React.FC = () => {
   );
 };
 
-export default ForgotPasswordPage;
+export default ForgotPasswordPage2; 
