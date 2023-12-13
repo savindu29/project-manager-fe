@@ -3,24 +3,25 @@ import { APP_API_BASE_URL } from '../../apis';
 
 const ForgotPasswordPage: React.FC = () => {
   const [email, setEmail] = useState('');
-  const [verificationCode, setVerificationCode] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [stage, setStage] = useState('email'); // 'email', 'verification', 'newPassword'
+  const [stage, setStage] = useState('email'); // 'email', 'adminEmailSent'
   const [error, setError] = useState('');
 
   const validateEmail = (email: string) => {
     return /\S+@\S+\.\S+/.test(email);
   };
 
-  const handleSendVerificationCode = async () => {
+  const ADMIN_EMAIL_ENDPOINT = `${APP_API_BASE_URL}/api/v1/admin/recover-password`;
+
+
+  const handleSendEmailToAdmin = async () => {
     try {
       if (!validateEmail(email)) {
         setError('Please enter a valid email address');
         return;
       }
 
-      //  API  for sending the verification code
-      const response = await fetch(`${APP_API_BASE_URL}/api/v1/auth/send-verification-code`, {
+      // API for indicating user request to the admin
+      const response = await fetch(ADMIN_EMAIL_ENDPOINT, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,69 +32,14 @@ const ForgotPasswordPage: React.FC = () => {
       });
 
       if (response.ok) {
-        setStage('verification');
+        setStage('adminEmailSent');
       } else {
         const errorResponse = await response.json();
-        console.error('Verification code sending failed:', errorResponse);
-        setError('Failed to send verification code. Please try again.');
+        console.error('Sending email to admin failed:', errorResponse);
+        setError('Failed to send email to admin. Please try again.');
       }
     } catch (error) {
-      console.error('Error during verification code sending:', error);
-      setError('An unexpected error occurred. Please try again.');
-    }
-  };
-
-  const handleVerifyCodeAndSetPassword = async () => {
-    try {
-      // API  for verifying the code and setting the new password
-      const response = await fetch(`${APP_API_BASE_URL}/api/v1/auth/verify-code-and-set-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          verificationCode: verificationCode,
-          newPassword: newPassword,
-        }),
-      });
-
-      if (response.ok) {
-        setStage('newPassword');
-      } else {
-        const errorResponse = await response.json();
-        console.error('Verification failed:', errorResponse);
-        setError('Verification failed. Please check your code and try again.');
-      }
-    } catch (error) {
-      console.error('Error during verification:', error);
-      setError('An unexpected error occurred. Please try again.');
-    }
-  };
-
-  const handleSetNewPassword = async () => {
-    try {
-      //change the API
-      const response = await fetch(`${APP_API_BASE_URL}/api/v1/auth/set-new-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          newPassword: newPassword,
-        }),
-      });
-
-      if (response.ok) {
-        setStage('success');
-      } else {
-        const errorResponse = await response.json();
-        console.error('Setting new password failed:', errorResponse);
-        setError('Failed to set a new password. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error during setting new password:', error);
+      console.error('Error during sending email to admin:', error);
       setError('An unexpected error occurred. Please try again.');
     }
   };
@@ -109,7 +55,7 @@ const ForgotPasswordPage: React.FC = () => {
                   Forgot Your Password?
                 </h1>
                 <p className="mt-3 text-gray-600 text-center">
-                  No worries, we've got you covered. Enter your email address, and we'll send you a verification code.
+                  No worries, we've got you covered. Enter your email address, and we'll let the admin know you need assistance.
                 </p>
                 <div className="w-full flex-1 mt-8">
                   <div className="mx-auto max-w-xs">
@@ -122,45 +68,26 @@ const ForgotPasswordPage: React.FC = () => {
                     />
                     <button
                       className="mt-5 tracking-wide font-semibold bg-blue-500 text-white w-full py-4 rounded-lg hover:bg-blue-600 transition-all duration-300 ease-in-out focus:shadow-outline focus:outline-none"
-                      onClick={handleSendVerificationCode}
+                      onClick={handleSendEmailToAdmin}
                     >
-                      Send Verification Code
+                      Send Request to Admin
                     </button>
                   </div>
                 </div>
               </>
             )}
-            {(stage === 'verification' || stage === 'newPassword') && (
+
+            {stage === 'adminEmailSent' && (
               <>
                 <h1 className="text-2xl font-extrabold text-center">
-                  Verify Code and Set New Password
+                  Request Sent to Admin
                 </h1>
-                <div className="w-full flex-1 mt-8">
-                  <div className="mx-auto max-w-xs">
-                    <input
-                      className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                      type="text"
-                      placeholder="Verification Code"
-                      value={verificationCode}
-                      onChange={(e) => setVerificationCode(e.target.value)}
-                    />
-                    <input
-                      className="mt-5 w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                      type="password"
-                      placeholder="New Password"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                    />
-                    <button
-                      className="mt-5 tracking-wide font-semibold bg-blue-500 text-white w-full py-4 rounded-lg hover:bg-blue-600 transition-all duration-300 ease-in-out focus:shadow-outline focus:outline-none"
-                      onClick={stage === 'verification' ? handleVerifyCodeAndSetPassword : handleSetNewPassword}
-                    >
-                      {stage === 'verification' ? 'Verify Code' : 'Set New Password'}
-                    </button>
-                  </div>
-                </div>
+                <p className="mt-3 text-gray-600 text-center">
+                  Your request has been sent to the admin. They will assist you in recovering your password.
+                </p>
               </>
             )}
+
             {error && (
               <p className="text-red-500 mt-3">{error}</p>
             )}
