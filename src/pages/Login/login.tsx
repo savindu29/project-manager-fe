@@ -123,8 +123,8 @@ const LoginPage: React.FC = () => {
                               <button
                                 className="text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-gray-900 focus:outline-none mt-2"
                                 onClick={() => {
-                                  // Handle the click event for the small button (redirect to sign-up page)
-                                  window.location.href = "/ForgotPasswordPage";
+                                 
+                                  window.location.href = "/newpass";
                                 }}
                               >
                                 Forgot Password
@@ -136,7 +136,7 @@ const LoginPage: React.FC = () => {
                 <button
                   className="mx-auto mt-2 text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-gray-900 focus:outline-none"
                   onClick={() => {
-                    // Handle the click event for the small button (redirect to sign-up page)
+                  
                     window.location.href = "/accRequest";
                   }}
                 >

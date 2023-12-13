@@ -11,7 +11,7 @@ import UpdatePeoplePage from './pages/people/update';
 import AddProject from './pages/project-page/create/index';
 import UpdateProject from './pages/project-page/update';
 import { useAuth } from './pages/Login/useAuth';
-import ForgotPasswordPage from './pages/Login/ForgotPassword1';
+//import ForgotPasswordPage from './pages/Login/ForgotPassword1';
 import ForgotPasswordPage2 from './pages/Login/ForgotPassword2';
 import SignupPage from './pages/Login/RegisterUaerAdmin';
 import AccRequest from './pages/Login/accRequest';
@@ -28,7 +28,7 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<SignupPage />} />
         <Route path="/newpass" element={<ForgotPasswordPage2 />} />
-        <Route path="/newpassAdmin" element={<ForgotPasswordPage />} />
+        {/* <Route path="/newpassAdmin" element={<ForgotPasswordPage />} /> */}
         <Route path="/accRequest" element={<AccRequest />} />
 
       <Route
