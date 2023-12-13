@@ -85,6 +85,8 @@ export type  Cost = {
     quotedValue: number | 0;
     quotedRate: number | 0;
     amcValue: number | 0;
+    workUnit:string | '',
+    currencyUnit:string | ''
 }
 
 
@@ -117,6 +119,7 @@ export type Activity = {
 export type ProjectUpdateType ={
     
     projectStatus: number;
+    priority:number;
     initiationDate: Date;
     proposalDueDate: Date | null;
     proposalSubmittedDate: Date | null;

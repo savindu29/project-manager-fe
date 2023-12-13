@@ -172,7 +172,7 @@ const ProjectDetail = ({ projectId }: any) => {
               {/* client and responsible person contact cards */}
               <div className="mt-16 mb-2  ">
                 <p className="font-medium	 text-xl underline">
-                  Employees who connect with the project
+                  Resource Details
                 </p>
               </div>
               <div className="w-full   flex py-8">

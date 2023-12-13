@@ -56,6 +56,8 @@ const MainData = ({projectDetails}: { projectDetails: any }) => {
     const [projectStatusData, setProjectStatusData] = useState([]);
     const [projectPriorityData, setProjectPriorityData] = useState([]);
     const [selectedProjectStatus, setSelectedProjectStatus] = useState("");
+    const [selectedProjectPriority, setSelectedProjectPriority] = useState("");
+    
 
     useEffect(() => {
         // Fetch project status data
@@ -79,6 +81,7 @@ const MainData = ({projectDetails}: { projectDetails: any }) => {
     const [editMode, setEditMode] = useState(false);
     const handleProjectPrioritySelect = (selectedPriority: any) => {
         setProjectPriority(selectedPriority.id);
+        console.log(selectedPriority.id)
     };
     const handleProjectStatusSelect = (selectedStatus: any) => {
         setProjectStatus(selectedStatus.id);
@@ -114,6 +117,7 @@ const MainData = ({projectDetails}: { projectDetails: any }) => {
         const effortEstimatorIds = projectDetails.effortEstimators.map((estimator: { id: number; }) => estimator.id);
         const requestData:ProjectUpdateType  = {
             projectStatus: projectStatus,
+            priority:projectPriority,
             initiationDate: projectinitiationDate,
             proposalDueDate: projectDetails.proposalDueDate ? new Date(projectDetails.proposalDueDate) : null,
             proposalSubmittedDate: projectDetails.proposalSubmittedDate ? new Date(projectDetails.proposalSubmittedDate) : null,
@@ -133,6 +137,7 @@ const MainData = ({projectDetails}: { projectDetails: any }) => {
             const resp = await axios.put(url, requestData);
             setEditMode(false);
             setSelectedProjectStatus(projectStatus)
+            setSelectedProjectPriority(projectPriority)
             handleOpenSnackbar('success', 'Successfully updated!');
         } catch (error) {
             handleOpenSnackbar('error', 'Failed to update. Please try again.');
@@ -155,6 +160,7 @@ const MainData = ({projectDetails}: { projectDetails: any }) => {
         // Restore previous values
         setProjectInitiationDate(projectDetails.initiationDate ? new Date(projectDetails.initiationDate) : new Date());
         setProjectStatus(projectDetails.projectStatus?.id || -1);
+        setProjectPriority(projectDetails.priority?.id || -1)
 
        
     };
@@ -248,7 +254,7 @@ const MainData = ({projectDetails}: { projectDetails: any }) => {
                             htmlFor=""
                             className="block text-sm font-medium leading-6 text-gray-900"
                         >
-                            Project Priority {!editMode ? <span> : {projectDetails?.priority?.name}</span>:<span></span>}
+                            Project Priority {!editMode ? <span> : {selectedProjectPriority}</span>:<span></span>}
                         </label>
                         <div className="mt-2">
                             <DropDown
@@ -256,7 +262,7 @@ const MainData = ({projectDetails}: { projectDetails: any }) => {
                                 dropdownFor="priority"
                                 onSelect={handleProjectPrioritySelect}
                                 defaultSelectedId={projectDetails?.priority?.id}
-                                disabled={true}
+                                disabled={!editMode}
 
                             />
                         </div>
