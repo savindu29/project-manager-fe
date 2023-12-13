@@ -43,6 +43,7 @@ const ForgotPasswordPage2: React.FC = () => {
       console.log(response);
       if (response.data.code === 200) {
         setStage('passwordSetSuccessfully');
+        window.location.href = "/login";
       } else {
         console.error('Setting new password failed:');
         if (response.data.code === 401) {
