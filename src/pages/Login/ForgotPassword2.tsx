@@ -45,7 +45,13 @@ const ForgotPasswordPage2: React.FC = () => {
         setStage('passwordSetSuccessfully');
       } else {
         console.error('Setting new password failed:');
-        setError('Failed to set a new password. Please try again.');
+        if (response.data.code === 401) {
+          setError('Verification code does not match. Please check and try again.');
+        } else if (response.data.code === 400) {
+          setError('Weak password. Please enter a stronger password.');
+        } else {
+          setError('Failed to set a new password. Please try again.');
+        }
       }
     } catch (error) {
       console.error('Error during setting new password:', error);
