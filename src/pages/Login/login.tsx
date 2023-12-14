@@ -4,7 +4,7 @@ import { DialogDefault } from './popupLogin';
 import { useAuth } from './useAuth'; 
 import { useNavigate } from 'react-router-dom';
 import { APP_API_BASE_URL } from '../../apis';
-// Create a variable to store the email globally
+
 let globalEmail: string | null = null;
 
 const LoginPage: React.FC = () => {
