@@ -172,7 +172,7 @@ const ProjectDetail = ({ projectId }: any) => {
               {/* client and responsible person contact cards */}
               <div className="mt-16 mb-2  ">
                 <p className="font-medium	 text-xl underline">
-                  Employees who connect with the project
+                  Resource Details
                 </p>
               </div>
               <div className="w-full   flex py-8">
@@ -364,9 +364,9 @@ const ProjectDetail = ({ projectId }: any) => {
                 </div>
               </div>
 
-              {/* Special Dates */}
+              {/* Key Milestone Dates */}
               <p className="font-medium	 text-xl underline mt-12">
-                Special Days
+                Key Milestone Dates
               </p>
               <div className=" w-full  px-8 py-6">
                 <div className="flex w-full">
@@ -435,16 +435,32 @@ const ProjectDetail = ({ projectId }: any) => {
 
               <div className=" w-full  px-8 py-6">
                 <p className="font-medium	 text-xl underline mt-12">Cost</p>
+
                 <div className="flex w-full mt-12">
-                  <div className="w-full">
-                    <p>Total Effort (MD/MH): </p>
+                <div className="w-full">
+                    <p>Effort Unit</p>
                     <p className=" text-sky-500">
-                      {projectDetails.cost.totalEffortMh || emptyData}{" "}
+                      {projectDetails.cost.workUnit =="MH"?"Man Hours":"Man Days" || emptyData}{" "}
+                    </p>
+                  </div>
+                </div>
+
+                
+                <div className="flex w-full mt-12">
+                
+                  
+
+                  <div className="w-full">
+                    <p>Total Effort: </p>
+                    <p className=" text-sky-500">
+                      {projectDetails.cost.currencyUnit} &nbsp; 
+                      {projectDetails.cost.totalEffortMh || emptyData}{" "} 
                     </p>
                   </div>
                   <div className="w-full">
                     <p>Quoted Value: </p>
                     <p className=" text-sky-500">
+                    {projectDetails.cost.currencyUnit}  &nbsp; 
                       {projectDetails.cost.quotedValue || emptyData}{" "}
                     </p>
                   </div>
@@ -453,12 +469,14 @@ const ProjectDetail = ({ projectId }: any) => {
                   <div className="w-full">
                     <p>Quoted Rate:</p>
                     <p className=" text-sky-500">
+                    {projectDetails.cost.currencyUnit}  &nbsp; 
                       {projectDetails.cost.quotedRate || emptyData}{" "}
                     </p>
                   </div>
                   <div className="w-full">
                     <p>AMC Value:</p>
                     <p className=" text-sky-500">
+                    {projectDetails.cost.currencyUnit}  &nbsp; 
                       {projectDetails.cost.amcValue || emptyData}{" "}
                     </p>
                   </div>
@@ -476,7 +494,7 @@ const ProjectDetail = ({ projectId }: any) => {
                 <ControlledAccordions
                   title="Documents"
                   description="Special Documents"
-                  body={<SpecialDocs />}
+                  body={<SpecialDocs projectDetails={projectDetails} />}
                   expanded={expanded === "panel2"}
                   onChange={handleChange("panel2")}
                 />

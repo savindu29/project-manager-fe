@@ -7,8 +7,8 @@ import StepLabel from '@mui/material/StepLabel';
 const steps = [
   'Proposal In progress',
   'Proposal Won',
-  'Implement Inprogress',
-  'Implement Success',
+  'Implementation Inprogress',
+  'Implementation Success',
 ];
 
 interface HorizontalLinearAlternativeLabelStepperProps {
