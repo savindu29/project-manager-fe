@@ -497,7 +497,7 @@ const CreateProject = () => {
                                     <button
                                         type="button"
                                         onClick={() => setShowLastActivityForm(true)}
-                                        className="bg-sky-400 mb-6 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer"
+                                        className="bg-black  mb-6 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer"
                                     >
                                         Add Last Activity
                                     </button>
@@ -1234,7 +1234,7 @@ const CreateProject = () => {
                                 <div className="flex sm:col-span-3 justify-end">
                                     <button
                                         type="button"
-                                        className="bg-sky-400 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer"
+                                        className="bg-black  text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer"
                                         onClick={() => setShowForm(!showForm)}
                                     >
                                         {showForm ? 'Hide Form' : 'Add Task'}
@@ -1311,7 +1311,7 @@ const CreateProject = () => {
                     <div className={"w-full flex mb-12"}>
                         <button
                             type="submit"
-                            className="bg-sky-400 w-full text-semibold  text-white px-4 py-2 rounded hover:cursor-pointer mt-12"
+                            className="bg-black  w-full text-semibold  text-white px-4 py-2 rounded hover:cursor-pointer mt-12"
                         >
                             Save
                         </button>

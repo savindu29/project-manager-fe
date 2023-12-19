@@ -82,7 +82,7 @@ const AddTodoModal: React.FC<AddTodoModalProps> = ({ isOpen, onClose, onAddTodo 
           onClick={handleAddTodo}
          
           color="primary"
-          className="bg-sky-400 text-white hover:bg-sky-500 px-4 py-2 text-xs rounded"
+          className="bg-black  text-white hover:bg-sky-500 px-4 py-2 text-xs rounded"
         >
           Add Task
         </button>

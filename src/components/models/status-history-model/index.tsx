@@ -65,7 +65,7 @@ const AddLastActivityModal: React.FC<AddLastActivityModalProps> = ({ isOpen, onC
         <button
               type="button"
               onClick={handleAddLastActivity}
-              className="bg-sky-400 text-white hover:bg-sky-500 px-4 py-2 text-xs rounded"
+              className="bg-black  text-white hover:bg-sky-500 px-4 py-2 text-xs rounded"
             >
               Add
             </button>

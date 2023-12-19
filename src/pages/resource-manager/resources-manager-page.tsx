@@ -92,25 +92,29 @@ export function ResourcesManagerPage() {
         <div className="px-12">
             <div className="h-20 w-full flex items-center ">
                 <div className="w-1/2">
-                    <p className="text-xl font-medium">
+                    <p className="text-xl font-semibold">
                         Resource allocation for test project
                     </p>
                 </div>
                 <div className="w-1/2 flex">
-                    <div className="flex border border-zinc-300 rounded-md items-center">
+                    <div className="flex border border-zinc-300 rounded-md items-center w-full mr-20">
                         <input
                             type="search"
                             name="resourceSearch"
                             id="resourceSearch"
                             placeholder="Search Resource here"
-                            className="appearance-none  px-4 py-2 text-gray-700 leading-tight outline-none"
+                            className="appearance-none  px-4 py-2 text-gray-700 leading-tight outline-none rounded-md w-full text-sm"
                         />
-                        <MagnifyingGlassIcon className="h-5 w-5 mx-2 text-zinc-500"/>
-                    </div>
-                    <button className="bg-zinc-200 ml-10 rounded px-3 py-1 flex items-center">
+                        
+                        <button className="bg-zinc-200  rounded-md px-3 text-xs py-1.5 mr-1 flex items-center">
                         <AdjustmentsHorizontalIcon className="w-4 h-4 mr-2"/>
                         Filter
                     </button>
+                    <button className="bg-zinc-200  rounded-md p-1 mr-1 flex items-center">
+                    <MagnifyingGlassIcon className="h-5 w-5 mx-2 text-zinc-500 "/>
+                    </button>
+                    </div>
+                    
                 </div>
             </div>
             <hr />
@@ -131,7 +135,7 @@ export function ResourcesManagerPage() {
                             <th className="p-2 font-normal text-sm">Perecentage</th>
                         </tr>
                         </thead>
-                        <tbody className="border-y border-gray-300">
+                        <tbody className="border-y border-gray-300 text-sm">
                         {employees.map((employee, index) => (
                             <tr key={index}>
                                 <td className="border-b p-2">{employee.name}</td>
@@ -155,7 +159,7 @@ export function ResourcesManagerPage() {
                     <StopCircleIcon className="h-4 w-4 mr-2" /> Other Resources
                 </div>
             </div>
-            <div className="mt-6  h-60 overflow-y-scroll">
+            <div className="mt-6  h-56 overflow-y-scroll">
                 <div className="">
                     <table className="min-w-full  table-auto">
                         <thead className="">
@@ -166,7 +170,7 @@ export function ResourcesManagerPage() {
                             <th className="p-2 font-normal text-sm">Pending Projects</th>
                         </tr>
                         </thead>
-                        <tbody className="border-y border-gray-300">
+                        <tbody className="border-y border-gray-300 text-sm">
                         {resourcesAllocated.map((resource, index) => (
                             <tr key={index}>
                                 <td className="border-b p-2">{resource.name}</td>

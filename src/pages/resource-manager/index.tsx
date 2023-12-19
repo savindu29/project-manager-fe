@@ -10,7 +10,7 @@ return(
         <div className=' py-2 w-full  '>
           <div className=' justify-end fixed z-10 bg-zinc-100  right-8 top-8'>
             <Link to="/projects">
-              <div className="bg-sky-400 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer">
+              <div className="bg-black  text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer">
                 Go Back
               </div>
             </Link>

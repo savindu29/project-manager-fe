@@ -177,7 +177,7 @@ export default function EmployeeCreateForm() {
         </button>
         <button
           type="submit"
-          className="bg-sky-400 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer">
+          className="bg-black  text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer">
                 
         
           Save

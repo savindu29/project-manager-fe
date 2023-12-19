@@ -20,7 +20,7 @@ export function RegisterSuccessDialog({
 }: RegisterSuccessDialogProps) {
   return (
       <>
-        <Dialog open={open} handler={onClose} className="w-full lg:w-96 max-h-48 bg-sky-400">
+        <Dialog open={open} handler={onClose} className="w-full lg:w-96 max-h-48 bg-black ">
           <DialogHeader className="text-lg font-bold text-white bg-blue-500 p-4">
           The account request was successful!
           </DialogHeader>
