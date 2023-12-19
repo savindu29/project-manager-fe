@@ -15,7 +15,10 @@ import { useAuth } from './pages/Login/useAuth';
 import ForgotPasswordPage2 from './pages/Login/ForgotPassword2';
 import SignupPage from './pages/Login/RegisterUaerAdmin';
 import AccRequest from './pages/Login/accRequest';
-import { ManageResources } from './pages/resource-manager';
+// import ManageResources from './pages/resource-manager';
+import SimplePage from './pages/resource-manager/Componants/test';
+
+
 
 
 
@@ -49,10 +52,10 @@ const App = () => {
         path="/projects/update/:id"
         element={isAuthenticated ? <UpdateProject	 /> : <Navigate to="/login" />}
       />
-       <Route
+       {/* <Route
         path="/projects/manage-resources/:id"
         element={isAuthenticated ? <ManageResources	 /> : <Navigate to="/login" />}
-      />
+      /> */}
       <Route
         path="/"
         element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />}
@@ -65,6 +68,10 @@ const App = () => {
     path="/dashboard"
     element={isAuthenticated ? <Navigate to="/" /> : <Navigate to="/login" />}
 />
+<Route
+        path="/simple-page"
+        element={isAuthenticated ? <SimplePage /> : <Navigate to="/login" />}
+      />
       
     </Routes>
 

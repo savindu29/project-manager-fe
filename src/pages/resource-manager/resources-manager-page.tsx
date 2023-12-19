@@ -4,4 +4,5 @@ export function ResourcesManagerPage(){
           
         </div>
     );
-    }
+    };
+    export default ResourcesManagerPage;

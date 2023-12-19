@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
 import MiniDrawer from "../../layout";
 import { ResourcesManagerPage } from "./resources-manager-page";
-
-export function ManageResources(){
+const ManageResources = () => {
 return(
     <div>
       <div className='flex '>
@@ -21,4 +20,6 @@ return(
       </div>
     </div>
 );
-}
+};
+export default ManageResources;
+
