@@ -150,17 +150,20 @@ const Projects: React.FC = () => {
               </div>
               <div className="flex justify-center">
                 <div className="overflow-hidden">
-                  {dataCount > 0 ? (
-                    projects.map((project, index) => (
-                      <ProjectCard
-                        key={project.id}
-                        cardDetails={project}
-                        onCardClick={handleCardClick}
-                      />
-                    ))
-                  ) : (
-                    <p>Loading ...</p>
-                  )}
+                {dataCount > 0 ? (
+  projects.map((project, index) => (
+    <ProjectCard
+      key={project.id}
+      cardDetails={project}
+      onCardClick={handleCardClick}
+    />
+  ))
+) : dataCount === 0 ? (
+  <p>No data</p>
+) : (
+  <p>Loading ...</p>
+)}
+
                 </div>
               </div>
 
@@ -192,15 +195,18 @@ const Projects: React.FC = () => {
             </Link>
           </div>
           {loading ? (
-            // Display a spinner while loading
-            <div className="flex items-center justify-center h-full">
-              <BlankPage/>
-            </div>
-          ) : selectedProject ? (
-            <ProjectDetail projectId={selectedProject.id} />
-          ) : (
-            <BlankPage />
-          )}
+  // Display a spinner while loading
+  <div className="flex items-center justify-center h-full">
+    <BlankPage />
+  </div>
+) : selectedProject ? (
+  <ProjectDetail projectId={selectedProject.id} />
+) : dataCount === 0 ? (
+  <div className="h-full w-full flex items-center justify-center">No data</div>
+) : (
+  <BlankPage />
+)}
+
         </div>
       </div>
     </div>

@@ -153,10 +153,10 @@ const UpdateProjectForm = ({projectDetails}: { projectDetails: any }) => {
                     <div className="text text-3xl font-semibold text-zinc-600">
                         Update Project
                     </div>
-                    <div className="pb-12  text-zinc-600">
+                    {/* <div className="pb-12  text-zinc-600">
                         <Link to="/projects">Projects</Link> /{" "}
                         <Link to="#">Update Project</Link>
-                    </div>
+                    </div> */}
                 </div>
 
 

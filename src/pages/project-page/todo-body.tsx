@@ -19,7 +19,7 @@ const Todo = ({ todo }: any) => {
                 <th className="px-4 py-2">Task</th>
                 <th className="px-4 py-2">Due Date</th>
                 <th className="px-4 py-2">Description</th>
-                <th className="px-4 py-2">Done/Not</th>
+                <th className="px-4 py-2">Status</th>
               </tr>
             </thead>
             <tbody>
