@@ -128,7 +128,7 @@ return (
     <MiniDrawer />
     <div className="flex-1">
   <div className="p-4">
-    <h1 className="text-3xl font-bold mb-4">{greeting}! Welcome to the Dashboard</h1>
+    <h1 className="text-3xl font-bold mb-4">Heading</h1>
   </div>
   <p className="text-lg ml-4">Proposal Statuses</p>
   <div className="flex flex-wrap">

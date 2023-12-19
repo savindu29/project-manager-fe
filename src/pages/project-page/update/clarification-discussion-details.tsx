@@ -57,6 +57,7 @@ const ClarificationDiscussionDetails = ({projectDetails}: { projectDetails: any 
 
         const requestData:ProjectUpdateType  = {
             projectStatus: projectDetails?.projectStatus?.id || -1,
+            priority: projectDetails?.priority?.id || -1,
             initiationDate: new Date(projectDetails.initiationDate),
             proposalDueDate: projectDetails.proposalDueDate ? new Date(projectDetails.proposalDueDate) : null,
             proposalSubmittedDate: projectDetails.proposalSubmittedDate ? new Date(projectDetails.proposalSubmittedDate) : null,

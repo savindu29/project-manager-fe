@@ -20,6 +20,7 @@ import {
 import AddTodoModal from "../../../components/models/todo-model";
 import AddLastActivityModal from "../../../components/models/status-history-model";
 
+
 interface Country {
     label: string;
     value: string;
@@ -98,7 +99,11 @@ const CreateProject = () => {
         // Handle the selected files for the specified instance
         console.log(`Selected Files for ${id}:`, files);
     };
-
+    const timeUnitData = [
+        
+        { id: 1, name: 'Man Hours', additionalProp: 'MH' },
+        { id: 2, name: 'Man Days', additionalProp: 'MD' },
+      ];
     const [projectStatusData, setProjectStatusData] = useState([]);
     const [projectPriorityData, setProjectPriorityData] = useState([]);
 
@@ -122,6 +127,10 @@ const CreateProject = () => {
     const handleProjectPrioritySelect = (selectedPriority: any) => {
         setProjectPriority(selectedPriority.id);
     };
+
+    const handleWorkUnitSelect = (selectedUnit:any)=>{
+        setWorkUnit(selectedUnit.additionalProp)
+    }
     const [projectLead, setProjectLead] = useState<EmployeeSearchResult | null>(null);
 
     const handleProjectLeadsAdd = async (selectedResultId: number) => {
@@ -253,7 +262,8 @@ const CreateProject = () => {
     const [costQuotedValue, setQuotedValue] = useState(0);
     const [costQuotingRate, setQuotingRate] = useState(0);
     const [costAmcValue, setAMCValue] = useState(0);
-
+    const [workUnit, setWorkUnit] = useState('');
+    const [currencyUnit, setCurrencyUnit] = useState('');
     const handleProjectStatusSelect = (selectedStatus: any) => {
         setProjectStatus(selectedStatus.id);
     };
@@ -350,6 +360,8 @@ const CreateProject = () => {
                     quotedValue: costQuotedValue || 0,
                     quotedRate: costQuotingRate || 0,
                     amcValue: costAmcValue || 0,
+                    workUnit : workUnit || '',
+                    currencyUnit : currencyUnit || ''
                 },
 
                 todo: {
@@ -529,7 +541,7 @@ const CreateProject = () => {
                             </div>
                             <div className="sm:col-span-6">
                                 <h2 className="font-semibold text-lg mt-8 mb-2 ">
-                                    Special Dates
+                                Key Milestone Dates
                                 </h2>
                             </div>
                             <div className="sm:col-span-3 px-6">
@@ -1082,12 +1094,51 @@ const CreateProject = () => {
                         <h2 className="font-semibold text-lg mt-8">Cost</h2>
                         <div className=" ">
                             <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
+
+
+
+                            <div className="sm:col-span-3 px-6">
+                                    <label
+                                        htmlFor=""
+                                        className="block text-sm font-medium leading-6 text-gray-900"
+                                    >
+                                        Total Effort Unit 
+                                    </label>
+                                    
+                                    <DropDown
+                                    data={timeUnitData}
+                                    dropdownFor="timeUnite"
+                                    onSelect={handleWorkUnitSelect}
+                                    />
+                                </div>
+                                <div className="sm:col-span-3 px-6">
+                                <label
+                                        htmlFor=""
+                                        className="block text-sm font-medium leading-6 text-gray-900"
+                                    >
+                                        Currency Unit
+                                    </label>
+                                    <div className="mt-2">
+                                        <input
+                                            type="number"
+                                            name="totalEffort"
+                                            id="totalEffort"
+                                            className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+                                            onChange={(e) => setCurrencyUnit(e.target.value)}
+                                            value={currencyUnit}
+                                        />
+                                    </div>
+                                </div>
+
+
+
+
                                 <div className="sm:col-span-3 px-6">
                                     <label
                                         htmlFor=""
                                         className="block text-sm font-medium leading-6 text-gray-900"
                                     >
-                                        Total Effort (MD/MH)
+                                        Total Effort 
                                     </label>
                                     <div className="mt-2">
                                         <input
@@ -1154,17 +1205,15 @@ const CreateProject = () => {
                                         />
                                     </div>
                                 </div>
-                                <div className="sm:col-span-6">
+                                {/* <div className="sm:col-span-6">
                                     <h2 className="font-semibold text-lg mt-8 mb-4">
                                         RFP Resources
                                     </h2>
-                                    <MyFileInput
-                                        id="rfpFiles"
-                                        onSelectFiles={handleSelectedFiles}
-                                        isDisabled={false}
-                                    />
-                                </div>
-                                <div className="sm:col-span-6">
+                                    
+
+                                    
+                                </div> */}
+                                {/* <div className="sm:col-span-6">
                                     <h2 className="font-semibold text-lg mt-8 mb-4">
                                         Outout From Inova
                                     </h2>
@@ -1175,7 +1224,7 @@ const CreateProject = () => {
                                             isDisabled={false}
                                         />
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
 
