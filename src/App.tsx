@@ -15,6 +15,7 @@ import { useAuth } from './pages/Login/useAuth';
 import ForgotPasswordPage2 from './pages/Login/ForgotPassword2';
 import SignupPage from './pages/Login/RegisterUaerAdmin';
 import AccRequest from './pages/Login/accRequest';
+import { ManageResources } from './pages/resource-manager';
 
 
 
@@ -47,6 +48,10 @@ const App = () => {
       <Route
         path="/projects/update/:id"
         element={isAuthenticated ? <UpdateProject	 /> : <Navigate to="/login" />}
+      />
+       <Route
+        path="/projects/manage-resources/:id"
+        element={isAuthenticated ? <ManageResources	 /> : <Navigate to="/login" />}
       />
       <Route
         path="/"

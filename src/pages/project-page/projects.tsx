@@ -182,11 +182,18 @@ const Projects: React.FC = () => {
         <div className="w-full h-full overflow-hidden">
           <div className="w-full flex justify-end items-end mt-2 px-12">
             {selectedProject && (
+              <div className="flex">
+                <Link to={`/projects/manage-resources/${selectedProject.id}`}>
+                <div className="text-semibold text-xs border px-4 py-2 rounded mr-4 hover:cursor-pointer">
+                  Manage Resources
+                </div>
+              </Link>
               <Link to={`/projects/update/${selectedProject.id}`}>
                 <div className="text-semibold text-xs border px-4 py-2 rounded mr-4 hover:cursor-pointer">
                   Update this Project
                 </div>
               </Link>
+              </div>
             )}
             <Link to="/projects/new">
               <div className="bg-sky-400 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer">
