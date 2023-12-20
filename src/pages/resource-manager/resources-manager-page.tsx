@@ -191,7 +191,7 @@ export function ResourcesManagerPage() {
                   {selectedEmployee &&
                     selectedEmployee.name === employee.name && (
                       <tr>
-                        <td colSpan={5} className="p-2  duration-300 pl-12 bg-zinc-100">
+                        <td colSpan={5} className="p-2  duration-300 pl-12 ">
                          <WorkPerecentageCurrent/>
                         </td>
                       </tr>

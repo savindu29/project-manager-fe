@@ -130,6 +130,9 @@ const SpecialDates = ({projectDetails}: { projectDetails: any }) => {
             const resp = await axios.put(url, requestData);
             setEditMode(false);
             handleOpenSnackbar('success', 'Successfully updated!');
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000); 
         } catch (error) {
             handleOpenSnackbar('error', 'Failed to update. Please try again.');
         }
