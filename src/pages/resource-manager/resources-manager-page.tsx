@@ -168,13 +168,14 @@ export function ResourcesManagerPage() {
                             <th className="p-2 font-normal text-sm">Status</th>
                             <th className="p-2 font-normal text-sm">Allocated Projects</th>
                             <th className="p-2 font-normal text-sm">Pending Projects</th>
+                            <th className="p-2 font-normal text-sm">Request</th>
                         </tr>
                         </thead>
                         <tbody className="border-y border-gray-300 text-sm">
                         {resourcesAllocated.map((resource, index) => (
                             <tr key={index}>
-                                <td className="border-b p-2">{resource.name}</td>
-                                <td className="border-b p-2 ">
+                                <td className="border-b p-2 ">{resource.name}</td>
+                                <td className="border-b p-2  ">
                                     <div
                                         className={
                                             "bg-violet-600 flex text-white rounded py-1 w-28 pl-4 items-center text-xs"
@@ -184,7 +185,7 @@ export function ResourcesManagerPage() {
                                         {resource.status}
                                     </div>
                                 </td>
-                                <td className="border-b p-2">
+                                <td className="border-b p-2 ">
                                     <div className="flex">
                                         {resource.allocatedProjects.map((project, projectIndex) => (
                                             <div
@@ -196,7 +197,7 @@ export function ResourcesManagerPage() {
                                         ))}
                                     </div>
                                 </td>
-                                <td className="border-b p-2">
+                                <td className="border-b p-2 ">
                                     <div className="flex">
                                         {resource.pendingProjects.map((project, projectIndex) => (
                                             <div
@@ -208,8 +209,10 @@ export function ResourcesManagerPage() {
                                         ))}
                                     </div>
                                 </td>
+                                <td className="border-b p-2 "><button className="bg-violet-500 flex text-white rounded py-1 px-3  justify-center items-center text-xs">Request</button></td>
                             </tr>
                         ))}
+                        
                         </tbody>
                     </table>
                 </div>
