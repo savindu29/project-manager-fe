@@ -69,7 +69,11 @@ const OutputFromInova = ({ projectDetails }: { projectDetails: any }) => {
       return 'IMAGE';
     } else if (fileType.includes('pdf')) {
       return 'PDF';
-    } else if (fileType.includes('excel') || fileType.includes('csv')) {
+    } else if (
+      fileType.includes('excel') ||
+      fileType.includes('spreadsheetml.sheet') || // MIME type for .xlsx files
+      fileType.includes('vnd.ms-excel')          // MIME type for .xls files
+    ) {
       return 'EXCEL';
     }
     return 'UNKNOWN';

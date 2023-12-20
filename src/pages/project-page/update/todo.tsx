@@ -216,7 +216,7 @@ const Todo = ({ projectDetails }: { projectDetails: any }) => {
             {editMode && (
               <button
                 type="button"
-                className="bg-sky-400 w-24 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer"
+                className="bg-black  w-24 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer"
                 // onClick={() => setShowForm(!showForm)}
                 onClick={handleAddTaskClick}
                 disabled={!editMode}
@@ -429,7 +429,7 @@ const Todo = ({ projectDetails }: { projectDetails: any }) => {
             <button
               onClick={handleAddTaskSubmit}
               color="primary"
-              className="bg-sky-400 text-white hover:bg-sky-500 px-4 py-2 text-xs rounded"
+              className="bg-black  text-white hover:bg-sky-500 px-4 py-2 text-xs rounded"
             >
               Add Task
             </button>

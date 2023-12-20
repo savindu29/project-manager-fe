@@ -372,7 +372,7 @@ export default function EmployeeUpdateForm() {
             <div className="mt-4 flex items-center justify-end gap-x-6">
           <button
             onClick={handleUpdateDetails}
-            className="bg-sky-400 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer">
+            className="bg-black  text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer">
             
             Update
           </button>

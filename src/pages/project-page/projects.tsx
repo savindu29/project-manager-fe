@@ -150,17 +150,20 @@ const Projects: React.FC = () => {
               </div>
               <div className="flex justify-center">
                 <div className="overflow-hidden">
-                  {dataCount > 0 ? (
-                    projects.map((project, index) => (
-                      <ProjectCard
-                        key={project.id}
-                        cardDetails={project}
-                        onCardClick={handleCardClick}
-                      />
-                    ))
-                  ) : (
-                    <p>Loading ...</p>
-                  )}
+                {dataCount > 0 ? (
+  projects.map((project, index) => (
+    <ProjectCard
+      key={project.id}
+      cardDetails={project}
+      onCardClick={handleCardClick}
+    />
+  ))
+) : dataCount === 0 ? (
+  <p>No data</p>
+) : (
+  <p>Loading ...</p>
+)}
+
                 </div>
               </div>
 
@@ -179,28 +182,38 @@ const Projects: React.FC = () => {
         <div className="w-full h-full overflow-hidden">
           <div className="w-full flex justify-end items-end mt-2 px-12">
             {selectedProject && (
+              <div className="flex">
+                <Link to={`/projects/manage-resources/${selectedProject.id}`}>
+                <div className="text-semibold text-xs border px-4 py-2 rounded mr-4 hover:cursor-pointer">
+                  Manage Resources
+                </div>
+              </Link>
               <Link to={`/projects/update/${selectedProject.id}`}>
                 <div className="text-semibold text-xs border px-4 py-2 rounded mr-4 hover:cursor-pointer">
                   Update this Project
                 </div>
               </Link>
+              </div>
             )}
             <Link to="/projects/new">
-              <div className="bg-sky-400 text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer">
+              <div className="bg-black text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer">
                 Add New Project
               </div>
             </Link>
           </div>
           {loading ? (
-            // Display a spinner while loading
-            <div className="flex items-center justify-center h-full">
-              <BlankPage/>
-            </div>
-          ) : selectedProject ? (
-            <ProjectDetail projectId={selectedProject.id} />
-          ) : (
-            <BlankPage />
-          )}
+  // Display a spinner while loading
+  <div className="flex items-center justify-center h-full">
+    <BlankPage />
+  </div>
+) : selectedProject ? (
+  <ProjectDetail projectId={selectedProject.id} />
+) : dataCount === 0 ? (
+  <div className="h-full w-full flex items-center justify-center">No data</div>
+) : (
+  <BlankPage />
+)}
+
         </div>
       </div>
     </div>

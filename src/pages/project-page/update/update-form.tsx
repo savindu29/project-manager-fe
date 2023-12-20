@@ -13,7 +13,7 @@ import OutputFromInova from "./output-from-inova";
 import Todo from "./todo";
 import LessonLearned from "./lesson-learned";
 import GrantClientDetails from "./grant-client-details";
-import StatusHistory from "./status-history";
+//import StatusHistory from "./status-history";
 
 interface Country {
     label: string;
@@ -153,16 +153,16 @@ const UpdateProjectForm = ({projectDetails}: { projectDetails: any }) => {
                     <div className="text text-3xl font-semibold text-zinc-600">
                         Update Project
                     </div>
-                    <div className="pb-12  text-zinc-600">
+                    {/* <div className="pb-12  text-zinc-600">
                         <Link to="/projects">Projects</Link> /{" "}
                         <Link to="#">Update Project</Link>
-                    </div>
+                    </div> */}
                 </div>
 
 
                 <div className="">
                     <MainData projectDetails={projectDetails}/>
-                    <StatusHistory projectDetails={projectDetails}/>
+                    {/* <StatusHistory projectDetails={projectDetails}/> */}
                     <SpecialDates projectDetails={projectDetails}/>
                     <ClarificationDiscussionDetails projectDetails={projectDetails}/>
                     <GrantClientDetails projectDetails={projectDetails}/>
