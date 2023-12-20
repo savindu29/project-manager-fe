@@ -10,8 +10,8 @@ export default function WorkPerecentageCurrent() {
   return (
     <div>
       {/* Your component details for the selected employee */}
-      Employee Details for
-      <div className="ml-10 w-full ">
+      Resource Details 
+      <div className="w-full ">
         <div className="w-full my-4">
           {/* <div className="flex w-full py-2">
             <div className="w-[12rem] ">role</div>
@@ -22,13 +22,13 @@ export default function WorkPerecentageCurrent() {
             <div className="w-[12rem] ">Software engineer</div>
             <div className="w-[52rem] flex items-center ">
             <CustomTooltip title={`Date From : ${dateFrom} Date To : ${dateTo}`}>
-                <div className="w-[26rem] bg-zinc-400 text-center  rounded-full text-white mx-px">60%</div>
+                <div className="w-[26rem] bg-red-600 text-center  rounded-full text-white mx-1">60%</div>
               </CustomTooltip>
               <CustomTooltip title={`Date From : ${dateFrom} Date To : ${dateTo}`}>
-                <div className="w-[19.5rem] bg-zinc-400 text-center  rounded-full text-white mx-px">40%</div>
+                <div className="w-[19.5rem] bg-yellow-500 text-center  rounded-full text-white mx-1">40%</div>
               </CustomTooltip>
               <CustomTooltip title={`Date From : ${dateFrom} Date To : ${dateTo}`}>
-                <div className="w-[6.5rem] bg-zinc-400 text-center  rounded-full text-white mx-px">80%</div>
+                <div className="w-[6.5rem] bg-orange-600 text-center  rounded-full text-white mx-1">80%</div>
               </CustomTooltip>
             </div>
           </div>

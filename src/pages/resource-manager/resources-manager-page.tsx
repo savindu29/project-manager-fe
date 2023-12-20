@@ -163,7 +163,7 @@ export function ResourcesManagerPage() {
                 <th className="p-2 font-normal text-sm">Status</th>
                 <th className="p-2 font-normal text-sm">Allocated date</th>
                 <th className="p-2 font-normal text-sm">Relese Date</th>
-                <th className="p-2 font-normal text-sm">Perecentage</th>
+                
               </tr>
             </thead>
             <tbody className="border-y border-gray-300 text-sm">
@@ -186,7 +186,7 @@ export function ResourcesManagerPage() {
                     </td>
                     <td className="border-b p-2">{employee.allocatedDate}</td>
                     <td className="border-b p-2">{employee.releaseDate}</td>
-                    <td className="border-b p-2">{employee.percentage}%</td>
+                    
                   </tr>
                   {selectedEmployee &&
                     selectedEmployee.name === employee.name && (
