@@ -8,6 +8,15 @@ import { useState } from "react";
 import RequestDialog from "./Componants/request-dialog";
 import React from "react";
 import WorkPerecentageCurrent from "./Componants/work-perecentage-current";
+import { Button } from '@mui/material';
+import FilterPopup from "../../components/Filter";
+
+type Filter = {
+  column: string;
+  operator: string;
+  value: string;
+};
+
 
 interface Employee {
   name: string;
@@ -120,6 +129,21 @@ export function ResourcesManagerPage() {
       setSelectedEmployee(employee);
     }
   };
+
+  const [isPopupOpen, setPopupOpen] = useState(false);
+  const [filters, setFilters] = useState<Filter[]>([]);
+
+  const openPopup = () => {
+    setPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setPopupOpen(false);
+  };
+
+  const handleAddFilter = (newFilter: Filter) => {
+    setFilters([...filters, newFilter]);
+  };
   return (
     <div className="px-12">
       <div className="h-20 w-full flex items-center ">
@@ -138,10 +162,27 @@ export function ResourcesManagerPage() {
               className="appearance-none  px-4 py-2 text-gray-700 leading-tight outline-none rounded-md w-full text-sm"
             />
 
-            <button className="bg-zinc-200  rounded-md px-3 text-xs py-1.5 mr-1 flex items-center">
+            
+            <div>
+            <button className="bg-zinc-200  rounded-md px-3 text-xs py-1.5 mr-1 flex items-center" onClick={openPopup}>
               <AdjustmentsHorizontalIcon className="w-4 h-4 mr-2" />
               Filter
             </button>
+
+              <FilterPopup isOpen={isPopupOpen} onClose={closePopup} onAddFilter={handleAddFilter} />
+
+              {/* Display existing filters */}
+              <div>
+                {filters.map((filter, index) => (
+                  <div key={index}>
+                    <p>
+                      {filter.column} {filter.operator} {filter.value}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             <button className="bg-zinc-200  rounded-md p-1 mr-1 flex items-center">
               <MagnifyingGlassIcon className="h-5 w-5 mx-2 text-zinc-500 " />
             </button>
