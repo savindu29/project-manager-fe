@@ -29,6 +29,9 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { useAuth } from "../pages/Login/useAuth";
 
 
+const userEmail = localStorage.getItem('userEmail');
+const firstLetter = userEmail ? userEmail.charAt(0).toUpperCase() : '';
+
 const drawerWidth = 300;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -129,13 +132,13 @@ export default function MiniDrawer() {
           <div className={`bg-sky-50 py-2 px-3  flex items-center justify-center  rounded-xl  mr-4 duration-500 ${!open && "hidden"}`}>
           <div>
           <img
-              className="h-12 w-12 rounded-full"
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-              alt=""
-            />
+      className="h-12 w-12 rounded-full"
+      src={`https://ui-avatars.com/api/?name=${firstLetter}&size=256&background=0D8ABC&color=fff`}
+      alt=""
+    />
+
           </div>
           <div className="ml-3">
-      <p className="font-medium text-sky-500">Username</p>
       <p className="text-sm">{email}</p>
     </div>
     </div>

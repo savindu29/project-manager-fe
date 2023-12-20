@@ -1,103 +1,103 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { APP_API_BASE_URL } from '../../apis';
+import axios from 'axios';
 
-const ForgotPasswordPage: React.FC = () => {
+const ForgotPasswordPage2: React.FC = () => {
   const [email, setEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [stage, setStage] = useState('email'); // 'email', 'verification', 'newPassword'
+  const [stage, setStage] = useState('email'); 
   const [error, setError] = useState('');
+  const [isSettingPassword, setIsSettingPassword] = useState(false);
+  const [isSendingVerificationCode, setIsSendingVerificationCode] = useState(false);
+  const [password, setPassword] = useState('');
+  const [isStrongPassword, setIsStrongPassword] = useState(false);
+
+  const checkPasswordStrength = (password: string) => {
+    // Define password strength criteria
+    const minLength = 8;
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasLowercase = /[a-z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    // Check if password meets all criteria
+    const isStrong =
+      password.length >= minLength &&
+      hasUppercase &&
+      hasLowercase &&
+      hasNumber &&
+      hasSpecialChar;
+
+    setIsStrongPassword(isStrong);
+  };
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    checkPasswordStrength(newPassword);
+  };
 
   const validateEmail = (email: string) => {
     return /\S+@\S+\.\S+/.test(email);
   };
 
   const handleSendVerificationCode = async () => {
+    setIsSendingVerificationCode(true);
     try {
       if (!validateEmail(email)) {
         setError('Please enter a valid email address');
         return;
       }
-
-      //  API  for sending the verification code
-      const response = await fetch(`${APP_API_BASE_URL}/api/v1/auth/send-verification-code`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-        }),
-      });
-
-      if (response.ok) {
+    let url = `${APP_API_BASE_URL}/api/password/reset-request?email=${email}`
+    const response = await axios.post(url)
+      console.log(response);
+      if (response.data.code==200) {
+     
         setStage('verification');
       } else {
-        const errorResponse = await response.json();
-        console.error('Verification code sending failed:', errorResponse);
+        console.error('Verification code sending failed:');
         setError('Failed to send verification code. Please try again.');
       }
     } catch (error) {
       console.error('Error during verification code sending:', error);
-      setError('An unexpected error occurred. Please try again.');
-    }
-  };
-
-  const handleVerifyCodeAndSetPassword = async () => {
-    try {
-      // API  for verifying the code and setting the new password
-      const response = await fetch(`${APP_API_BASE_URL}/api/v1/auth/verify-code-and-set-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          verificationCode: verificationCode,
-          newPassword: newPassword,
-        }),
-      });
-
-      if (response.ok) {
-        setStage('newPassword');
-      } else {
-        const errorResponse = await response.json();
-        console.error('Verification failed:', errorResponse);
-        setError('Verification failed. Please check your code and try again.');
-      }
-    } catch (error) {
-      console.error('Error during verification:', error);
-      setError('An unexpected error occurred. Please try again.');
+      setError('Error during verification code sending.Please try again.');
     }
   };
 
   const handleSetNewPassword = async () => {
+    setIsSettingPassword(true);
     try {
-      //change the API
-      const response = await fetch(`${APP_API_BASE_URL}/api/v1/auth/set-new-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          newPassword: newPassword,
-        }),
-      });
-
-      if (response.ok) {
-        setStage('success');
+      const response = await axios.post(
+        `${APP_API_BASE_URL}/api/password/reset?resetCode=${verificationCode}&newPassword=${newPassword}`
+      );
+      console.log('Response:', response);
+  
+      if (response.data === "Password reset successful.") {
+        setStage('passwordSetSuccessfully');
+        window.location.href = "/login";
       } else {
-        const errorResponse = await response.json();
-        console.error('Setting new password failed:', errorResponse);
-        setError('Failed to set a new password. Please try again.');
+        console.error('Setting new password failed:');
+  
+        if (response.data && (response.data.code === 401 || response.data.code === 500)) {
+          setError('Verification code does not match. Please check and try again.');
+        } else if (response.data && response.data.code === 400) {
+          setError('Weak password. Please enter a stronger password.');
+        } else {
+          setError('Failed to set a new password. Please try again.');
+        }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error during setting new password:', error);
+  
+      if (error.response) {
+        console.error('Response from server:', error.response);
+      }
+  
       setError('An unexpected error occurred. Please try again.');
     }
   };
-
+  
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
       <div className="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1">
@@ -123,6 +123,7 @@ const ForgotPasswordPage: React.FC = () => {
                     <button
                       className="mt-5 tracking-wide font-semibold bg-blue-500 text-white w-full py-4 rounded-lg hover:bg-blue-600 transition-all duration-300 ease-in-out focus:shadow-outline focus:outline-none"
                       onClick={handleSendVerificationCode}
+                      disabled={isSendingVerificationCode || isSettingPassword}
                     >
                       Send Verification Code
                     </button>
@@ -144,19 +145,36 @@ const ForgotPasswordPage: React.FC = () => {
                       value={verificationCode}
                       onChange={(e) => setVerificationCode(e.target.value)}
                     />
-                    <input
-                      className="mt-5 w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                      type="password"
-                      placeholder="New Password"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                    />
-                    <button
-                      className="mt-5 tracking-wide font-semibold bg-blue-500 text-white w-full py-4 rounded-lg hover:bg-blue-600 transition-all duration-300 ease-in-out focus:shadow-outline focus:outline-none"
-                      onClick={stage === 'verification' ? handleVerifyCodeAndSetPassword : handleSetNewPassword}
-                    >
-                      {stage === 'verification' ? 'Verify Code' : 'Set New Password'}
-                    </button>
+                   <input
+        className="mt-5 w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+        type="password"
+        placeholder="New Password"
+        value={newPassword}
+        onChange={(e) => {
+          setNewPassword(e.target.value);
+          checkPasswordStrength(e.target.value);
+        }}
+      />
+
+      {/* Password strength indicator */}
+      <div>
+        Password Strength: {isStrongPassword ? 'Strong' : 'Weak'}
+      </div>
+
+      {/* Your existing button for setting a new password */}
+      <button
+        className="mt-5 tracking-wide font-semibold bg-blue-500 text-white w-full py-4 rounded-lg hover:bg-blue-600 transition-all duration-300 ease-in-out focus:shadow-outline focus:outline-none"
+        onClick={() => {
+          if (stage === 'verification' || stage === 'newPassword') {
+            handleSetNewPassword();
+          }
+        }}
+        disabled={isSendingVerificationCode || isSettingPassword}
+      >
+        {stage === 'verification' ? 'Recover Account' : 'Set New Password'}
+      </button>
+
+
                   </div>
                 </div>
               </>
@@ -171,4 +189,4 @@ const ForgotPasswordPage: React.FC = () => {
   );
 };
 
-export default ForgotPasswordPage;
+export default ForgotPasswordPage2; 

@@ -4,7 +4,7 @@ import { DialogDefault } from './popupLogin';
 import { useAuth } from './useAuth'; 
 import { useNavigate } from 'react-router-dom';
 import { APP_API_BASE_URL } from '../../apis';
-// Create a variable to store the email globally
+
 let globalEmail: string | null = null;
 
 const LoginPage: React.FC = () => {
@@ -123,8 +123,8 @@ const LoginPage: React.FC = () => {
                               <button
                                 className="text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-gray-900 focus:outline-none mt-2"
                                 onClick={() => {
-                                  // Handle the click event for the small button (redirect to sign-up page)
-                                  window.location.href = "/ForgotPasswordPage";
+                                 
+                                  window.location.href = "/newpass";
                                 }}
                               >
                                 Forgot Password
@@ -136,7 +136,7 @@ const LoginPage: React.FC = () => {
                 <button
                   className="mx-auto mt-2 text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-gray-900 focus:outline-none"
                   onClick={() => {
-                    // Handle the click event for the small button (redirect to sign-up page)
+                  
                     window.location.href = "/accRequest";
                   }}
                 >

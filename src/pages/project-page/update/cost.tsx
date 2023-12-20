@@ -6,7 +6,14 @@ import { APP_API_BASE_URL, Cost } from '../../../apis';
 import { Alert, Snackbar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 import { MdOutlineCancel } from "react-icons/md";
 import ConfirmationDialog from "../../../components/update-confirm";
+import DropDown from '../../../components/drop-down';
 const SpecialDates = ({ projectDetails }: { projectDetails: any }) => {
+
+    const timeUnitData = [
+        
+        { id: 1, name: 'Man Hours', additionalProp: 'MH' },
+        { id: 2, name: 'Man Days', additionalProp: 'MD' },
+      ];
 
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
@@ -44,6 +51,8 @@ const SpecialDates = ({ projectDetails }: { projectDetails: any }) => {
             quotedValue: costQuotedValue,
             quotedRate: costQuotingRate,
             amcValue: costAmcValue,
+            workUnit : workUnit || '',
+            currencyUnit : currencyUnit || 'MD'
         };
 
         try {
@@ -61,6 +70,8 @@ const SpecialDates = ({ projectDetails }: { projectDetails: any }) => {
         setQuotedValue(projectDetails.cost?.quotedValue || 0);
         setQuotingRate(projectDetails.cost?.quotedRate || 0);
         setAMCValue(projectDetails.cost?.amcValue || 0);
+        setWorkUnit(projectDetails.cost?.workUnit || '');
+        setCurrencyUnit(projectDetails.cost?.currencyUnit || '');
     };
     const handleSaveClick = () => {
         handleConfirmationDialogOpen();
@@ -71,6 +82,8 @@ const SpecialDates = ({ projectDetails }: { projectDetails: any }) => {
     const [costQuotedValue, setQuotedValue] = useState(projectDetails?.cost?.quotedValue || 0);
     const [costQuotingRate, setQuotingRate] = useState(projectDetails?.cost?.quotedRate || 0);
     const [costAmcValue, setAMCValue] = useState(projectDetails?.cost?.amcValue || 0);
+    const [workUnit, setWorkUnit] = useState('');
+    const [currencyUnit, setCurrencyUnit] = useState('');
 
     useEffect(() => {
         if (projectDetails) {
@@ -78,8 +91,17 @@ const SpecialDates = ({ projectDetails }: { projectDetails: any }) => {
             setQuotedValue(projectDetails.cost?.quotedValue || 0);
             setQuotingRate(projectDetails.cost?.quotedRate || 0);
             setAMCValue(projectDetails.cost?.amcValue || 0);
+            setWorkUnit(projectDetails.cost?.workUnit || 'MD');
+            setCurrencyUnit(projectDetails.cost?.currencyUnit || '');
         }
     }, [projectDetails]);
+
+
+    
+    const handleWorkUnitSelect = (selectedUnit:any)=>{
+        
+        setWorkUnit(selectedUnit.additionalProp)
+    }
 
     return (
         <div className={ editMode ? 'px-12 py-8 white duration-500' : 'px-12 py-8 bg-zinc-100 duration-500 '}>
@@ -121,6 +143,47 @@ const SpecialDates = ({ projectDetails }: { projectDetails: any }) => {
                 </div>
 
                 <div className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
+
+
+                <div className="sm:col-span-3 px-6">
+                        <label
+                            htmlFor=""
+                            className="block text-sm font-medium leading-6 text-gray-900"
+                        >
+                            Total Effort (MD/MH)
+                        </label>
+                        <div className="mt-2">
+                        <DropDown
+                                    data={timeUnitData}
+                                    dropdownFor="timeUnite"
+                                    onSelect={handleWorkUnitSelect}
+                                    disabled={!editMode}
+                                    />
+                        </div>
+                    </div>
+
+
+                    <div className="sm:col-span-3 px-6">
+                        <label
+                            htmlFor=""
+                            className="block text-sm font-medium leading-6 text-gray-900"
+                        >
+                            Total Effort (MD/MH)
+                        </label>
+                        <div className="mt-2">
+                            <input
+                                type="text"
+                                name="totalEffort"
+                                id="totalEffort"
+                                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  focus:ring-inset  sm:text-sm sm:leading-6"
+                                onChange={(e) => setCurrencyUnit(e.target.value)}
+                                value={currencyUnit}
+                                disabled={!editMode}
+                            />
+                        </div>
+                    </div>
+
+
                     <div className="sm:col-span-3 px-6">
                         <label
                             htmlFor=""
