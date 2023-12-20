@@ -43,17 +43,13 @@ const FilterPopup: React.FC<FilterPopupProps> = ({ isOpen, onClose, onAddFilter 
 
   const createFilter = (column: string): Filter => ({
     column,
-    operator: operators[column][0],
+    operator: 'operator',
     value: '',
   });
 
   const [filters, setFilters] = useState<Filter[]>(initialColumns.map(createFilter));
 
   const handleAddFilter = () => {
-    filters.forEach((filter) => {
-      onAddFilter(filter);
-    });
-
     onClose();
   };
 
@@ -73,7 +69,7 @@ const FilterPopup: React.FC<FilterPopupProps> = ({ isOpen, onClose, onAddFilter 
       </DialogTitle>
       <DialogContent>
         {initialColumns.map((column, index) => (
-          <div key={index} style={{ marginBottom: '16px' }}>
+          <div key={index} style={{ marginBottom: '16px',marginTop:'16px' }}>
             <Grid container spacing={2} alignItems="center">
               <Grid item>
                 <Typography variant="subtitle1" color="textSecondary">
@@ -82,9 +78,10 @@ const FilterPopup: React.FC<FilterPopupProps> = ({ isOpen, onClose, onAddFilter 
               </Grid>
 
               <Grid item>
-                <FormControl>
+                <FormControl sx={{ minWidth: '120px' }}>
                   <InputLabel>Operator</InputLabel>
                   <Select
+                    label="operator"
                     value={filters[index].operator}
                     onChange={(e) => setFilters((prevFilters) => {
                       const updatedFilters = [...prevFilters];
