@@ -134,18 +134,37 @@ const MainData = ({projectDetails}: { projectDetails: any }) => {
         };
 
         try {
+            if (projectStatus > 2 && projectStatus < 6) {
+                // console.log(projectStatus.id  && projectStatus.id)
+                console.log(!checkDates())
+                if (!checkDates()) { // Add parentheses to execute the checkDates function
+                    handleOpenSnackbar('error', 'Please set the Proposed Implementation Start Date and Proposed Implementation End Date before changing the Status in the implementation');
+                    return;
+                }
+            
+            }
             const resp = await axios.put(url, requestData);
             setEditMode(false);
-            setSelectedProjectStatus(projectStatus)
-            setSelectedProjectPriority(projectPriority)
+            setSelectedProjectStatus(projectStatus);
+            setSelectedProjectPriority(projectPriority);
             handleOpenSnackbar('success', 'Successfully updated!');
+            
         } catch (error) {
             handleOpenSnackbar('error', 'Failed to update. Please try again.');
         }
+        
     };
 
 
-
+    function checkDates(): boolean {
+        
+        return (
+          projectDetails?.piStartDate !== undefined &&
+          projectDetails?.piStartDate !== null &&
+          projectDetails?.piEndDate !== undefined &&
+          projectDetails?.piEndDate !== null
+        );
+      }
 
 
 
@@ -296,7 +315,7 @@ const MainData = ({projectDetails}: { projectDetails: any }) => {
 
 
 
-                    <Snackbar open={snackbarOpen} autoHideDuration={2000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+                    <Snackbar open={snackbarOpen} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
                         <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
                             {snackbarMessage}
                         </Alert>

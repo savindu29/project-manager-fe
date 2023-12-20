@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react';
-import Select from 'react-select';
-import countryList from 'react-select-country-list';
+import React, { useState, useMemo } from "react";
+import Select from "react-select";
+import countryList from "react-select-country-list";
 
 interface Country {
   label: string;
@@ -14,15 +14,9 @@ function CountrySelector() {
 
   const changeHandler = (selectedOption: Country | null) => {
     setValue(selectedOption);
-  }
+  };
 
-  return (
-    <Select
-      options={options}
-      value={value}
-      onChange={changeHandler}
-    />
-  );
+  return <Select options={options} value={value} onChange={changeHandler} />;
 }
 
 export default CountrySelector;
