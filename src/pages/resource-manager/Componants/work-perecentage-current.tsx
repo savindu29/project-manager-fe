@@ -11,7 +11,7 @@ export default function WorkPerecentageCurrent() {
     <div>
       {/* Your component details for the selected employee */}
       Employee Details for
-      <div className="w-full ">
+      <div className="ml-4 w-full ">
         <div className="w-full my-4">
           {/* <div className="flex w-full py-2">
             <div className="w-[12rem] ">role</div>

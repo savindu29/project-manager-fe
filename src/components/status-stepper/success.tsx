@@ -7,6 +7,7 @@ import StepLabel from '@mui/material/StepLabel';
 const steps = [
   'Proposal In progress',
   'Proposal Won',
+  'Implementation Pending',
   'Implementation Inprogress',
   'Implementation Success',
 ];
