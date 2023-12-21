@@ -11,12 +11,12 @@ import WorkPerecentageCurrent from "./Componants/work-perecentage-current";
 import { Button } from '@mui/material';
 import FilterPopup from "../../components/Filter";
 
+
 type Filter = {
   column: string;
   operator: string;
   value: string;
 };
-
 
 interface Employee {
   name: string;
@@ -32,6 +32,7 @@ interface Project {
 }
 
 interface Resource {
+  id:number;
   name: string;
   status: string;
   allocatedProjects: Project[];
@@ -76,8 +77,9 @@ const employees: Employee[] = [
   },
   // Add more employee data as needed
 ];
+
 const resourcesAllocated: Resource[] = [
-  {
+  {id:1,
     name: "Resource1",
     status: "Active",
     allocatedProjects: [
@@ -91,7 +93,7 @@ const resourcesAllocated: Resource[] = [
       { id: 5, name: "Project B" },
     ],
   },
-  {
+  {id:2,
     name: "Resource2",
     status: "Inactive",
     allocatedProjects: [
@@ -144,6 +146,33 @@ export function ResourcesManagerPage() {
   const handleAddFilter = (newFilter: Filter) => {
     setFilters([...filters, newFilter]);
   };
+
+  const [checkedResourceIds, setCheckedResourceIds] = useState<number[]>([]);
+  const [checkedResourceNames, setCheckedResourceNames] = useState<string[]>([]);
+
+  const handleCheckboxChange = (id: number, name: string) => {
+    // If the resource is already checked, uncheck it
+    if (checkedResourceIds.includes(id)) {
+      setCheckedResourceIds((prevIds) => prevIds.filter((prevId) => prevId !== id));
+      setCheckedResourceNames((prevNames) => prevNames.filter((prevName) => prevName !== name));
+    } else {
+      // If the resource is not checked, check it
+      setCheckedResourceIds((prevIds) => [...prevIds, id]);
+      setCheckedResourceNames((prevNames) => [...prevNames, name]);
+    }
+  };
+
+  const isRequestAllDisabled = checkedResourceIds.length === 0;
+
+
+
+  const handleRequestAll = () => {
+    
+    // Use the IDs as needed, for example, redirect to a new page
+    openRequestDialog();
+  };
+
+
   return (
     <div className="px-12">
       <div className="h-20 w-full flex items-center ">
@@ -162,12 +191,11 @@ export function ResourcesManagerPage() {
               className="appearance-none  px-4 py-2 text-gray-700 leading-tight outline-none rounded-md w-full text-sm"
             />
 
-            
             <div>
-            <button className="bg-zinc-200  rounded-md px-3 text-xs py-1.5 mr-1 flex items-center" onClick={openPopup}>
-              <AdjustmentsHorizontalIcon className="w-4 h-4 mr-2" />
-              Filter
-            </button>
+              <button className="bg-zinc-200  rounded-md px-3 text-xs py-1.5 mr-1 flex items-center" onClick={openPopup}>
+                <AdjustmentsHorizontalIcon className="w-4 h-4 mr-2" />
+                Filter
+              </button>
 
               <FilterPopup isOpen={isPopupOpen} onClose={closePopup} onAddFilter={handleAddFilter} />
 
@@ -204,7 +232,6 @@ export function ResourcesManagerPage() {
                 <th className="p-2 font-normal text-sm">Status</th>
                 <th className="p-2 font-normal text-sm">Allocated date</th>
                 <th className="p-2 font-normal text-sm">Relese Date</th>
-                
               </tr>
             </thead>
             <tbody className="border-y border-gray-300 text-sm">
@@ -227,13 +254,12 @@ export function ResourcesManagerPage() {
                     </td>
                     <td className="border-b p-2">{employee.allocatedDate}</td>
                     <td className="border-b p-2">{employee.releaseDate}</td>
-                    
                   </tr>
                   {selectedEmployee &&
                     selectedEmployee.name === employee.name && (
                       <tr>
                         <td colSpan={5} className="p-2  duration-300 pl-12 ">
-                         <WorkPerecentageCurrent/>
+                          <WorkPerecentageCurrent />
                         </td>
                       </tr>
                     )}
@@ -276,7 +302,16 @@ export function ResourcesManagerPage() {
             <tbody className="border-y border-gray-300 text-sm">
               {resourcesAllocated.map((resource, index) => (
                 <tr key={index}>
-                  <td className="border-b p-2 ">{resource.name}</td>
+                  <td className="border-b p-2 ">
+                    <div className="flex items-center">
+                    <input
+                        type="checkbox"
+                        className="mr-2"
+                        onChange={() => handleCheckboxChange(resource.id, resource.name)}
+                        />
+                      {resource.name}
+                    </div>
+                  </td>
                   <td className="border-b p-2  ">
                     <div
                       className={
@@ -327,8 +362,16 @@ export function ResourcesManagerPage() {
           </table>
         </div>
       </div>
-
-      {isRequestDialogOpen && <RequestDialog onClose={closeRequestDialog} />}
+      <div className="mt-6 flex justify-end">
+        <button
+          className={`rounded py-2 px-4 text-xs ${isRequestAllDisabled ? 'bg-gray-400 text-gray-700' : 'bg-violet-500 text-white'}`}
+          onClick={handleRequestAll}
+          disabled={isRequestAllDisabled}
+        >
+          Request All
+        </button>
+      </div>
+      {isRequestDialogOpen &&  <RequestDialog isOpen={isRequestDialogOpen} onClose={closeRequestDialog} checkedResourceNames={checkedResourceNames} />}
     </div>
   );
 }
