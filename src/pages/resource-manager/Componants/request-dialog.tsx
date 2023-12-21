@@ -1,10 +1,11 @@
 // RequestDialog.tsx
 import { XMarkIcon, StopCircleIcon } from "@heroicons/react/20/solid";
-import React from "react";
+import React, { useState } from "react";
 
 interface RequestDialogProps {
   onClose: () => void;
 }
+
 interface Project {
   id: number;
   name: string;
@@ -44,11 +45,39 @@ const resourcesAllocated: Resource[] = [
       { id: 8, name: "Project H" },
     ],
   },
-  // Add more resource entities as needed
 ];
+
 const RequestDialog: React.FC<RequestDialogProps> = ({ onClose }) => {
+  const [addedData, setAddedData] = useState<{
+    dateFrom: string;
+    dateTo: string;
+    percentage: string;
+  }[]>([]);
+  const [formData, setFormData] = useState({
+    dateFrom: "",
+    dateTo: "",
+    percentage: "",
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleAddData = () => {
+    setAddedData((prevData) => [...prevData, formData]);
+    setFormData({
+      dateFrom: "",
+      dateTo: "",
+      percentage: "",
+    });
+  };
+  const handleClearData = () => {
+    setAddedData([]);
+  };
+
   return (
-    <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex justify-end items-center  py-10 pl-20 pr-4 z-50 ">
+    <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex justify-end items-center py-10 pl-20 pr-4 z-50 ">
       <div className="bg-white p-6 rounded-md h-full w-5/6 relative">
         <button
           onClick={onClose}
@@ -123,9 +152,74 @@ const RequestDialog: React.FC<RequestDialogProps> = ({ onClose }) => {
               </tbody>
             </table>
           </div>
-          <div className="w-1/3"></div>
+          <div className="w-1/3">
+  <div className="container mx-auto p-4">
+    <div className="flex flex-col space-y-4">
+      <div className="flex">
+        <div className="flex flex-col mr-4">
+          <label className="p-2 font-normal text-sm">Date From:</label>
+          <input
+            type="date"
+            name="dateFrom"
+            value={formData.dateFrom}
+            onChange={handleInputChange}
+            className="p-2 border rounded w-40"
+          />
         </div>
-        {/* Add your content for the dialog here */}
+
+        <div className="flex flex-col">
+          <label className="p-2 font-normal text-sm">Date To:</label>
+          <input
+            type="date"
+            name="dateTo"
+            value={formData.dateTo}
+            onChange={handleInputChange}
+            className="p-2 border rounded w-40"
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col">
+        <label className="p-2 font-normal text-sm">Percentage:</label>
+        <input
+          type="number"
+          name="percentage"
+          value={formData.percentage}
+          onChange={handleInputChange}
+          placeholder="Percentage"
+          className="p-2 border rounded"
+        />
+      </div>
+
+      <div className="flex space-x-4 mt-4">
+      <button onClick={handleAddData} className="bg-green-500 flex text-white rounded py-1 px-3 justify-center items-center text-xs">
+  Add Data
+</button>
+<button onClick={handleClearData} className="bg-red-500 flex text-white rounded py-1 px-3 justify-center items-center text-xs">
+  Clear Data
+</button>
+
+      </div>
+    </div>
+
+    <div className="mt-4 overflow-y-auto max-h-48">
+  <h3 className="text-lg font-semibold mb-4">Added Requests:</h3>
+  <ul className="list-disc list-inside">
+    {addedData.map((data, index) => (
+      <li key={index} className="mb-2 text-sm text-zinc-500">
+        {`Date From: ${data.dateFrom}, Date To: ${data.dateTo}, Percentage: ${data.percentage}%`}
+      </li>
+    ))}
+  </ul>
+</div>
+
+
+  </div>
+</div>
+
+        </div>
+
+      
       </div>
     </div>
   );

@@ -16,7 +16,7 @@ import ForgotPasswordPage2 from './pages/Login/ForgotPassword';
 import SignupPage from './pages/Login/RegisterUaerAdmin';
 import AccRequest from './pages/Login/accRequest';
 // import ManageResources from './pages/resource-manager';
-import SimplePage from './pages/resource-manager/Componants/test';
+
 import ManageResources from './pages/resource-manager';
 
 
@@ -69,10 +69,7 @@ const App = () => {
     path="/dashboard"
     element={isAuthenticated ? <Navigate to="/" /> : <Navigate to="/login" />}
 />
-<Route
-        path="/simple-page"
-        element={isAuthenticated ? <SimplePage /> : <Navigate to="/login" />}
-      />
+
       
     </Routes>
 
