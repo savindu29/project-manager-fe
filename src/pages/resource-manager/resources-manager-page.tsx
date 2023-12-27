@@ -10,8 +10,6 @@ import React from "react";
 import WorkPerecentageCurrent from "./Componants/work-perecentage-current";
 import { Button } from '@mui/material';
 import FilterPopup from "./Componants/filter";
-import Filter from "./Componants/filter";
-import FilterButton from "./Componants/filter";
 
 
 type Filter = {
@@ -194,11 +192,13 @@ export function ResourcesManagerPage() {
             />
 
             <div>
-             
+              <button className="bg-zinc-200  rounded-md px-3 text-xs py-1.5 mr-1 flex items-center" onClick={openPopup}>
+                <AdjustmentsHorizontalIcon className="w-4 h-4 mr-2" />
+                Filter
+              </button>
 
-              <FilterButton/>
-
-              {/* Display existing filters */}
+              {/* <FilterPopup isOpen={isPopupOpen} onClose={closePopup} onAddFilter={handleAddFilter} />
+             Display existing filters */}
               <div>
                 {filters.map((filter, index) => (
                   <div key={index}>
