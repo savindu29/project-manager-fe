@@ -67,7 +67,8 @@ const App = () => {
           <Route
     path="/dashboard"
     element={isAuthenticated ? <Navigate to="/" /> : <Navigate to="/login" />}
-/>      
+
+/>
     </Routes>
 
   );

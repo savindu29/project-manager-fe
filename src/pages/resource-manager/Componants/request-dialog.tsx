@@ -2,8 +2,11 @@
 import { XMarkIcon, StopCircleIcon } from "@heroicons/react/20/solid";
 import React, { useState } from "react";
 
+
 interface RequestDialogProps {
   onClose: () => void;
+  isOpen: boolean;
+  checkedResourceNames: string[];
 }
 
 interface Project {
@@ -47,16 +50,17 @@ const resourcesAllocated: Resource[] = [
   },
 ];
 
-const RequestDialog: React.FC<RequestDialogProps> = ({ onClose }) => {
+const RequestDialog: React.FC<RequestDialogProps> = ({ isOpen,onClose, checkedResourceNames }) => {
   const [addedData, setAddedData] = useState<{
     dateFrom: string;
     dateTo: string;
-    percentage: string;
+    percentage: string[];
   }[]>([]);
+  
   const [formData, setFormData] = useState({
     dateFrom: "",
     dateTo: "",
-    percentage: "",
+    percentage: [] as string[],
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,7 +73,7 @@ const RequestDialog: React.FC<RequestDialogProps> = ({ onClose }) => {
     setFormData({
       dateFrom: "",
       dateTo: "",
-      percentage: "",
+      percentage: [] as string[],
     });
   };
   const handleClearData = () => {
@@ -87,7 +91,10 @@ const RequestDialog: React.FC<RequestDialogProps> = ({ onClose }) => {
         </button>
         <div className="w-full h-full flex ">
           <div className="w-2/3 border-r border-zinc-300 px-4">
-            <h2 className="text-lg font-semibold mb-4">Resource Name</h2>
+            <h2 className="text-lg font-semibold mb-4"> {checkedResourceNames.length > 0
+                ? ` ${checkedResourceNames.join(', ')}`
+                : 'Resource Name'}
+            </h2>
             <table className="min-w-full  table-auto">
               <thead className="">
                 <tr className="text-zinc-400 font-normal text-left">
