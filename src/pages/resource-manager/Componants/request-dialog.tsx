@@ -1,6 +1,6 @@
 // RequestDialog.tsx
 import { XMarkIcon, StopCircleIcon } from "@heroicons/react/20/solid";
-import React, { useState } from "react";
+import React from "react";
 
 
 interface RequestDialogProps {
@@ -8,46 +8,30 @@ interface RequestDialogProps {
   isOpen: boolean;
   checkedResourceNames: string[];
 }
-
 interface Project {
-  id: number;
-  name: string;
-}
-
-interface Resource {
   name: string;
   status: string;
-  allocatedProjects: Project[];
-  pendingProjects: Project[];
+  allocatedDate: string;
+  releaseDate: string;
+  percentage: number;
 }
 
-const resourcesAllocated: Resource[] = [
+const resourcesAllocated: Project[] = [
   {
-    name: "Resource1",
-    status: "Active",
-    allocatedProjects: [
-      { id: 1, name: "A Project " },
-      { id: 2, name: "B Project " },
-      { id: 3, name: "C Project " },
-    ],
-    pendingProjects: [
-      { id: 3, name: "Project C" },
-      { id: 4, name: "Project D" },
-      { id: 5, name: "Project B" },
-    ],
+    name: "Project 1",
+    status: "Approved",
+    allocatedDate: "2023-02-15",
+    releaseDate: "2023-12-31",
+    percentage: 40,
   },
   {
-    name: "Resource2",
-    status: "Inactive",
-    allocatedProjects: [
-      { id: 5, name: "Project E" },
-      { id: 6, name: "Project F" },
-    ],
-    pendingProjects: [
-      { id: 7, name: "Project G" },
-      { id: 8, name: "Project H" },
-    ],
+    name: "Project 2",
+    status: "Pending",
+    allocatedDate: "2023-05-15",
+    releaseDate: "2023-10-31",
+    percentage: 60,
   },
+  // Add more resource entities as needed
 ];
 
 const RequestDialog: React.FC<RequestDialogProps> = ({ isOpen,onClose, checkedResourceNames }) => {
@@ -98,63 +82,32 @@ const RequestDialog: React.FC<RequestDialogProps> = ({ isOpen,onClose, checkedRe
             <table className="min-w-full  table-auto">
               <thead className="">
                 <tr className="text-zinc-400 font-normal text-left">
-                  <th className="p-2 font-normal text-sm">Name</th>
+                  <th className="p-2 font-normal text-sm">Project Name</th>
                   <th className="p-2 font-normal text-sm">Status</th>
-                  <th className="p-2 font-normal text-sm">
-                    Allocated Projects
-                  </th>
-                  <th className="p-2 font-normal text-sm">Pending Projects</th>
-                  <th className="p-2 font-normal text-sm">Request</th>
+                  <th className="p-2 font-normal text-sm">Allocated date</th>
+                <th className="p-2 font-normal text-sm">Relese Date</th>
+                <th className="p-2 font-normal text-sm">Perecentage</th>
                 </tr>
               </thead>
               <tbody className="border-y border-gray-300 text-sm">
-                {resourcesAllocated.map((resource, index) => (
+                {resourcesAllocated.map((project, index) => (
                   <tr key={index}>
-                    <td className="border-b p-2 ">{resource.name}</td>
+                    <td className="border-b p-2 ">{project.name}</td>
                     <td className="border-b p-2  ">
                       <div
                         className={
-                          "bg-violet-600 flex text-white rounded py-1 w-28 pl-4 items-center text-xs"
+                          " bg-green-700 flex text-white rounded py-1  w-28 pl-4 items-center text-xs"
                         }
                       >
-                        <StopCircleIcon className="h-4 w-4 mr-2" />{" "}
-                        {resource.status}
+                        <CheckCircleIcon className="h-4 w-4 mr-2" />{" "}
+                        {project.status}
                       </div>
                     </td>
-                    <td className="border-b p-2 ">
-                      <div className="flex">
-                        {resource.allocatedProjects.map(
-                          (project, projectIndex) => (
-                            <div
-                              key={projectIndex}
-                              className="w-8 h-8 flex items-center justify-center text-white rounded-full bg-violet-300 -mr-2 border-2 border-white"
-                            >
-                              {project.name.charAt(0).toUpperCase()}
-                            </div>
-                          )
-                        )}
-                      </div>
-                    </td>
-                    <td className="border-b p-2 ">
-                      <div className="flex">
-                        {resource.pendingProjects.map(
-                          (project, projectIndex) => (
-                            <div
-                              key={projectIndex}
-                              className="w-8 h-8 flex items-center justify-center text-white rounded-full bg-violet-300 -mr-2 border-2 border-white"
-                            >
-                              {project.name.charAt(0).toUpperCase()}
-                            </div>
-                          )
-                        )}
-                      </div>
-                    </td>
-                    <td className="border-b p-2 ">
-                      <button className="bg-violet-500 flex text-white rounded py-1 px-3  justify-center items-center text-xs">
-                        Request
-                      </button>
-                    </td>
+                    <td className="border-b p-2">{project.allocatedDate}</td>
+                    <td className="border-b p-2">{project.releaseDate}</td>
+                    <td className="border-b p-2">{project.percentage}%</td>
                   </tr>
+                  
                 ))}
               </tbody>
             </table>
