@@ -78,6 +78,14 @@ const getResourcesWithDetails = (resources: Resource[]): DetailedResource[] => {
     };
   });
 };
+type EditableDataItem = {
+  project: string;
+  allocateDate: string;
+  releaseDate: string;
+  percentage: string;
+  editable: boolean;
+  [key: string]: string | boolean;
+};
 
 const detailedResources: DetailedResource[] = getResourcesWithDetails(resourcesAllocated);
 
@@ -102,10 +110,25 @@ const RequestDialog: React.FC<RequestDialogProps> = ({ isOpen, onClose, checkedR
     checkedResourceNames.includes(resource.name)
   );
 
+    // State variables with useState
+    const [editableData, setEditableData] = useState<EditableDataItem[]>([
+      { project: '', allocateDate: '', releaseDate: '', percentage: '', editable: false },
+    ]);
   const onResourceClick = (resource: Resource) => {
     setSelectedResource(getResourcesWithDetails([resource])[0]);
   };
   
+  const handleInputChange = (index: number, field: string, value: string) => {
+    const newData = [...editableData];
+    newData[index][field] = value;
+    setEditableData(newData);
+  };
+  
+  const handleCheckboxChange = (index: number, checked: boolean) => {
+    const newData = [...editableData];
+    newData[index].editable = checked;
+    setEditableData(newData);
+  };
 const getResourcesWithDetails = (resources: Resource[]): DetailedResource[] => {
   return resources.map((resource) => {
     const details: AllocationDetails[] = resource.allocatedProjects.map((project) => {
@@ -131,7 +154,6 @@ const getResourcesWithDetails = (resources: Resource[]): DetailedResource[] => {
 };
 
 const detailedResources: DetailedResource[] = getResourcesWithDetails(resourcesAllocated);
-
 
   return (
     <div className={`fixed ${isOpen ? 'block' : 'hidden'} top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex justify-end items-center py-10 pl-20 pr-4 z-50`}>
@@ -194,7 +216,100 @@ Current project detilas
     ))}
   </tbody>
 </table>
+<br></br>
 
+  {/*  Editable Table */}
+<table className="min-w-full table-auto">
+  <thead className="">
+  <tr className="text-zinc-400 font-normal text-left my-0 py-1">
+      <th className="p-2 font-normal text-sm">Project</th>
+      <th className="p-2 font-normal text-sm">Allocate Date</th>
+      <th className="p-2 font-normal text-sm">Release Date</th>
+      <th className="p-2 font-normal text-sm">Percentage</th>
+      <th className="p-2 font-normal text-sm">Select</th>
+    </tr>
+  </thead>
+  <tbody className="border-y border-gray-300 text-sm">
+    {/* Render editable rows */}
+    {editableData.map((data, index) => (
+      <tr key={index}>
+        <td className="border-b p-2 font-semibold">
+          <input
+            type="text"
+            style={{ width: '102px' }} 
+            value={data.project}
+            onChange={(e) => handleInputChange(index, 'project', e.target.value)}
+          />
+        </td>
+        <td className="border-b p-0.5 font-semibold">
+          <input
+            type="date"
+            style={{ width: '176px' }}
+            value={data.allocateDate}
+            onChange={(e) => handleInputChange(index, 'allocateDate', e.target.value)}
+          />
+        </td>
+        <td className="border-b p-2 font-semibold">
+          <input
+            type="date"
+            style={{ width: '176px' }}
+            value={data.releaseDate}
+            onChange={(e) => handleInputChange(index, 'releaseDate', e.target.value)}
+          />
+        </td>
+        <td className="border-b p-2 font-semibold">
+          <input
+            type="number"
+            style={{ width: '130px' }}
+            value={data.percentage}
+            onChange={(e) => handleInputChange(index, 'percentage', e.target.value)}
+          />
+        </td>
+        <td className="border-b p-2 font-semibold">
+          <input
+            type="checkbox"
+            checked={data.editable}
+            onChange={(e) => handleCheckboxChange(index, e.target.checked)}
+          />
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+<div className="mt-4 flex flex-col"> 
+  <label htmlFor="role" className="block text-sm font-normal text-zinc-400">Role:</label>
+  <select
+    id="role"
+    className="w-64 p-2 border border-gray-300 rounded-md"
+ 
+  >
+    {/* Add options for roles */}
+    <option value="role1">Role 1</option>
+    <option value="role2">Role 2</option>
+    
+  </select>
+
+  <label htmlFor="note" className="block mt-4 text-sm font-normal text-zinc-400">Note:</label>
+<div className="flex items-end"> 
+  <div className="flex-grow pr-2">
+    <textarea
+      id="note"
+      className="w-full p-2 border border-gray-300 rounded-md"
+      // Add onChange or value props 
+    />
+  </div>
+
+  <div className="flex-none ml-4 mb-2"> 
+    <button
+      className="p-2 px-3 bg-blue-500 text-white rounded-md text-sm" 
+      //   onClick={handleSendRequest} // Add the function to handle the button click
+    >
+      Send Request
+    </button>
+  </div>
+</div>
+
+</div>
     </>
   )}
 </div>
