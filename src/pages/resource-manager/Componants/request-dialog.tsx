@@ -27,6 +27,7 @@ const resourcesAllocated: Resource[] = [
       { id: 1, name: "A Project " },
       { id: 2, name: "B Project " },
       { id: 3, name: "C Project " },
+
     ],
     pendingProjects: [
       { id: 3, name: "Project C" },
@@ -78,14 +79,15 @@ const getResourcesWithDetails = (resources: Resource[]): DetailedResource[] => {
     };
   });
 };
-type EditableDataItem = {
+interface EditableDataItem {
   project: string;
   allocateDate: string;
   releaseDate: string;
-  percentage: string;
+  percentage: number; // Change the type to number
   editable: boolean;
-  [key: string]: string | boolean;
-};
+  [key: string]: string | boolean | number;
+}
+
 
 const detailedResources: DetailedResource[] = getResourcesWithDetails(resourcesAllocated);
 
@@ -112,13 +114,13 @@ const RequestDialog: React.FC<RequestDialogProps> = ({ isOpen, onClose, checkedR
 
     // State variables with useState
     const [editableData, setEditableData] = useState<EditableDataItem[]>([
-      { project: '', allocateDate: '', releaseDate: '', percentage: '', editable: false },
+      { project: '', allocateDate: '', releaseDate: '', percentage: 50, editable: false },
     ]);
   const onResourceClick = (resource: Resource) => {
     setSelectedResource(getResourcesWithDetails([resource])[0]);
   };
   
-  const handleInputChange = (index: number, field: string, value: string) => {
+  const handleInputChange = (index: number, field: string, value: string|number) => {
     const newData = [...editableData];
     newData[index][field] = value;
     setEditableData(newData);
@@ -156,45 +158,52 @@ const getResourcesWithDetails = (resources: Resource[]): DetailedResource[] => {
 const detailedResources: DetailedResource[] = getResourcesWithDetails(resourcesAllocated);
 
   return (
-    <div className={`fixed ${isOpen ? 'block' : 'hidden'} top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex justify-end items-center py-10 pl-20 pr-4 z-50`}>
-      <div className="bg-white p-6 rounded-md h-full w-5/6 relative">
+    <div className={`fixed ${isOpen ? 'block' : 'hidden'} top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex justify-end items-center py-6 pl-20 pr-4 z-50`}>
+      
+      <div className="bg-white p-6 rounded-md h-full w-5/6 relative overflow-y-scroll">
+      <div className="rounded-t-lg text-black text-2xl  py-2 px-4"> 
+Current project detilas 
+  </div>
         <button
           onClick={onClose}
           className="rounded py-1 px-3 absolute right-4 top-4"
         >
           <XMarkIcon className="h-6 w-6" />
         </button>
-        <div className="flex">
+        <div className="flex mt-6">
           {/* Left Column (1/3 of the window) */}
-          <div className="w-1/3 h-full overflow-y-auto">
-          <div className="rounded-t-lg text-black text-2xl font-semibold py-2 px-4 mb-4"> 
-Current project detilas 
-  </div>
+          <div className="w-1/4 h-full overflow-y-auto">
+          
   {filteredResources.map((resource) => (
     <div
       key={resource.name}
-      className="h-24 w-full flex items-center cursor-pointer bg-zinc-200 hover:bg-zinc-300 p-4 mb-2 rounded-md"
+      className="border-b pb-1 text-sm pt-2 cursor-pointer"
       onClick={() => onResourceClick(resource)}
     >
-      <span className="text-lg font-semibold">{resource.name}</span>
+      <span className="">{resource.name}</span>
     </div>
   ))}
 </div>
 
 
   {/* Right Details Pane (2/3 of the window) */}
-  <div className="w-2/3 h-full bg-white p-6 rounded-md ml-4 mt-8"> 
-      <button onClick={onClose} className="rounded py-1 px-3 absolute right-4 top-4">
-        <XMarkIcon className="h-6 w-6" />
-      </button>
+  
+ 
+  <div className="w-3/4 h-full bg-white px-6 rounded-md ml-4  "> 
+     <div>
+     {selectedResource
+              ? ` ${selectedResource.name}`
+              : ''}
+     </div>
       {selectedResource && (
         <>
-          <h2 className="text-lg font-semibold mb-4">
+        <div className="mb-6 mt-4 ">
+          <div className=" mb-2 text-xs py-1 px-2 bg-green-600 text-white rounded w-56 text-center">
             {selectedResource
-              ? ` ${selectedResource.name}'s Details`
-              : 'Resource Name'}
-          </h2>
-          <table className="min-w-full table-auto">
+              ? `Existing Project Allocations`
+              : ''}
+          </div>
+          <table className="min-w-full table-auto ">
   <thead className="">
     <tr className="text-zinc-400 font-normal text-left">
       <th className="p-2 font-normal text-sm">Project</th>
@@ -207,7 +216,7 @@ Current project detilas
   <tbody className="border-y border-gray-300 text-sm">
     {selectedResource && selectedResource.details.map((detail, projectIndex) => (
       <tr key={projectIndex}>
-        <td className="border-b p-2 font-semibold">{selectedResource.allocatedProjects[projectIndex]?.name}</td>
+        <td className="border-b p-2 ">{selectedResource.allocatedProjects[projectIndex]?.name}</td>
         <td className="border-b p-2">{detail.allocatedDate.toLocaleDateString()}</td>
         <td className="border-b p-2">{detail.releaseDate.toLocaleDateString()}</td>
         <td className="border-b p-2">{selectedResource.status}</td>
@@ -216,13 +225,19 @@ Current project detilas
     ))}
   </tbody>
 </table>
-<br></br>
+
+</div>
 
   {/*  Editable Table */}
+  <div className="  mb-2 text-xs py-1 px-2 bg-purple-600 text-white rounded w-56 text-center">
+            {selectedResource
+              ? ` Request To Current Project  `
+              : ''}
+          </div>
 <table className="min-w-full table-auto">
   <thead className="">
   <tr className="text-zinc-400 font-normal text-left my-0 py-1">
-      <th className="p-2 font-normal text-sm">Project</th>
+      
       <th className="p-2 font-normal text-sm">Allocate Date</th>
       <th className="p-2 font-normal text-sm">Release Date</th>
       <th className="p-2 font-normal text-sm">Percentage</th>
@@ -233,44 +248,48 @@ Current project detilas
     {/* Render editable rows */}
     {editableData.map((data, index) => (
       <tr key={index}>
-        <td className="border-b p-2 font-semibold">
+        
+        <td className="border-b p-0.5 ">
           <input
-            type="text"
-            style={{ width: '102px' }} 
-            value={data.project}
-            onChange={(e) => handleInputChange(index, 'project', e.target.value)}
-          />
-        </td>
-        <td className="border-b p-0.5 font-semibold">
-          <input
+          className="px-4 py-2 border rounded-md   focus:outline-none  focus:border-zinc-300 "
             type="date"
             style={{ width: '176px' }}
             value={data.allocateDate}
             onChange={(e) => handleInputChange(index, 'allocateDate', e.target.value)}
           />
         </td>
-        <td className="border-b p-2 font-semibold">
+        <td className="border-b p-2 ">
           <input
+          className="px-4 py-2 border rounded-md   focus:outline-none  focus:border-zinc-300 "
             type="date"
             style={{ width: '176px' }}
             value={data.releaseDate}
             onChange={(e) => handleInputChange(index, 'releaseDate', e.target.value)}
           />
         </td>
-        <td className="border-b p-2 font-semibold">
-          <input
-            type="number"
-            style={{ width: '130px' }}
-            value={data.percentage}
-            onChange={(e) => handleInputChange(index, 'percentage', e.target.value)}
-          />
+        <td className="border-b p-2 ">
+        <input
+  className="px-4 py-2 border rounded-md   focus:outline-none  focus:border-zinc-300"
+  type="number"
+  placeholder="Request %"
+  style={{ width: '130px' }}
+  value={Math.min(100, Math.max(0, data.percentage))}
+  onChange={(e) => handleInputChange(index, 'percentage', Math.min(100, Math.max(0, Number(e.target.value))))}
+
+
+/>
+
         </td>
-        <td className="border-b p-2 font-semibold">
-          <input
-            type="checkbox"
-            checked={data.editable}
-            onChange={(e) => handleCheckboxChange(index, e.target.checked)}
-          />
+        <td className="border-b p-2  ">
+        <input
+  className="ml-6"
+  type="checkbox"
+  checked={data.editable}
+  
+  onChange={(e) => handleCheckboxChange(index, e.target.checked)}
+  style={{ transform: "scale(1.5)" }}
+/>
+
         </td>
       </tr>
     ))}
@@ -280,7 +299,7 @@ Current project detilas
   <label htmlFor="role" className="block text-sm font-normal text-zinc-400">Role:</label>
   <select
     id="role"
-    className="w-64 p-2 border border-gray-300 rounded-md"
+    className="px-4 py-2 border rounded-md   focus:outline-none  focus:border-zinc-300 w-1/2"
  
   >
     {/* Add options for roles */}
@@ -301,7 +320,7 @@ Current project detilas
 
   <div className="flex-none ml-4 mb-2"> 
     <button
-      className="p-2 px-3 bg-blue-500 text-white rounded-md text-sm" 
+      className="p-2 text-xs px-3 bg-purple-600 text-white rounded-md " 
       //   onClick={handleSendRequest} // Add the function to handle the button click
     >
       Send Request
