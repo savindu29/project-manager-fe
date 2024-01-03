@@ -16,12 +16,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
-import WidgetsRoundedIcon from '@mui/icons-material/WidgetsRounded';
-import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
-import PeopleOutlineRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
+
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes/mainRoutes";
 import { useParams } from 'react-router-dom';
@@ -123,28 +118,37 @@ export default function MiniDrawer() {
     logout();
     // You can also add any additional logic after logging out if needed
   };
-  
+
+ 
+
+ 
   return (
     <Box sx={{ display: 'flex', height: '100%' }}>
       <Drawer variant="permanent" open={open}>
         <Box>
           <div className="flex justify-center items-center h-24">
-          <div className={`bg-sky-50 py-2 px-3  flex items-center justify-center  rounded-xl  mr-4 duration-500 ${!open && "hidden"}`}>
+          <div className={`bg-sky-50 py-2 px-3  flex items-center justify-center  rounded-xl  mr-4 duration-500  text-lg ${!open && "hidden"}`}>
           <div>
           <img
-      className="h-12 w-12 rounded-full"
+      className="h-8 w-8 rounded-full"
       src={`https://ui-avatars.com/api/?name=${firstLetter}&size=256&background=0D8ABC&color=fff`}
-      alt=""
+      
     />
 
           </div>
           <div className="ml-3">
       <p className="text-sm">{email}</p>
     </div>
+    
     </div>
-          </div>
+    <IconButton onClick={handleDrawer}>
+            {open  ? <ChevronRightIcon /> : <MenuIcon />}
+          </IconButton>
+          </div >
           <Divider />
+          
           <List sx={{ backgroundColor: 'rgb(241 245 249)' }}>
+          
             <ListItem disablePadding sx={{ display: 'block', marginTop: 3 }}>
               {routes.map((route, index) => (
                 <Link to={route.path} key={index} style={{ textDecoration: 'none' }}>
