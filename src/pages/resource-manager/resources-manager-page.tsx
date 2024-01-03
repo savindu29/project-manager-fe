@@ -9,8 +9,10 @@ import RequestDialog from "./Componants/request-dialog";
 import React from "react";
 import WorkPerecentageCurrent from "./Componants/work-perecentage-current";
 import { Button } from '@mui/material';
-import FilterPopup from "./Componants/filter";
-import FilterButton from "./Componants/filter";
+import Filter from "./Componants/search-filter";
+import SearchFilter from "./Componants/search-filter";
+
+
 
 
 type Filter = {
@@ -197,7 +199,8 @@ export function ResourcesManagerPage() {
                 <AdjustmentsHorizontalIcon className="w-4 h-4 mr-2" />
                 Filter
               </button> */}
-              <FilterButton/>
+              {/* <ABC/> */}
+              <SearchFilter/>
 
               {/* <FilterPopup isOpen={isPopupOpen} onClose={closePopup} onAddFilter={handleAddFilter} />
              Display existing filters */}
