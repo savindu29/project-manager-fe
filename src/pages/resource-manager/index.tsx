@@ -1,7 +1,32 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import MiniDrawer from "../../layout";
 import { ResourcesManagerPage } from "./resources-manager-page";
+import { useEffect, useState } from "react";
+import { getProject } from "../../apis/project-api";
+
 const ManageResources = () => {
+  const { id } = useParams();
+  const [projectDetails, setProjectDetails] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        console.log("out : ",id)
+        if (id) {
+          console.log("in : ",id)
+          const response = await getProject(parseInt(id));
+          setProjectDetails(response.data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+        setLoading(false);
+      }
+    };
+    fetchProjects();
+  }, [id]);
+
 return(
     <div>
       <div className='flex '>
@@ -14,7 +39,7 @@ return(
               </div>
             </Link>
           </div>
-          <ResourcesManagerPage />
+          <ResourcesManagerPage projectDetails = {projectDetails} />
         </div>
 
       </div>

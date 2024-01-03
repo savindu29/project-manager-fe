@@ -4,15 +4,16 @@ import {
   AdjustmentsHorizontalIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RequestDialog from "./Componants/request-dialog";
 import React from "react";
 import WorkPerecentageCurrent from "./Componants/work-perecentage-current";
-import { Button } from '@mui/material';
+import { Button } from "@mui/material";
 import FilterPopup from "./Componants/filter";
 import Filter from "./Componants/filter";
 import FilterButton from "./Componants/filter";
-
+import { APP_API_BASE_URL, DateType } from "../../apis";
+import axios from "axios";
 
 type Filter = {
   column: string;
@@ -34,7 +35,7 @@ interface Project {
 }
 
 interface Resource {
-  id:number;
+  id: number;
   name: string;
   status: string;
   allocatedProjects: Project[];
@@ -81,7 +82,8 @@ const employees: Employee[] = [
 ];
 
 const resourcesAllocated: Resource[] = [
-  {id:1,
+  {
+    id: 1,
     name: "Resource1",
     status: "Active",
     allocatedProjects: [
@@ -95,7 +97,8 @@ const resourcesAllocated: Resource[] = [
       { id: 5, name: "Project B" },
     ],
   },
-  {id:2,
+  {
+    id: 2,
     name: "Resource2",
     status: "Inactive",
     allocatedProjects: [
@@ -110,7 +113,11 @@ const resourcesAllocated: Resource[] = [
   // Add more resource entities as needed
 ];
 
-export function ResourcesManagerPage() {
+export function ResourcesManagerPage({
+  projectDetails,
+}: {
+  projectDetails: any;
+}) {
   const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
     null
@@ -150,13 +157,19 @@ export function ResourcesManagerPage() {
   };
 
   const [checkedResourceIds, setCheckedResourceIds] = useState<number[]>([]);
-  const [checkedResourceNames, setCheckedResourceNames] = useState<string[]>([]);
+  const [checkedResourceNames, setCheckedResourceNames] = useState<string[]>(
+    []
+  );
 
   const handleCheckboxChange = (id: number, name: string) => {
     // If the resource is already checked, uncheck it
     if (checkedResourceIds.includes(id)) {
-      setCheckedResourceIds((prevIds) => prevIds.filter((prevId) => prevId !== id));
-      setCheckedResourceNames((prevNames) => prevNames.filter((prevName) => prevName !== name));
+      setCheckedResourceIds((prevIds) =>
+        prevIds.filter((prevId) => prevId !== id)
+      );
+      setCheckedResourceNames((prevNames) =>
+        prevNames.filter((prevName) => prevName !== name)
+      );
     } else {
       // If the resource is not checked, check it
       setCheckedResourceIds((prevIds) => [...prevIds, id]);
@@ -166,14 +179,32 @@ export function ResourcesManagerPage() {
 
   const isRequestAllDisabled = checkedResourceIds.length === 0;
 
-
-
   const handleRequestAll = () => {
-    
     // Use the IDs as needed, for example, redirect to a new page
     openRequestDialog();
   };
 
+  const [projectProposedImpStartDate, setProposedImpStartDate] = useState(
+    projectDetails?.piStartDate ? new Date(projectDetails.piStartDate) : null
+  );
+  const [projectProposedImpEndDate, setProposedImpEndDate] = useState(
+    projectDetails?.piEndDate ? new Date(projectDetails.piEndDate) : null
+  );
+
+  useEffect(() => {
+    if (projectDetails) {
+        setProposedImpStartDate(projectDetails.piStartDate ? new Date(projectDetails.piStartDate) : null);
+        setProposedImpEndDate(projectDetails.piEndDate ? new Date(projectDetails.piEndDate) : null);
+    }
+
+}, [projectDetails]);
+
+  function formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
 
   return (
     <div className="px-12">
@@ -194,9 +225,7 @@ export function ResourcesManagerPage() {
             />
 
             <div>
-             
-
-              <FilterButton/>
+              <FilterButton />
 
               {/* Display existing filters */}
               <div>
@@ -269,20 +298,39 @@ export function ResourcesManagerPage() {
         </div>
       </div>
       <div className="mt-6 flex">
-        <div className=" bg-violet-600 flex text-white rounded py-1 px-2 w-48 justify-center items-center text-sm">
+        <div className=" bg-violet-600 flex text-white rounded py-1 px-2 w-48  justify-center items-center text-sm">
           <StopCircleIcon className="h-4 w-4 mr-2" /> Potential Resources
         </div>
         <div className="py-1 px-3 bg-zinc-200 rounded ml-12 flex text-xs flex items-center">
           <div>
-            Date from
+            Date from :
             <input
               type="date"
-              className="px-1 py-1 ml-2 hover:outline-none pointer-events-none"
+              name="proposedImplementStartDate"
+              id="proposedImplementStartDate"
+              onChange={(e) =>
+                setProposedImpStartDate(new Date(e.target.value))
+              }
+              value={
+                projectProposedImpStartDate
+                  ? formatDate(projectProposedImpStartDate)
+                  : ""
+              }
             />
           </div>
           <div className="ml-6">
             Date To :
-            <input type="date" className="px-1 py-1 ml-2 hover:outline-none " />
+            <input
+              type="date"
+              name="proposedImplementEndDate"
+              id="proposedImplementEndDate"
+              onChange={(e) => setProposedImpEndDate(new Date(e.target.value))}
+              value={
+                projectProposedImpEndDate
+                  ? formatDate(projectProposedImpEndDate)
+                  : ""
+              }
+            />
           </div>
         </div>
       </div>
@@ -303,11 +351,13 @@ export function ResourcesManagerPage() {
                 <tr key={index}>
                   <td className="border-b p-2 ">
                     <div className="flex items-center">
-                    <input
+                      <input
                         type="checkbox"
                         className="mr-2"
-                        onChange={() => handleCheckboxChange(resource.id, resource.name)}
-                        />
+                        onChange={() =>
+                          handleCheckboxChange(resource.id, resource.name)
+                        }
+                      />
                       {resource.name}
                     </div>
                   </td>
@@ -363,14 +413,24 @@ export function ResourcesManagerPage() {
       </div>
       <div className="mt-6 flex justify-end">
         <button
-          className={`rounded py-2 px-4 text-xs ${isRequestAllDisabled ? 'bg-gray-400 text-gray-700' : 'bg-violet-500 text-white'}`}
+          className={`rounded py-2 px-4 text-xs ${
+            isRequestAllDisabled
+              ? "bg-gray-400 text-gray-700"
+              : "bg-violet-500 text-white"
+          }`}
           onClick={handleRequestAll}
           disabled={isRequestAllDisabled}
         >
           Request All
         </button>
       </div>
-      {isRequestDialogOpen &&  <RequestDialog isOpen={isRequestDialogOpen} onClose={closeRequestDialog} checkedResourceNames={checkedResourceNames} />}
+      {isRequestDialogOpen && (
+        <RequestDialog
+          isOpen={isRequestDialogOpen}
+          onClose={closeRequestDialog}
+          checkedResourceNames={checkedResourceNames}
+        />
+      )}
     </div>
   );
 }

@@ -121,6 +121,11 @@ export type ProjectUpdateType = {
   // latestActivity: Activity[] | null;
 };
 
+export type DateType ={
+  proposedImplementStartDate: Date | null;
+  proposedImplementEndDate: Date | null;
+}
+
 export type ProjectRequest = {
   name: string | null;
   priority: number | null;
