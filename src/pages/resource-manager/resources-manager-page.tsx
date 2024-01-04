@@ -5,6 +5,7 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
+
 import RequestDialog from "./Componants/request-dialog";
 import React from "react";
 import WorkPerecentageCurrent from "./Componants/work-perecentage-current";
@@ -51,10 +52,11 @@ interface Project {
 interface Employee {
   name: string;
   status: string;
-  allocatedDate: string;
-  releaseDate: string;
+  allocated_date: string;
+  released_date: string;
   percentage: number;
 }
+
 
 interface ResourcesManagerPageProps {
   projectDetails: any;
@@ -65,6 +67,7 @@ interface ResourceTableProps {
   onRequestButtonClick: () => void;
 }
 const ResourcesManagerPage: React.FC<ResourcesManagerPageProps> = ({ projectDetails }) => {
+  // ... other useState declarations
   const [employeesData, setEmployeesData] = useState<Employee[]>([]);
   const [resourcesAllocated, setResourcesAllocated] = useState<any[]>([]);
   const [employees, setEmployees] = useState<any[]>([]);
@@ -84,6 +87,44 @@ const ResourcesManagerPage: React.FC<ResourcesManagerPageProps> = ({ projectDeta
   const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [potentialResources, setPotentialResources] = useState<Resource[]>([]);
+
+
+interface Project {
+  id: number;
+  name: string;
+}
+
+interface Resource {
+  id:number;
+  name: string;
+  status: string;
+  allocatedProjects: Project[];
+  pendingProjects: Project[];
+}
+
+
+export function ResourcesManagerPage({
+  projectDetails,
+}: {
+  projectDetails: any;
+}) {
+  const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/api/v1/projectReosurces/ResourceList");
+        console.log(response)
+        setEmployees(response.data.data);
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+      } 
+    };
+
+    fetchEmployees();
+  }, []);
 
 
 

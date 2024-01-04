@@ -6,8 +6,8 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 interface Employee {
   name: string;
   status: string;
-  allocatedDate: string;
-  releaseDate: string;
+  allocated_date: string;
+  released_date: string;
   percentage: number;
 }
 
@@ -69,8 +69,8 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                     {employee.status}
                   </div>
                 </TableCell>
-                <TableCell>{employee.allocatedDate}</TableCell>
-                <TableCell>{employee.releaseDate}</TableCell>
+                <TableCell>{employee.allocated_date}</TableCell>
+                <TableCell>{employee.released_date}</TableCell>
               </TableRow>
               {selectedEmployee && selectedEmployee.name === employee.name && (
                 <TableRow>
