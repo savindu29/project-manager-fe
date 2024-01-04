@@ -15,6 +15,7 @@ import EmployeeTable from "./Componants/current-resources";
 import ResourceTable from "./Componants/potential-resource-table";
 import { useParams } from "react-router-dom";
 import { getProject } from "../../apis/project-api";
+import axios from "axios";
 
 export interface SearchFilterProps {
   projectDetail: any;
@@ -35,6 +36,18 @@ type Filter = {
   value: string;
 };
 
+interface Resource {
+  id: number;
+  name: string;
+  status: string;
+  allocatedProjects: { id: number; name: string }[];
+  pendingProjects: { id: number; name: string }[];
+}
+interface Project {
+  id: number;
+  name: string;
+}
+
 interface Employee {
   name: string;
   status: string;
@@ -43,111 +56,29 @@ interface Employee {
   percentage: number;
 }
 
-interface Project {
-  id: number;
-  name: string;
-}
-
-interface Resource {
-  id:number;
-  name: string;
-  status: string;
-  allocatedProjects: Project[];
-  pendingProjects: Project[];
-}
-
-const employees: Employee[] = [
-  {
-    name: "John Doe",
-    status: "Active",
-    allocatedDate: "2023-01-01",
-    releaseDate: "2023-12-31",
-    percentage: 80,
-  },
-  {
-    name: "Jane Smith",
-    status: "Inactive",
-    allocatedDate: "2023-02-15",
-    releaseDate: "2023-10-31",
-    percentage: 60,
-  },
-  {
-    name: "Bob Johnson",
-    status: "Active",
-    allocatedDate: "2023-03-20",
-    releaseDate: "2023-09-30",
-    percentage: 75,
-  },
-  {
-    name: "Alice Williams",
-    status: "Inactive",
-    allocatedDate: "2023-04-10",
-    releaseDate: "2023-08-15",
-    percentage: 90,
-  },
-  {
-    name: "Charlie Brown",
-    status: "Active",
-    allocatedDate: "2023-05-05",
-    releaseDate: "2023-07-01",
-    percentage: 85,
-  },
-  {
-    name: "John Doe",
-    status: "Active",
-    allocatedDate: "2023-01-01",
-    releaseDate: "2023-12-31",
-    percentage: 80,
-  },
-  {
-    name: "John Doe",
-    status: "Active",
-    allocatedDate: "2023-01-01",
-    releaseDate: "2023-12-31",
-    percentage: 80,
-  },
-  // Add more employee data as needed
-];
-
-const resourcesAllocated: Resource[] = [
-  {id:1,
-    name: "Resource1",
-    status: "Active",
-    allocatedProjects: [
-      { id: 1, name: "A Project " },
-      { id: 2, name: "B Project " },
-      { id: 3, name: "C Project " },
-    ],
-    pendingProjects: [
-      { id: 3, name: "Project C" },
-      { id: 4, name: "Project D" },
-      { id: 5, name: "Project B" },
-    ],
-  },
-  {id:2,
-    name: "Resource2",
-    status: "Inactive",
-    allocatedProjects: [
-      { id: 5, name: "Project E" },
-      { id: 6, name: "Project F" },
-    ],
-    pendingProjects: [
-      { id: 7, name: "Project G" },
-      { id: 8, name: "Project H" },
-    ],
-  },
-  // Add more resource entities as needed
-];
-
-export function ResourcesManagerPage({
-  projectDetails,
-}: {
+interface ResourcesManagerPageProps {
   projectDetails: any;
-}) {
-  const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
-    null
+}
+
+const ResourcesManagerPage: React.FC<ResourcesManagerPageProps> = ({ projectDetails }) => {
+  const [employeesData, setEmployeesData] = useState<Employee[]>([]);
+  const [resourcesAllocated, setResourcesAllocated] = useState<any[]>([]);
+  const [employees, setEmployees] = useState<any[]>([]);
+  const [isPopupOpen, setPopupOpen] = useState(false);
+  const [filters, setFilters] = useState<Filter[]>([]);
+  const [checkedResourceIds, setCheckedResourceIds] = useState<number[]>([]);
+  const [checkedResourceNames, setCheckedResourceNames] = useState<string[]>([]);
+  const [projectProposedImpStartDate, setProposedImpStartDate] = useState<Date | null>(
+    projectDetails?.piStartDate ? new Date(projectDetails.piStartDate) : null
   );
+  const [projectProposedImpEndDate, setProposedImpEndDate] = useState<Date | null>(
+    projectDetails?.piEndDate ? new Date(projectDetails.piEndDate) : null
+  );
+  const { id } = useParams();
+  const [projectDetail, setProjectDetails] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
 
   const openRequestDialog = () => {
     setRequestDialogOpen(true);
@@ -158,17 +89,10 @@ export function ResourcesManagerPage({
   };
 
   const toggleEmployeeDetails = (employee: Employee) => {
-    if (selectedEmployee && selectedEmployee.name === employee.name) {
-      // If the same employee is clicked again, hide the details
-      setSelectedEmployee(null);
-    } else {
-      // Show the details of the clicked employee
-      setSelectedEmployee(employee);
-    }
+    setSelectedEmployee((prevSelectedEmployee) =>
+      prevSelectedEmployee && prevSelectedEmployee.name === employee.name ? null : employee
+    );
   };
-
-  const [isPopupOpen, setPopupOpen] = useState(false);
-  const [filters, setFilters] = useState<Filter[]>([]);
 
   const openPopup = () => {
     setPopupOpen(true);
@@ -179,90 +103,79 @@ export function ResourcesManagerPage({
   };
 
   const handleAddFilter = (newFilter: Filter) => {
-    setFilters([...filters, newFilter]);
+    setFilters((prevFilters) => [...prevFilters, newFilter]);
   };
 
-  const [checkedResourceIds, setCheckedResourceIds] = useState<number[]>([]);
-  const [checkedResourceNames, setCheckedResourceNames] = useState<string[]>(
-    []
-  );
-
   const handleCheckboxChange = (id: number, name: string) => {
-    // If the resource is already checked, uncheck it
-    if (checkedResourceIds.includes(id)) {
-      setCheckedResourceIds((prevIds) =>
-        prevIds.filter((prevId) => prevId !== id)
-      );
-      setCheckedResourceNames((prevNames) =>
-        prevNames.filter((prevName) => prevName !== name)
-      );
-    } else {
-      // If the resource is not checked, check it
-      setCheckedResourceIds((prevIds) => [...prevIds, id]);
-      setCheckedResourceNames((prevNames) => [...prevNames, name]);
-    }
+    const isChecked = checkedResourceIds.includes(id);
+
+    setCheckedResourceIds((prevIds) =>
+      isChecked ? prevIds.filter((prevId) => prevId !== id) : [...prevIds, id]
+    );
+
+    setCheckedResourceNames((prevNames) =>
+      isChecked ? prevNames.filter((prevName) => prevName !== name) : [...prevNames, name]
+    );
   };
 
   const isRequestAllDisabled = checkedResourceIds.length === 0;
 
   const handleRequestAll = () => {
-    // Use the IDs as needed, for example, redirect to a new page
     openRequestDialog();
   };
-
-  const [projectProposedImpStartDate, setProposedImpStartDate] = useState(
-    projectDetails?.piStartDate ? new Date(projectDetails.piStartDate) : null
-  );
-  const [projectProposedImpEndDate, setProposedImpEndDate] = useState(
-    projectDetails?.piEndDate ? new Date(projectDetails.piEndDate) : null
-  );
-  
-  const { id } = useParams();
-  const [projectDetail, setProjectDetails] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        console.log("out : ",id)
         if (id) {
-          console.log("in : ",id)
           const response = await getProject(parseInt(id));
           setProjectDetails(response.data);
           setLoading(false);
         }
       } catch (error) {
-        console.error("Error fetching projects:", error);
+        console.error('Error fetching projects:', error);
         setLoading(false);
       }
     };
+
     fetchProjects();
   }, [id]);
 
   useEffect(() => {
     if (projectDetails) {
-        setProposedImpStartDate(projectDetails.piStartDate ? new Date(projectDetails.piStartDate) : null);
-        setProposedImpEndDate(projectDetails.piEndDate ? new Date(projectDetails.piEndDate) : null);
+      setProposedImpStartDate(projectDetails.piStartDate ? new Date(projectDetails.piStartDate) : null);
+      setProposedImpEndDate(projectDetails.piEndDate ? new Date(projectDetails.piEndDate) : null);
     }
+  }, [projectDetails]);
 
-}, [projectDetails]);
-
-  function formatDate(date: Date): string {
+  const formatDate = (date: Date): string => {
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
-  }
-  const handleSaveFilter = (filterData:FilterData) => {
-    // Do something with the filter data, such as sending it to the server or updating state
+  };
+
+  const handleSaveFilter = (filterData: FilterData) => {
     setProposedImpStartDate(filterData.dateFrom ? new Date(filterData.dateFrom) : null);
     setProposedImpEndDate(filterData.dateTo ? new Date(filterData.dateTo) : null);
     console.log('Received Filter Data in ResourceManagerPage:', filterData);
-    
   };
+
+  useEffect(() => {
+    const fetchEmployeesData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/employees/notAllocatedToProject?projectId=${projectDetails.id}`);
+        setEmployeesData(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
   
-
-
+    if (projectDetails && projectDetails.id) {
+      fetchEmployeesData();
+    }
+  }, [projectDetails]);
+ 
   return (
     <div className="px-12 mb-12">
       <div className="h-20 w-full flex items-center ">
@@ -379,3 +292,5 @@ export function ResourcesManagerPage({
     </div>
   );
 }
+
+export default ResourcesManagerPage;
