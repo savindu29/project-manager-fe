@@ -164,13 +164,17 @@ const ResourcesManagerPage: React.FC<ResourcesManagerPageProps> = ({ projectDeta
   useEffect(() => {
     const fetchEmployeesData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/employees/notAllocatedToProject?projectId=${projectDetails.id}`);
-        setEmployeesData(response.data);
+        // Use JSONPlaceholder as a fake API for testing
+        //const response = await axios.get('https://jsonplaceholder.typicode.com/users');
+        const response = await axios.get(`http://localhost:8000/api/v1/admin/employees/notAllocatedToProject?projectId=${projectDetails.id}`);
+
+        setEmployeesData(response.data.data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data:', error as string);
+        
       }
     };
-  
+
     if (projectDetails && projectDetails.id) {
       fetchEmployeesData();
     }
