@@ -59,7 +59,7 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
-            <TableCell>Status</TableCell>
+            {/* <TableCell>Status</TableCell> */}
             <TableCell>Allocated Projects</TableCell>
             <TableCell>Pending Projects</TableCell>
             <TableCell>Request</TableCell>
@@ -78,7 +78,7 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
                   {resource.name}
                 </div>
               </TableCell>
-              <TableCell>
+              {/* <TableCell>
                 <div
                   className={
                     "bg-violet-600 flex text-white rounded py-1 w-28 pl-4 items-center text-xs"
@@ -87,7 +87,7 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
                   <StopCircleIcon className="h-4 w-4 mr-2" />
                   {resource.status}
                 </div>
-              </TableCell>
+              </TableCell> */}
               <TableCell>
                 <div className="flex">
                   {resource.allocatedProjects.map((project, projectIndex) => (
@@ -112,14 +112,14 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
                   ))}
                 </div>
               </TableCell>
-              <TableCell>
+              {/* <TableCell>
                 <button
                   className="bg-violet-500 flex text-white rounded py-1 px-3  justify-center items-center text-xs"
                   onClick={onRequestButtonClick}
                 >
                   Request
                 </button>
-              </TableCell>
+              </TableCell> */}
             </tr>
           ))}
         </TableBody>
