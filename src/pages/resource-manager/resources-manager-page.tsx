@@ -59,7 +59,11 @@ interface Employee {
 interface ResourcesManagerPageProps {
   projectDetails: any;
 }
-
+interface ResourceTableProps {
+  resources: Employee[];
+  onCheckboxChange: (id: number, name: string) => void;
+  onRequestButtonClick: () => void;
+}
 const ResourcesManagerPage: React.FC<ResourcesManagerPageProps> = ({ projectDetails }) => {
   const [employeesData, setEmployeesData] = useState<Employee[]>([]);
   const [resourcesAllocated, setResourcesAllocated] = useState<any[]>([]);
@@ -79,6 +83,9 @@ const ResourcesManagerPage: React.FC<ResourcesManagerPageProps> = ({ projectDeta
   const [loading, setLoading] = useState(true);
   const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [potentialResources, setPotentialResources] = useState<Resource[]>([]);
+
+
 
   const openRequestDialog = () => {
     setRequestDialogOpen(true);
@@ -164,14 +171,25 @@ const ResourcesManagerPage: React.FC<ResourcesManagerPageProps> = ({ projectDeta
   useEffect(() => {
     const fetchEmployeesData = async () => {
       try {
-        // Use JSONPlaceholder as a fake API for testing
-        //const response = await axios.get('https://jsonplaceholder.typicode.com/users');
         const response = await axios.get(`http://localhost:8000/api/v1/admin/employees/notAllocatedToProject?projectId=${projectDetails.id}`);
+        console.log('API Response:', response.data); 
 
-        setEmployeesData(response.data.data);
+        // Assuming the API response structure is as mentioned
+        const employeesDataFromAPI = response.data.data;
+
+        // Map the API response to the state variable
+        const mappedEmployeesData = employeesDataFromAPI.map((employeeData: any) => ({
+          name: employeeData.name,
+          allocatedProjects: employeeData.allocatedProjects || [],
+          pendingProjects: employeeData.pendingProjects || [],
+        }));
+
+        setEmployeesData(mappedEmployeesData);
+
+        // Set potential resources separately
+        setPotentialResources(mappedEmployeesData);
       } catch (error) {
         console.error('Error fetching data:', error as string);
-        
       }
     };
 
@@ -179,7 +197,8 @@ const ResourcesManagerPage: React.FC<ResourcesManagerPageProps> = ({ projectDeta
       fetchEmployeesData();
     }
   }, [projectDetails]);
- 
+    
+
   return (
     <div className="px-12 mb-12">
       <div className="h-20 w-full flex items-center ">
@@ -229,11 +248,10 @@ const ResourcesManagerPage: React.FC<ResourcesManagerPageProps> = ({ projectDeta
       <div className="mt-6  ">
         <div className="">
         <EmployeeTable
-        employees={employees}
-        selectedEmployee={selectedEmployee}
-        toggleEmployeeDetails={toggleEmployeeDetails}
-      />
-         
+            employees={employeesData}
+            selectedEmployee={selectedEmployee}
+            toggleEmployeeDetails={toggleEmployeeDetails}
+          />   
         </div>
       </div>
       <div className="mt-12 flex">
@@ -275,12 +293,11 @@ const ResourcesManagerPage: React.FC<ResourcesManagerPageProps> = ({ projectDeta
       </div>
       <div className="mt-6  ">
         <div className="">
-        
-          <ResourceTable
-      resources={resourcesAllocated}
-      onCheckboxChange={handleCheckboxChange}
-      onRequestButtonClick={openRequestDialog}
-    />
+        <ResourceTable
+            resources={potentialResources}
+            onCheckboxChange={handleCheckboxChange}
+            onRequestButtonClick={openRequestDialog}
+          />
         </div>
       </div>
       <div className="mt-6 flex justify-end">
