@@ -4,7 +4,7 @@ import {
   AdjustmentsHorizontalIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RequestDialog from "./Componants/request-dialog";
 import React from "react";
 import WorkPerecentageCurrent from "./Componants/work-perecentage-current";
@@ -13,10 +13,22 @@ import Filter from "./Componants/search-filter";
 import SearchFilter from "./Componants/search-filter";
 import EmployeeTable from "./Componants/current-resources";
 import ResourceTable from "./Componants/potential-resource-table";
+import { useParams } from "react-router-dom";
+import { getProject } from "../../apis/project-api";
 
+export interface SearchFilterProps {
+  projectDetail: any;
+  onSaveFilter: (filterData: any) => void;
+}
 
-
-
+interface FilterData {
+  dateFrom?: string;
+  dateTo?: string;
+  selectedValues?: number[];
+  availability?: number;
+  // Add other properties as needed
+}
+ 
 type Filter = {
   column: string;
   operator: string;
@@ -127,7 +139,11 @@ const resourcesAllocated: Resource[] = [
   // Add more resource entities as needed
 ];
 
-export function ResourcesManagerPage() {
+export function ResourcesManagerPage({
+  projectDetails,
+}: {
+  projectDetails: any;
+}) {
   const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
     null
@@ -167,13 +183,19 @@ export function ResourcesManagerPage() {
   };
 
   const [checkedResourceIds, setCheckedResourceIds] = useState<number[]>([]);
-  const [checkedResourceNames, setCheckedResourceNames] = useState<string[]>([]);
+  const [checkedResourceNames, setCheckedResourceNames] = useState<string[]>(
+    []
+  );
 
   const handleCheckboxChange = (id: number, name: string) => {
     // If the resource is already checked, uncheck it
     if (checkedResourceIds.includes(id)) {
-      setCheckedResourceIds((prevIds) => prevIds.filter((prevId) => prevId !== id));
-      setCheckedResourceNames((prevNames) => prevNames.filter((prevName) => prevName !== name));
+      setCheckedResourceIds((prevIds) =>
+        prevIds.filter((prevId) => prevId !== id)
+      );
+      setCheckedResourceNames((prevNames) =>
+        prevNames.filter((prevName) => prevName !== name)
+      );
     } else {
       // If the resource is not checked, check it
       setCheckedResourceIds((prevIds) => [...prevIds, id]);
@@ -183,13 +205,62 @@ export function ResourcesManagerPage() {
 
   const isRequestAllDisabled = checkedResourceIds.length === 0;
 
-
-
   const handleRequestAll = () => {
-    
     // Use the IDs as needed, for example, redirect to a new page
     openRequestDialog();
   };
+
+  const [projectProposedImpStartDate, setProposedImpStartDate] = useState(
+    projectDetails?.piStartDate ? new Date(projectDetails.piStartDate) : null
+  );
+  const [projectProposedImpEndDate, setProposedImpEndDate] = useState(
+    projectDetails?.piEndDate ? new Date(projectDetails.piEndDate) : null
+  );
+  
+  const { id } = useParams();
+  const [projectDetail, setProjectDetails] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        console.log("out : ",id)
+        if (id) {
+          console.log("in : ",id)
+          const response = await getProject(parseInt(id));
+          setProjectDetails(response.data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+        setLoading(false);
+      }
+    };
+    fetchProjects();
+  }, [id]);
+
+  useEffect(() => {
+    if (projectDetails) {
+        setProposedImpStartDate(projectDetails.piStartDate ? new Date(projectDetails.piStartDate) : null);
+        setProposedImpEndDate(projectDetails.piEndDate ? new Date(projectDetails.piEndDate) : null);
+    }
+
+}, [projectDetails]);
+
+  function formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+  const handleSaveFilter = (filterData:FilterData) => {
+    // Do something with the filter data, such as sending it to the server or updating state
+    setProposedImpStartDate(filterData.dateFrom ? new Date(filterData.dateFrom) : null);
+    setProposedImpEndDate(filterData.dateTo ? new Date(filterData.dateTo) : null);
+    console.log('Received Filter Data in ResourceManagerPage:', filterData);
+    
+  };
+  
 
 
   return (
@@ -212,7 +283,7 @@ export function ResourcesManagerPage() {
 
             <div>
               
-              <SearchFilter/>
+            <SearchFilter projectDetail={projectDetail} onSaveFilter={handleSaveFilter} />
 
             
               <div>
@@ -254,15 +325,34 @@ export function ResourcesManagerPage() {
         </div>
         <div className="py-1 px-3 bg-zinc-200 rounded ml-12 flex text-xs flex items-center">
           <div>
-            Date from
+            Date from :
             <input
               type="date"
-              className="px-1 py-1 ml-2 hover:outline-none pointer-events-none"
-            />
+              name="proposedImplementStartDate"
+              id="proposedImplementStartDate"
+              className="px-1 py-1 ml-2 hover:outline-none "
+              onChange={(e) =>
+                setProposedImpStartDate(new Date(e.target.value))
+              }
+              value={
+                projectProposedImpStartDate
+                  ? formatDate(projectProposedImpStartDate)
+                  : ""
+              }/>
           </div>
           <div className="ml-6">
             Date To :
-            <input type="date" className="px-1 py-1 ml-2 hover:outline-none " />
+            <input
+              type="date"
+              name="proposedImplementEndDate"
+              id="proposedImplementEndDate"
+              className="px-1 py-1 ml-2 hover:outline-none "
+              onChange={(e) => setProposedImpEndDate(new Date(e.target.value))}
+              value={
+                projectProposedImpEndDate
+                  ? formatDate(projectProposedImpEndDate)
+                  : ""
+              } />
           </div>
         </div>
       </div>
