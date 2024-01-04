@@ -13,6 +13,7 @@ import axios from "axios";
 import { APP_API_BASE_URL } from "../../../apis";
 import { Slider } from "@mui/material";
 import MultiSelectDropdown from "./MultiSelectDropdown";
+import { SearchFilterProps } from "../resources-manager-page";
 
 interface Option {
   id: number;
@@ -33,12 +34,11 @@ const options: Option[] = [
 ];
 // ... (previous imports)
 
-const SearchFilter = () => {
+const SearchFilter: React.FC<SearchFilterProps> = ({ projectDetail, onSaveFilter }) => {
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [filterOption, setFilterOption] = useState<Option | null>(null);
   const [selectArea, setSelectArea] = useState<Area | null>(null);
-  const [selectedDateFrom, setSelectedDateFrom] = useState<string>("");
-  const [selectedDateTo, setSelectedDateTo] = useState<string>("");
+
   const [availability, setAvailability] = useState<number>(50);
   const [areas, setAreas] = useState([]);
   const [frameworks, setFrameworks] = useState<Framework[]>([]);
@@ -103,22 +103,63 @@ const SearchFilter = () => {
   };
 
   const save = () => {
-    if (durationEditMode) {
-      console.log("Date From:", selectedDateFrom);
-      console.log("Date To:", selectedDateTo);
-    }
-  
-    if (areaEditMode) {
-      console.log("Selected Framework IDs:", selectedValues);
-    }
-  
-    if (availabilityEditMode) {
-      console.log("Availability:", availability);
-      // Additional code for handling availability
-    }
-  };
-  
+    let filterData = {};
 
+    if (durationEditMode) {
+      filterData = {
+        ...filterData,
+        dateFrom: projectProposedImpStartDate
+          ? formatDate(projectProposedImpStartDate)
+          : null,
+        dateTo: projectProposedImpEndDate
+          ? formatDate(projectProposedImpEndDate)
+          : null,
+      };
+    }
+
+    if (areaEditMode) {
+      filterData = {
+        ...filterData,
+        selectedValues: selectedValues,
+      };
+    }
+
+    if (availabilityEditMode) {
+      filterData = {
+        ...filterData,
+        availability: availability,
+      };
+    }
+
+    // console.log("Filter Data:", filterData);
+    onSaveFilter(filterData);
+  };
+
+  const [projectProposedImpStartDate, setProposedImpStartDate] = useState(
+    projectDetail?.piStartDate ? new Date(projectDetail.piStartDate) : null
+  );
+  const [projectProposedImpEndDate, setProposedImpEndDate] = useState(
+    projectDetail?.piEndDate ? new Date(projectDetail.piEndDate) : null
+  );
+
+  useEffect(() => {
+    if (projectDetail) {
+      setProposedImpStartDate(
+        projectDetail.piStartDate ? new Date(projectDetail.piStartDate) : null
+      );
+      setProposedImpEndDate(
+        projectDetail.piEndDate ? new Date(projectDetail.piEndDate) : null
+      );
+    }
+  }, [projectDetail]);
+
+  function formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+ 
   return (
     <div>
       <button
@@ -143,10 +184,20 @@ const SearchFilter = () => {
 
               <div className="filter-popup-content mt-3">
                 <div className=" w-full ">
-                  <div className={`relative pr-12 py-2 flex bg-white ${durationEditMode ? 'bg-white' : 'bg-zinc-100'}`}>
-                  <div className="flex items-center ">
-                  <input type="checkbox" className="mt-8 w-full  py-1.5 mx-4 " onChange={handleDurationCheckboxChange}/>
-                  </div>
+                  <div
+                    className={`relative pr-12 py-2 flex bg-white ${
+                      durationEditMode ? "bg-white" : "bg-zinc-100"
+                    }`}
+                  >
+                    <div className="flex items-center ">
+                    <input
+  type="checkbox"
+  className="mt-8 w-full  py-1.5 mx-4 "
+  onChange={handleDurationCheckboxChange}
+  checked={durationEditMode}
+/>
+
+                    </div>
                     <div className="w-1/3 p-2">
                       <div className="block mt-8 w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset sm:text-sm sm:leading-6">
                         Duration
@@ -166,12 +217,18 @@ const SearchFilter = () => {
                             <input
                               placeholder="Date from"
                               type="date"
-                              value={selectedDateFrom}
+                              name="proposedImplementStartDate"
+                              id="proposedImplementStartDate"
                               onChange={(e) =>
-                                setSelectedDateFrom(e.target.value)
+                                setProposedImpStartDate(
+                                  new Date(e.target.value)
+                                )
                               }
-                              name="dateFrom"
-                              id="dateFrom"
+                              value={
+                                projectProposedImpStartDate
+                                  ? formatDate(projectProposedImpStartDate)
+                                  : ""
+                              }
                               className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset sm:text-sm sm:leading-6"
                               disabled={!durationEditMode}
                             />
@@ -188,10 +245,14 @@ const SearchFilter = () => {
                             <input
                               placeholder="Date to"
                               type="date"
-                              value={selectedDateTo}
-                              onChange={(e) => setSelectedDateTo(e.target.value)}
-                              name="dateTo"
-                              id="dateTo"
+                              name="proposedImplementEndDate"
+                              id="proposedImplementEndDate"
+                              onChange={(e) => setProposedImpEndDate(new Date(e.target.value))}
+                              value={
+                                projectProposedImpEndDate
+                                  ? formatDate(projectProposedImpEndDate)
+                                  : ""
+                              }
                               className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset sm:text-sm sm:leading-6"
                               disabled={!durationEditMode}
                             />
@@ -201,10 +262,19 @@ const SearchFilter = () => {
                     </div>
                   </div>
 
-                  <div className={`relative pr-12 flex py-2 ${areaEditMode ? 'bg-white' : 'bg-zinc-100'}`}>
-                  <div className="flex items-center ">
-                  <input type="checkbox" className="mt-8 w-full  py-1.5 mx-4 " onChange={handleAreaCheckboxChange}/>
-                  </div>
+                  <div
+                    className={`relative pr-12 flex py-2 ${
+                      areaEditMode ? "bg-white" : "bg-zinc-100"
+                    }`}
+                  >
+                    <div className="flex items-center ">
+                      <input
+                        type="checkbox"
+                        className="mt-8 w-full  py-1.5 mx-4 "
+                        onChange={handleAreaCheckboxChange}
+                        checked={areaEditMode}
+                      />
+                    </div>
                     <div className="w-1/3 p-2">
                       <div className="block mt-8 w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset sm:text-sm sm:leading-6">
                         Area
@@ -242,10 +312,19 @@ const SearchFilter = () => {
                     </div>
                   </div>
 
-                  <div className={`relative pr-12 mb-2 flex py-2 ${availabilityEditMode ? 'bg-white' : 'bg-zinc-100'}`}>
-                  <div className="flex items-center ">
-                  <input type="checkbox" className="mt-8 w-full  py-1.5 mx-4 " onChange={handleAvailabilityCheckboxChange}/>
-                  </div>
+                  <div
+                    className={`relative pr-12 mb-2 flex py-2 ${
+                      availabilityEditMode ? "bg-white" : "bg-zinc-100"
+                    }`}
+                  >
+                    <div className="flex items-center ">
+                      <input
+                        type="checkbox"
+                        className="mt-8 w-full  py-1.5 mx-4 "
+                        onChange={handleAvailabilityCheckboxChange}
+                        checked={availabilityEditMode}
+                      />
+                    </div>
                     <div className="w-1/3 p-2">
                       <div className="block mt-8 w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset sm:text-sm sm:leading-6">
                         Availability
@@ -287,7 +366,7 @@ const SearchFilter = () => {
               className="absolute bg-red-600 text-white px-2 py-1 rounded text-xs right-4 bottom-3"
               onClick={save}
             >
-              Save filter and Search
+              Save filter 
             </button>
           </div>
         </>
@@ -297,4 +376,3 @@ const SearchFilter = () => {
 };
 
 export default SearchFilter;
-
