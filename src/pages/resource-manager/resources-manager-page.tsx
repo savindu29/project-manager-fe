@@ -4,14 +4,31 @@ import {
   AdjustmentsHorizontalIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RequestDialog from "./Componants/request-dialog";
 import React from "react";
 import WorkPerecentageCurrent from "./Componants/work-perecentage-current";
 import { Button } from '@mui/material';
-import FilterPopup from "./Componants/filter";
+import Filter from "./Componants/search-filter";
+import SearchFilter from "./Componants/search-filter";
+import EmployeeTable from "./Componants/current-resources";
+import ResourceTable from "./Componants/potential-resource-table";
+import { useParams } from "react-router-dom";
+import { getProject } from "../../apis/project-api";
 
+export interface SearchFilterProps {
+  projectDetail: any;
+  onSaveFilter: (filterData: any) => void;
+}
 
+interface FilterData {
+  dateFrom?: string;
+  dateTo?: string;
+  selectedValues?: number[];
+  availability?: number;
+  // Add other properties as needed
+}
+ 
 type Filter = {
   column: string;
   operator: string;
@@ -75,6 +92,20 @@ const employees: Employee[] = [
     releaseDate: "2023-07-01",
     percentage: 85,
   },
+  {
+    name: "John Doe",
+    status: "Active",
+    allocatedDate: "2023-01-01",
+    releaseDate: "2023-12-31",
+    percentage: 80,
+  },
+  {
+    name: "John Doe",
+    status: "Active",
+    allocatedDate: "2023-01-01",
+    releaseDate: "2023-12-31",
+    percentage: 80,
+  },
   // Add more employee data as needed
 ];
 
@@ -108,7 +139,11 @@ const resourcesAllocated: Resource[] = [
   // Add more resource entities as needed
 ];
 
-export function ResourcesManagerPage() {
+export function ResourcesManagerPage({
+  projectDetails,
+}: {
+  projectDetails: any;
+}) {
   const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
     null
@@ -148,13 +183,19 @@ export function ResourcesManagerPage() {
   };
 
   const [checkedResourceIds, setCheckedResourceIds] = useState<number[]>([]);
-  const [checkedResourceNames, setCheckedResourceNames] = useState<string[]>([]);
+  const [checkedResourceNames, setCheckedResourceNames] = useState<string[]>(
+    []
+  );
 
   const handleCheckboxChange = (id: number, name: string) => {
     // If the resource is already checked, uncheck it
     if (checkedResourceIds.includes(id)) {
-      setCheckedResourceIds((prevIds) => prevIds.filter((prevId) => prevId !== id));
-      setCheckedResourceNames((prevNames) => prevNames.filter((prevName) => prevName !== name));
+      setCheckedResourceIds((prevIds) =>
+        prevIds.filter((prevId) => prevId !== id)
+      );
+      setCheckedResourceNames((prevNames) =>
+        prevNames.filter((prevName) => prevName !== name)
+      );
     } else {
       // If the resource is not checked, check it
       setCheckedResourceIds((prevIds) => [...prevIds, id]);
@@ -164,17 +205,66 @@ export function ResourcesManagerPage() {
 
   const isRequestAllDisabled = checkedResourceIds.length === 0;
 
-
-
   const handleRequestAll = () => {
-    
     // Use the IDs as needed, for example, redirect to a new page
     openRequestDialog();
   };
 
+  const [projectProposedImpStartDate, setProposedImpStartDate] = useState(
+    projectDetails?.piStartDate ? new Date(projectDetails.piStartDate) : null
+  );
+  const [projectProposedImpEndDate, setProposedImpEndDate] = useState(
+    projectDetails?.piEndDate ? new Date(projectDetails.piEndDate) : null
+  );
+  
+  const { id } = useParams();
+  const [projectDetail, setProjectDetails] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        console.log("out : ",id)
+        if (id) {
+          console.log("in : ",id)
+          const response = await getProject(parseInt(id));
+          setProjectDetails(response.data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+        setLoading(false);
+      }
+    };
+    fetchProjects();
+  }, [id]);
+
+  useEffect(() => {
+    if (projectDetails) {
+        setProposedImpStartDate(projectDetails.piStartDate ? new Date(projectDetails.piStartDate) : null);
+        setProposedImpEndDate(projectDetails.piEndDate ? new Date(projectDetails.piEndDate) : null);
+    }
+
+}, [projectDetails]);
+
+  function formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+  const handleSaveFilter = (filterData:FilterData) => {
+    // Do something with the filter data, such as sending it to the server or updating state
+    setProposedImpStartDate(filterData.dateFrom ? new Date(filterData.dateFrom) : null);
+    setProposedImpEndDate(filterData.dateTo ? new Date(filterData.dateTo) : null);
+    console.log('Received Filter Data in ResourceManagerPage:', filterData);
+    
+  };
+  
+
 
   return (
-    <div className="px-12">
+    <div className="px-12 mb-12">
       <div className="h-20 w-full flex items-center ">
         <div className="w-1/2">
           <p className="text-xl font-semibold">
@@ -192,13 +282,10 @@ export function ResourcesManagerPage() {
             />
 
             <div>
-              <button className="bg-zinc-200  rounded-md px-3 text-xs py-1.5 mr-1 flex items-center" onClick={openPopup}>
-                <AdjustmentsHorizontalIcon className="w-4 h-4 mr-2" />
-                Filter
-              </button>
+              
+            <SearchFilter projectDetail={projectDetail} onSaveFilter={handleSaveFilter} />
 
-              {/* <FilterPopup isOpen={isPopupOpen} onClose={closePopup} onAddFilter={handleAddFilter} />
-             Display existing filters */}
+            
               <div>
                 {filters.map((filter, index) => (
                   <div key={index}>
@@ -224,141 +311,59 @@ export function ResourcesManagerPage() {
       </div>
       <div className="mt-6  ">
         <div className="">
-          <table className="min-w-full  table-auto">
-            <thead className="">
-              <tr className="text-zinc-400 font-normal text-left">
-                <th className="p-2 font-normal text-sm">Name</th>
-                <th className="p-2 font-normal text-sm">Status</th>
-                <th className="p-2 font-normal text-sm">Allocated date</th>
-                <th className="p-2 font-normal text-sm">Relese Date</th>
-              </tr>
-            </thead>
-            <tbody className="border-y border-gray-300 text-sm">
-              {employees.map((employee, index) => (
-                <React.Fragment key={index}>
-                  <tr>
-                    <td className="border-b p-2">
-                      <button
-                        className="hover:underline"
-                        onClick={() => toggleEmployeeDetails(employee)}
-                      >
-                        {employee.name}
-                      </button>
-                    </td>
-                    <td className="border-b p-2 ">
-                      <div className=" bg-green-700 flex text-white rounded py-1  w-28 pl-4 items-center text-xs">
-                        <CheckCircleIcon className="h-4 w-4 mr-2" />{" "}
-                        {employee.status}
-                      </div>
-                    </td>
-                    <td className="border-b p-2">{employee.allocatedDate}</td>
-                    <td className="border-b p-2">{employee.releaseDate}</td>
-                  </tr>
-                  {selectedEmployee &&
-                    selectedEmployee.name === employee.name && (
-                      <tr>
-                        <td colSpan={5} className="p-2  duration-300 pl-12 ">
-                          <WorkPerecentageCurrent />
-                        </td>
-                      </tr>
-                    )}
-                </React.Fragment>
-              ))}
-            </tbody>
-          </table>
+        <EmployeeTable
+        employees={employees}
+        selectedEmployee={selectedEmployee}
+        toggleEmployeeDetails={toggleEmployeeDetails}
+      />
+         
         </div>
       </div>
-      <div className="mt-6 flex">
+      <div className="mt-12 flex">
         <div className=" bg-violet-600 flex text-white rounded py-1 px-2 w-48 justify-center items-center text-sm">
           <StopCircleIcon className="h-4 w-4 mr-2" /> Potential Resources
         </div>
         <div className="py-1 px-3 bg-zinc-200 rounded ml-12 flex text-xs flex items-center">
           <div>
-            Date from
+            Date from :
             <input
               type="date"
-              className="px-1 py-1 ml-2 hover:outline-none pointer-events-none"
-            />
+              name="proposedImplementStartDate"
+              id="proposedImplementStartDate"
+              className="px-1 py-1 ml-2 hover:outline-none "
+              onChange={(e) =>
+                setProposedImpStartDate(new Date(e.target.value))
+              }
+              value={
+                projectProposedImpStartDate
+                  ? formatDate(projectProposedImpStartDate)
+                  : ""
+              }/>
           </div>
           <div className="ml-6">
             Date To :
-            <input type="date" className="px-1 py-1 ml-2 hover:outline-none " />
+            <input
+              type="date"
+              name="proposedImplementEndDate"
+              id="proposedImplementEndDate"
+              className="px-1 py-1 ml-2 hover:outline-none "
+              onChange={(e) => setProposedImpEndDate(new Date(e.target.value))}
+              value={
+                projectProposedImpEndDate
+                  ? formatDate(projectProposedImpEndDate)
+                  : ""
+              } />
           </div>
         </div>
       </div>
       <div className="mt-6  ">
         <div className="">
-          <table className="min-w-full  table-auto">
-            <thead className="">
-              <tr className="text-zinc-400 font-normal text-left">
-                <th className="p-2 font-normal text-sm">Name</th>
-                <th className="p-2 font-normal text-sm">Status</th>
-                <th className="p-2 font-normal text-sm">Allocated Projects</th>
-                <th className="p-2 font-normal text-sm">Pending Projects</th>
-                <th className="p-2 font-normal text-sm">Request</th>
-              </tr>
-            </thead>
-            <tbody className="border-y border-gray-300 text-sm">
-              {resourcesAllocated.map((resource, index) => (
-                <tr key={index}>
-                  <td className="border-b p-2 ">
-                    <div className="flex items-center">
-                    <input
-                        type="checkbox"
-                        className="mr-2"
-                        onChange={() => handleCheckboxChange(resource.id, resource.name)}
-                        />
-                      {resource.name}
-                    </div>
-                  </td>
-                  <td className="border-b p-2  ">
-                    <div
-                      className={
-                        "bg-violet-600 flex text-white rounded py-1 w-28 pl-4 items-center text-xs"
-                      }
-                    >
-                      <StopCircleIcon className="h-4 w-4 mr-2" />{" "}
-                      {resource.status}
-                    </div>
-                  </td>
-                  <td className="border-b p-2 ">
-                    <div className="flex">
-                      {resource.allocatedProjects.map(
-                        (project, projectIndex) => (
-                          <div
-                            key={projectIndex}
-                            className="w-8 h-8 flex items-center justify-center text-white rounded-full bg-violet-300 -mr-2 border-2 border-white"
-                          >
-                            {project.name.charAt(0).toUpperCase()}
-                          </div>
-                        )
-                      )}
-                    </div>
-                  </td>
-                  <td className="border-b p-2 ">
-                    <div className="flex">
-                      {resource.pendingProjects.map((project, projectIndex) => (
-                        <div
-                          key={projectIndex}
-                          className="w-8 h-8 flex items-center justify-center text-white rounded-full bg-violet-300 -mr-2 border-2 border-white"
-                        >
-                          {project.name.charAt(0).toUpperCase()}
-                        </div>
-                      ))}
-                    </div>
-                  </td>
-                  <td className="border-b p-2 ">
-                    <button
-                      className="bg-violet-500 flex text-white rounded py-1 px-3  justify-center items-center text-xs"
-                      onClick={openRequestDialog}
-                    >
-                      Request
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        
+          <ResourceTable
+      resources={resourcesAllocated}
+      onCheckboxChange={handleCheckboxChange}
+      onRequestButtonClick={openRequestDialog}
+    />
         </div>
       </div>
       <div className="mt-6 flex justify-end">
