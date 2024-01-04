@@ -14,7 +14,7 @@ export default function WorkPerecentageCurrent() {
       <div className="w-full ">
         <div className="w-full my-4">
           <div className="flex w-full py-2 items-center  text-xs font-medium text-zinc-600 mb-3">
-            <div className='w-[16rem]'>Role</div>
+            <div className='w-[16rem]'></div>
             <div className="w-28 text-center">{dateFrom}</div>
             <div className="w-full "><hr /></div>
             <div className="w-28 text-center">{dateTo}</div>

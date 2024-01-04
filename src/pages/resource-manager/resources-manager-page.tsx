@@ -4,12 +4,18 @@ import {
   AdjustmentsHorizontalIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RequestDialog from "./Componants/request-dialog";
 import React from "react";
 import WorkPerecentageCurrent from "./Componants/work-perecentage-current";
 import { Button } from '@mui/material';
-import FilterPopup from "../../components/Filter";
+import Filter from "./Componants/search-filter";
+import SearchFilter from "./Componants/search-filter";
+import EmployeeTable from "./Componants/current-resources";
+import ResourceTable from "./Componants/potential-resource-table";
+import axios from "axios";
+
+
 
 
 type Filter = {
@@ -21,8 +27,8 @@ type Filter = {
 interface Employee {
   name: string;
   status: string;
-  allocatedDate: string;
-  releaseDate: string;
+  allocated_date: string;
+  released_date: string;
   percentage: number;
 }
 
@@ -39,44 +45,7 @@ interface Resource {
   pendingProjects: Project[];
 }
 
-const employees: Employee[] = [
-  {
-    name: "John Doe",
-    status: "Active",
-    allocatedDate: "2023-01-01",
-    releaseDate: "2023-12-31",
-    percentage: 80,
-  },
-  {
-    name: "Jane Smith",
-    status: "Inactive",
-    allocatedDate: "2023-02-15",
-    releaseDate: "2023-10-31",
-    percentage: 60,
-  },
-  {
-    name: "Bob Johnson",
-    status: "Active",
-    allocatedDate: "2023-03-20",
-    releaseDate: "2023-09-30",
-    percentage: 75,
-  },
-  {
-    name: "Alice Williams",
-    status: "Inactive",
-    allocatedDate: "2023-04-10",
-    releaseDate: "2023-08-15",
-    percentage: 90,
-  },
-  {
-    name: "Charlie Brown",
-    status: "Active",
-    allocatedDate: "2023-05-05",
-    releaseDate: "2023-07-01",
-    percentage: 85,
-  },
-  // Add more employee data as needed
-];
+
 
 const resourcesAllocated: Resource[] = [
   {id:1,
@@ -110,9 +79,23 @@ const resourcesAllocated: Resource[] = [
 
 export function ResourcesManagerPage() {
   const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
-    null
-  );
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/api/v1/projectReosurces/ResourceList");
+        console.log(response)
+        setEmployees(response.data.data);
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+      } 
+    };
+
+    fetchEmployees();
+  }, []);
+
 
   const openRequestDialog = () => {
     setRequestDialogOpen(true);
@@ -174,7 +157,7 @@ export function ResourcesManagerPage() {
 
 
   return (
-    <div className="px-12">
+    <div className="px-12 mb-12">
       <div className="h-20 w-full flex items-center ">
         <div className="w-1/2">
           <p className="text-xl font-semibold">
@@ -192,14 +175,10 @@ export function ResourcesManagerPage() {
             />
 
             <div>
-              <button className="bg-zinc-200  rounded-md px-3 text-xs py-1.5 mr-1 flex items-center" onClick={openPopup}>
-                <AdjustmentsHorizontalIcon className="w-4 h-4 mr-2" />
-                Filter
-              </button>
+              
+              <SearchFilter/>
 
-              <FilterPopup isOpen={isPopupOpen} onClose={closePopup} onAddFilter={handleAddFilter} />
-
-              {/* Display existing filters */}
+            
               <div>
                 {filters.map((filter, index) => (
                   <div key={index}>
@@ -225,51 +204,15 @@ export function ResourcesManagerPage() {
       </div>
       <div className="mt-6  ">
         <div className="">
-          <table className="min-w-full  table-auto">
-            <thead className="">
-              <tr className="text-zinc-400 font-normal text-left">
-                <th className="p-2 font-normal text-sm">Name</th>
-                <th className="p-2 font-normal text-sm">Status</th>
-                <th className="p-2 font-normal text-sm">Allocated date</th>
-                <th className="p-2 font-normal text-sm">Relese Date</th>
-              </tr>
-            </thead>
-            <tbody className="border-y border-gray-300 text-sm">
-              {employees.map((employee, index) => (
-                <React.Fragment key={index}>
-                  <tr>
-                    <td className="border-b p-2">
-                      <button
-                        className="hover:underline"
-                        onClick={() => toggleEmployeeDetails(employee)}
-                      >
-                        {employee.name}
-                      </button>
-                    </td>
-                    <td className="border-b p-2 ">
-                      <div className=" bg-green-700 flex text-white rounded py-1  w-28 pl-4 items-center text-xs">
-                        <CheckCircleIcon className="h-4 w-4 mr-2" />{" "}
-                        {employee.status}
-                      </div>
-                    </td>
-                    <td className="border-b p-2">{employee.allocatedDate}</td>
-                    <td className="border-b p-2">{employee.releaseDate}</td>
-                  </tr>
-                  {selectedEmployee &&
-                    selectedEmployee.name === employee.name && (
-                      <tr>
-                        <td colSpan={5} className="p-2  duration-300 pl-12 ">
-                          <WorkPerecentageCurrent />
-                        </td>
-                      </tr>
-                    )}
-                </React.Fragment>
-              ))}
-            </tbody>
-          </table>
+        <EmployeeTable
+        employees={employees}
+        selectedEmployee={selectedEmployee}
+        toggleEmployeeDetails={toggleEmployeeDetails}
+      />
+         
         </div>
       </div>
-      <div className="mt-6 flex">
+      <div className="mt-12 flex">
         <div className=" bg-violet-600 flex text-white rounded py-1 px-2 w-48 justify-center items-center text-sm">
           <StopCircleIcon className="h-4 w-4 mr-2" /> Potential Resources
         </div>
@@ -289,77 +232,12 @@ export function ResourcesManagerPage() {
       </div>
       <div className="mt-6  ">
         <div className="">
-          <table className="min-w-full  table-auto">
-            <thead className="">
-              <tr className="text-zinc-400 font-normal text-left">
-                <th className="p-2 font-normal text-sm">Name</th>
-                <th className="p-2 font-normal text-sm">Status</th>
-                <th className="p-2 font-normal text-sm">Allocated Projects</th>
-                <th className="p-2 font-normal text-sm">Pending Projects</th>
-                <th className="p-2 font-normal text-sm">Request</th>
-              </tr>
-            </thead>
-            <tbody className="border-y border-gray-300 text-sm">
-              {resourcesAllocated.map((resource, index) => (
-                <tr key={index}>
-                  <td className="border-b p-2 ">
-                    <div className="flex items-center">
-                    <input
-                        type="checkbox"
-                        className="mr-2"
-                        onChange={() => handleCheckboxChange(resource.id, resource.name)}
-                        />
-                      {resource.name}
-                    </div>
-                  </td>
-                  <td className="border-b p-2  ">
-                    <div
-                      className={
-                        "bg-violet-600 flex text-white rounded py-1 w-28 pl-4 items-center text-xs"
-                      }
-                    >
-                      <StopCircleIcon className="h-4 w-4 mr-2" />{" "}
-                      {resource.status}
-                    </div>
-                  </td>
-                  <td className="border-b p-2 ">
-                    <div className="flex">
-                      {resource.allocatedProjects.map(
-                        (project, projectIndex) => (
-                          <div
-                            key={projectIndex}
-                            className="w-8 h-8 flex items-center justify-center text-white rounded-full bg-violet-300 -mr-2 border-2 border-white"
-                          >
-                            {project.name.charAt(0).toUpperCase()}
-                          </div>
-                        )
-                      )}
-                    </div>
-                  </td>
-                  <td className="border-b p-2 ">
-                    <div className="flex">
-                      {resource.pendingProjects.map((project, projectIndex) => (
-                        <div
-                          key={projectIndex}
-                          className="w-8 h-8 flex items-center justify-center text-white rounded-full bg-violet-300 -mr-2 border-2 border-white"
-                        >
-                          {project.name.charAt(0).toUpperCase()}
-                        </div>
-                      ))}
-                    </div>
-                  </td>
-                  <td className="border-b p-2 ">
-                    <button
-                      className="bg-violet-500 flex text-white rounded py-1 px-3  justify-center items-center text-xs"
-                      onClick={openRequestDialog}
-                    >
-                      Request
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        
+          <ResourceTable
+      resources={resourcesAllocated}
+      onCheckboxChange={handleCheckboxChange}
+      onRequestButtonClick={openRequestDialog}
+    />
         </div>
       </div>
       <div className="mt-6 flex justify-end">
