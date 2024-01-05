@@ -11,6 +11,7 @@ import {
   TablePagination,
 } from "@mui/material";
 
+
 interface Project {
   id: number;
   name: string;
@@ -28,6 +29,7 @@ interface ResourceTableProps {
   resources: Resource[];
   onCheckboxChange: (id: number, name: string) => void;
   onRequestButtonClick: () => void;
+  checkedResourcesIds:number[];
   itemsPerPage?: number;
 }
 
@@ -35,10 +37,12 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
   resources,
   onCheckboxChange,
   onRequestButtonClick,
+  checkedResourcesIds,
   itemsPerPage = 5,
 }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(itemsPerPage);
+  
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -53,6 +57,7 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
   const endIndex = startIndex + rowsPerPage;
   const currentResources = resources.slice(startIndex, endIndex);
 
+  
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -70,11 +75,11 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
             <tr key={index}>
               <TableCell>
                 <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    className="mr-2"
-                    onChange={() => onCheckboxChange(resource.id, resource.name)}
-                  />
+                <input
+          type="checkbox"
+          
+          onChange={() => onCheckboxChange(resource.id, resource.name)}
+        />
                   {resource.name}
                 </div>
               </TableCell>

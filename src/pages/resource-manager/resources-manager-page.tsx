@@ -17,45 +17,46 @@ import ResourceTable from "./Componants/potential-resource-table";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { getProject } from "../../apis/project-api";
+
 export interface SearchFilterProps {
-projectDetail: any;
-onSaveFilter: (filterData: any) => void;
+  projectDetail: any;
+  onSaveFilter: (filterData: any) => void;
 }
 
 interface FilterData {
-dateFrom?: string;
-dateTo?: string;
-selectedValues?: number[];
-availability?: number;
-// Add other properties as needed
+  dateFrom?: string;
+  dateTo?: string;
+  selectedValues?: number[];
+  availability?: number;
+  // Add other properties as needed
 }
-
+ 
 type Filter = {
-column: string;
-operator: string;
-value: string;
+  column: string;
+  operator: string;
+  value: string;
 };
 
 interface Employee {
-id:number;
-name: string;
-status: string;
-allocated_date: string;
-released_date: string;
-percentage: number;
+  id:number;
+  name: string;
+  status: string;
+  allocated_date: string;
+  released_date: string;
+  percentage: number;
 }
 
 interface Project {
-id: number;
-name: string;
+  id: number;
+  name: string;
 }
 
 interface Resource {
-id:number;
-name: string;
-status: string;
-allocatedProjects: Project[];
-pendingProjects: Project[];
+  id:number;
+  name: string;
+  status: string;
+  allocatedProjects: Project[];
+  pendingProjects: Project[];
 }
 
 
@@ -70,19 +71,19 @@ export function ResourcesManagerPage({
   // const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   // const [employees, setEmployees] = useState<Employee[]>([]);
 
-useEffect(() => {
-  const fetchEmployees = async () => {
-    try {
-      const response = await axios.get(`http://localhost:8000/api/v1/projectReosurces/ResourceList?projectId=${id}`);
-      console.log(response)
-      setEmployees(response.data.data);
-    } catch (error) {
-      console.error("Error fetching employees:", error);
-    } 
-  };
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/api/v1/projectReosurces/ResourceList");
+        console.log(response)
+        setEmployees(response.data.data);
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+      } 
+    };
 
-  fetchEmployees();
-}, []);
+    fetchEmployees();
+  }, []);
 
 
   // const openRequestDialog = () => {
@@ -106,38 +107,56 @@ useEffect(() => {
   // const [isPopupOpen, setPopupOpen] = useState(false);
   // const [filters, setFilters] = useState<Filter[]>([]);
 
-const openPopup = () => {
-  setPopupOpen(true);
-};
+  const openPopup = () => {
+    setPopupOpen(true);
+  };
 
-const closePopup = () => {
-  setPopupOpen(false);
-};
+  const closePopup = () => {
+    setPopupOpen(false);
+  };
 
-const handleAddFilter = (newFilter: Filter) => {
-  setFilters([...filters, newFilter]);
-};
+  const handleAddFilter = (newFilter: Filter) => {
+    setFilters([...filters, newFilter]);
+  };
 
-const [checkedResourceIds, setCheckedResourceIds] = useState<number[]>([]);
-const [checkedResourceNames, setCheckedResourceNames] = useState<string[]>(
-  []
-);
+  const [checkedResourceIds, setCheckedResourceIds] = useState<number[]>([]);
+  const [checkedResourceNames, setCheckedResourceNames] = useState<string[]>(
+    []
+  );
 
   const handleCheckboxChange = (id: number, name: string) => {
-    // If the resource is already checked, uncheck it
-    if (checkedResourceIds.includes(id)) {
-      setCheckedResourceIds((prevIds) =>
-        prevIds.filter((prevId) => prevId !== id)
-      );
-      setCheckedResourceNames((prevNames) =>
-        prevNames.filter((prevName) => prevName !== name)
-      );
-    } else {
-      // If the resource is not checked, check it
-      setCheckedResourceIds((prevIds) => [...prevIds, id]);
-      setCheckedResourceNames((prevNames) => [...prevNames, name]);
-    }
+    setCheckedResourceIds((prevIds) => {
+      const isChecked = prevIds.includes(id);
+      if (isChecked) {
+        // If the resource is already checked, uncheck it
+        return prevIds.filter((prevId) => prevId !== id);
+      } else {
+        // If the resource is not checked, check it
+        return [...prevIds, id];
+      }
+    });
+  
+    setCheckedResourceNames((prevNames) => {
+      const isChecked = prevNames.includes(name);
+      if (isChecked) {
+        // If the resource is already checked, uncheck it
+        return prevNames.filter((prevName) => prevName !== name);
+      } else {
+        // If the resource is not checked, check it
+        return [...prevNames, name];
+      }
+    });
   };
+  
+  // Add a useEffect to log the checkedResourceNames whenever it changes
+  useEffect(() => {
+    console.log("Checked Resource Names:", checkedResourceNames);
+    console.log("Checked Resource Ids:", checkedResourceIds);
+  }, [checkedResourceNames, checkedResourceIds]);
+  
+  
+
+  
   const [employeesData, setEmployeesData] = useState<Employee[]>([]);
   const [resourcesAllocated, setResourcesAllocated] = useState<any[]>([]);
   const [employees, setEmployees] = useState<any[]>([]);
@@ -168,12 +187,12 @@ const [checkedResourceNames, setCheckedResourceNames] = useState<string[]>(
   };
 
 
-const isRequestAllDisabled = checkedResourceIds.length === 0;
+  const isRequestAllDisabled = checkedResourceNames.length == 0;
 
-const handleRequestAll = () => {
-  // Use the IDs as needed, for example, redirect to a new page
-  openRequestDialog();
-};
+  const handleRequestAll = () => {
+    // Use the IDs as needed, for example, redirect to a new page
+    openRequestDialog();
+  };
 
   const [projectProposedImpStartDate, setProposedImpStartDate] = useState(
     projectDetails?.piStartDate ? new Date(projectDetails.piStartDate) : null
@@ -187,17 +206,6 @@ const handleRequestAll = () => {
   const [loading, setLoading] = useState(true);
 
 
-  // const handleCheckboxChange = (id: number, name: string) => {
-  //   const isChecked = checkedResourceIds.includes(id);
-
-  //   setCheckedResourceIds((prevIds) =>
-  //       isChecked ? prevIds.filter((prevId) => prevId !== id) : [...prevIds, id]
-  //   );
-
-  //   setCheckedResourceNames((prevNames) =>
-  //       isChecked ? prevNames.filter((prevName) => prevName !== name) : [...prevNames, name]
-  //   );
-  // };
 
 
 
@@ -208,31 +216,29 @@ const handleRequestAll = () => {
 
 
 
-
-
-useEffect(() => {
-  const fetchProjects = async () => {
-    try {
-      console.log("out : ",id)
-      if (id) {
-        console.log("in : ",id)
-        const response = await getProject(parseInt(id));
-        setProjectDetails(response.data);
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        console.log("out : ",id)
+        if (id) {
+          console.log("in : ",id)
+          const response = await getProject(parseInt(id));
+          setProjectDetails(response.data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Error fetching projects:", error);
         setLoading(false);
       }
-    } catch (error) {
-      console.error("Error fetching projects:", error);
-      setLoading(false);
-    }
-  };
-  fetchProjects();
-}, [id]);
+    };
+    fetchProjects();
+  }, [id]);
 
-useEffect(() => {
-  if (projectDetails) {
-      setProposedImpStartDate(projectDetails.piStartDate ? new Date(projectDetails.piStartDate) : null);
-      setProposedImpEndDate(projectDetails.piEndDate ? new Date(projectDetails.piEndDate) : null);
-  }
+  useEffect(() => {
+    if (projectDetails) {
+        setProposedImpStartDate(projectDetails.piStartDate ? new Date(projectDetails.piStartDate) : null);
+        setProposedImpEndDate(projectDetails.piEndDate ? new Date(projectDetails.piEndDate) : null);
+    }
 
 }, [projectDetails]);
 
@@ -279,40 +285,41 @@ useEffect(() => {
     }
   }, [projectDetails]);
 
+ 
 
-return (
-  <div className="px-12 mb-12">
-    <div className="h-20 w-full flex items-center ">
-      <div className="w-1/2">
-        <p className="text-xl font-semibold">
-          Resource allocation for test project
-        </p>
-      </div>
-      <div className="w-1/2 flex">
-        <div className="flex border border-zinc-300 rounded-md items-center w-full mr-20">
-          <input
-            type="search"
-            name="resourceSearch"
-            id="resourceSearch"
-            placeholder="Search Resource here"
-            className="appearance-none  px-4 py-2 text-gray-700 leading-tight outline-none rounded-md w-full text-sm"
-          />
+  return (
+    <div className="px-12 mb-12">
+      <div className="h-20 w-full flex items-center ">
+        <div className="w-1/2">
+          <p className="text-xl font-semibold">
+            Resource allocation for test project
+          </p>
+        </div>
+        <div className="w-1/2 flex">
+          <div className="flex border border-zinc-300 rounded-md items-center w-full mr-20">
+            <input
+              type="search"
+              name="resourceSearch"
+              id="resourceSearch"
+              placeholder="Search Resource here"
+              className="appearance-none  px-4 py-2 text-gray-700 leading-tight outline-none rounded-md w-full text-sm"
+            />
 
-          <div>
-            
-          <SearchFilter projectDetail={projectDetail} onSaveFilter={handleSaveFilter} />
-
-          
             <div>
-              {filters.map((filter, index) => (
-                <div key={index}>
-                  <p>
-                    {filter.column} {filter.operator} {filter.value}
-                  </p>
-                </div>
-              ))}
+              
+            <SearchFilter projectDetail={projectDetail} onSaveFilter={handleSaveFilter} />
+
+            
+              <div>
+                {filters.map((filter, index) => (
+                  <div key={index}>
+                    <p>
+                      {filter.column} {filter.operator} {filter.value}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
 
             <button className="bg-zinc-200  rounded-md p-1 mr-1 flex items-center">
               <MagnifyingGlassIcon className="h-5 w-5 mx-2 text-zinc-500 " />
@@ -379,6 +386,7 @@ return (
               resources={potentialResources}
               onCheckboxChange={handleCheckboxChange}
               onRequestButtonClick={openRequestDialog}
+              checkedResourcesIds = {checkedResourceIds}
           />
         </div>
       </div>
@@ -391,7 +399,7 @@ return (
           Request All
         </button>
       </div>
-      {isRequestDialogOpen &&  <RequestDialog isOpen={isRequestDialogOpen} onClose={closeRequestDialog} checkedResourceNames={checkedResourceNames} />}
+      {isRequestDialogOpen &&  <RequestDialog isOpen={isRequestDialogOpen} onClose={closeRequestDialog} checkedResourceNames={checkedResourceNames} checkedResourceId={checkedResourceIds}/>}
     </div>
   );
 }
