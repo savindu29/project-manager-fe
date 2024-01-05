@@ -86,95 +86,24 @@ export function ResourcesManagerPage({
   }, []);
 
 
-  // const openRequestDialog = () => {
-  //   setRequestDialogOpen(true);
-  // };
 
-  // const closeRequestDialog = () => {
-  //   setRequestDialogOpen(false);
-  // };
 
-  // const toggleEmployeeDetails = (employee: Employee) => {
-  //   if (selectedEmployee && selectedEmployee.name === employee.name) {
-  //     // If the same employee is clicked again, hide the details
-  //     setSelectedEmployee(null);
-  //   } else {
-  //     // Show the details of the clicked employee
-  //     setSelectedEmployee(employee);
-  //   }
-  // };
+  
 
-  // const [isPopupOpen, setPopupOpen] = useState(false);
-  // const [filters, setFilters] = useState<Filter[]>([]);
-
-  const openPopup = () => {
-    setPopupOpen(true);
-  };
-
-  const closePopup = () => {
-    setPopupOpen(false);
-  };
-
-  const handleAddFilter = (newFilter: Filter) => {
-    setFilters([...filters, newFilter]);
-  };
-
-  const [checkedResourceIds, setCheckedResourceIds] = useState<number[]>([]);
-  const [checkedResourceNames, setCheckedResourceNames] = useState<string[]>(
-    []
-  );
-
-  const handleCheckboxChange = (id: number, name: string) => {
-    // If the resource is already checked, uncheck it
-    if (checkedResourceIds.includes(id)) {
-      setCheckedResourceIds((prevIds) =>
-        prevIds.filter((prevId) => prevId !== id)
-      );
-      setCheckedResourceNames((prevNames) =>
-        prevNames.filter((prevName) => prevName !== name)
-      );
-    } else {
-      // If the resource is not checked, check it
-      setCheckedResourceIds((prevIds) => [...prevIds, id]);
-      setCheckedResourceNames((prevNames) => [...prevNames, name]);
-    }
-  };
   const [employeesData, setEmployeesData] = useState<Employee[]>([]);
-  const [resourcesAllocated, setResourcesAllocated] = useState<any[]>([]);
+
   const [employees, setEmployees] = useState<any[]>([]);
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [filters, setFilters] = useState<Filter[]>([]);
 
-  // const [projectProposedImpStartDate, setProposedImpStartDate] = useState<Date | null>(
-  //     projectDetails?.piStartDate ? new Date(projectDetails.piStartDate) : null
-  // );
-  // const [projectProposedImpEndDate, setProposedImpEndDate] = useState<Date | null>(
-  //     projectDetails?.piEndDate ? new Date(projectDetails.piEndDate) : null
-  // );
-  // const { id } = useParams();
-  // const [projectDetail, setProjectDetails] = useState<any>(null);
-  // const [loading, setLoading] = useState(true);
-  const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+
+
   const [potentialResources, setPotentialResources] = useState<Resource[]>([]);
 
 
 
-  const openRequestDialog = () => {
-    setRequestDialogOpen(true);
-  };
-
-  const closeRequestDialog = () => {
-    setRequestDialogOpen(false);
-  };
-
-
-  const isRequestAllDisabled = checkedResourceIds.length === 0;
-
-  const handleRequestAll = () => {
-    // Use the IDs as needed, for example, redirect to a new page
-    openRequestDialog();
-  };
+  
+ 
 
   const [projectProposedImpStartDate, setProposedImpStartDate] = useState(
     projectDetails?.piStartDate ? new Date(projectDetails.piStartDate) : null
@@ -188,17 +117,7 @@ export function ResourcesManagerPage({
   const [loading, setLoading] = useState(true);
 
 
-  // const handleCheckboxChange = (id: number, name: string) => {
-  //   const isChecked = checkedResourceIds.includes(id);
-
-  //   setCheckedResourceIds((prevIds) =>
-  //       isChecked ? prevIds.filter((prevId) => prevId !== id) : [...prevIds, id]
-  //   );
-
-  //   setCheckedResourceNames((prevNames) =>
-  //       isChecked ? prevNames.filter((prevName) => prevName !== name) : [...prevNames, name]
-  //   );
-  // };
+ 
 
 
 
@@ -378,21 +297,10 @@ export function ResourcesManagerPage({
 
           <ResourceTable
               resources={potentialResources}
-              onCheckboxChange={handleCheckboxChange}
-              onRequestButtonClick={openRequestDialog}
           />
         </div>
       </div>
-      <div className="mt-6 flex justify-end">
-        <button
-          className={`rounded py-2 px-4 text-xs ${isRequestAllDisabled ? 'bg-gray-400 text-gray-700' : 'bg-violet-500 text-white'}`}
-          onClick={handleRequestAll}
-          disabled={isRequestAllDisabled}
-        >
-          Request All
-        </button>
-      </div>
-      {isRequestDialogOpen &&  <RequestDialog isOpen={isRequestDialogOpen} onClose={closeRequestDialog} checkedResourceNames={checkedResourceNames} />}
+      
     </div>
   );
 }

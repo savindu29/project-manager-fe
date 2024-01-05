@@ -62,7 +62,7 @@ useEffect(() => {
 
 const percentageComponents = percentageData.map((data, index) => (
   <CustomTooltip key={index} title={`Date From : ${data.fromDate} Date To : ${data.toDate}`}>
-    <div className={`w-[${52 / percentageData.length}rem] ${backgroundColors[index]} text-center rounded-full text-white mx-1`}>
+    <div className={`w-[${Math.round(52 / percentageData.length)}rem] ${backgroundColors[index]} text-center rounded-full text-white mx-1`}>
       {data.percentage}%
     </div>
   </CustomTooltip>
