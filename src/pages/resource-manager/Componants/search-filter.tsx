@@ -173,7 +173,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ projectDetail, onSaveFilter
       {isPopupOpen && (
         <>
           <div className="overlay" onClick={closePopup}></div>
-          <div className="absolute top-20 bg-zinc-100 drop-shadow-xl right-10 p-4 w-[64rem] ">
+          <div className="absolute top-20 bg-zinc-100 drop-shadow-xl right-10 p-4 w-[64rem] z-50">
             <div className="filter-popup relative w-full">
               <div className="filter-popup-header">
                 <span>Filter Options</span>
