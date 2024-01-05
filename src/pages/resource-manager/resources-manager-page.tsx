@@ -17,330 +17,325 @@ import ResourceTable from "./Componants/potential-resource-table";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { getProject } from "../../apis/project-api";
-
 export interface SearchFilterProps {
-  projectDetail: any;
-  onSaveFilter: (filterData: any) => void;
+projectDetail: any;
+onSaveFilter: (filterData: any) => void;
 }
 
 interface FilterData {
-  dateFrom?: string;
-  dateTo?: string;
-  selectedValues?: number[];
-  availability?: number;
-  // Add other properties as needed
+dateFrom?: string;
+dateTo?: string;
+selectedValues?: number[];
+availability?: number;
+// Add other properties as needed
 }
- 
+
 type Filter = {
-  column: string;
-  operator: string;
-  value: string;
+column: string;
+operator: string;
+value: string;
 };
 
 interface Employee {
-  name: string;
-  status: string;
-  allocated_date: string;
-  released_date: string;
-  percentage: number;
+name: string;
+status: string;
+allocated_date: string;
+released_date: string;
+percentage: number;
 }
 
 interface Project {
-  id: number;
-  name: string;
+id: number;
+name: string;
 }
 
 interface Resource {
-  id:number;
-  name: string;
-  status: string;
-  allocatedProjects: Project[];
-  pendingProjects: Project[];
+id:number;
+name: string;
+status: string;
+allocatedProjects: Project[];
+pendingProjects: Project[];
 }
 
 
 
 const resourcesAllocated: Resource[] = [
-  {id:1,
-    name: "Resource1",
-    status: "Active",
-    allocatedProjects: [
-      { id: 1, name: "A Project " },
-      { id: 2, name: "B Project " },
-      { id: 3, name: "C Project " },
-    ],
-    pendingProjects: [
-      { id: 3, name: "Project C" },
-      { id: 4, name: "Project D" },
-      { id: 5, name: "Project B" },
-    ],
-  },
-  {id:2,
-    name: "Resource2",
-    status: "Inactive",
-    allocatedProjects: [
-      { id: 5, name: "Project E" },
-      { id: 6, name: "Project F" },
-    ],
-    pendingProjects: [
-      { id: 7, name: "Project G" },
-      { id: 8, name: "Project H" },
-    ],
-  },
-  // Add more resource entities as needed
+{id:1,
+  name: "Resource1",
+  status: "Active",
+  allocatedProjects: [
+    { id: 1, name: "A Project " },
+    { id: 2, name: "B Project " },
+    { id: 3, name: "C Project " },
+  ],
+  pendingProjects: [
+    { id: 3, name: "Project C" },
+    { id: 4, name: "Project D" },
+    { id: 5, name: "Project B" },
+  ],
+},
+{id:2,
+  name: "Resource2",
+  status: "Inactive",
+  allocatedProjects: [
+    { id: 5, name: "Project E" },
+    { id: 6, name: "Project F" },
+  ],
+  pendingProjects: [
+    { id: 7, name: "Project G" },
+    { id: 8, name: "Project H" },
+  ],
+},
+// Add more resource entities as needed
 ];
 
-export function ResourcesManagerPage({
-  projectDetails,
-}: {
-  projectDetails: any;
-}) {
-  const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
-  const [employees, setEmployees] = useState<Employee[]>([]);
+export function ResourcesManagerPage({projectDetails,}: {projectDetails: any;})  {
+const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
+const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+const [employees, setEmployees] = useState<Employee[]>([]);
 
-  useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        const response = await axios.get("http://localhost:8000/api/v1/projectReosurces/ResourceList");
-        console.log(response)
-        setEmployees(response.data.data);
-      } catch (error) {
-        console.error("Error fetching employees:", error);
-      } 
-    };
-
-    fetchEmployees();
-  }, []);
-
-
-  const openRequestDialog = () => {
-    setRequestDialogOpen(true);
+useEffect(() => {
+  const fetchEmployees = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/api/v1/projectReosurces/ResourceList?projectId=${projectDetails.id}");
+      console.log(response)
+      setEmployees(response.data.data);
+    } catch (error) {
+      console.error("Error fetching employees:", error);
+    } 
   };
 
-  const closeRequestDialog = () => {
-    setRequestDialogOpen(false);
-  };
+  fetchEmployees();
+}, []);
 
-  const toggleEmployeeDetails = (employee: Employee) => {
-    if (selectedEmployee && selectedEmployee.name === employee.name) {
-      // If the same employee is clicked again, hide the details
-      setSelectedEmployee(null);
-    } else {
-      // Show the details of the clicked employee
-      setSelectedEmployee(employee);
-    }
-  };
 
-  const [isPopupOpen, setPopupOpen] = useState(false);
-  const [filters, setFilters] = useState<Filter[]>([]);
+const openRequestDialog = () => {
+  setRequestDialogOpen(true);
+};
 
-  const openPopup = () => {
-    setPopupOpen(true);
-  };
+const closeRequestDialog = () => {
+  setRequestDialogOpen(false);
+};
 
-  const closePopup = () => {
-    setPopupOpen(false);
-  };
+const toggleEmployeeDetails = (employee: Employee) => {
+  if (selectedEmployee && selectedEmployee.name === employee.name) {
+    // If the same employee is clicked again, hide the details
+    setSelectedEmployee(null);
+  } else {
+    // Show the details of the clicked employee
+    setSelectedEmployee(employee);
+  }
+};
 
-  const handleAddFilter = (newFilter: Filter) => {
-    setFilters([...filters, newFilter]);
-  };
+const [isPopupOpen, setPopupOpen] = useState(false);
+const [filters, setFilters] = useState<Filter[]>([]);
 
-  const [checkedResourceIds, setCheckedResourceIds] = useState<number[]>([]);
-  const [checkedResourceNames, setCheckedResourceNames] = useState<string[]>(
-    []
-  );
+const openPopup = () => {
+  setPopupOpen(true);
+};
 
-  const handleCheckboxChange = (id: number, name: string) => {
-    // If the resource is already checked, uncheck it
-    if (checkedResourceIds.includes(id)) {
-      setCheckedResourceIds((prevIds) =>
-        prevIds.filter((prevId) => prevId !== id)
-      );
-      setCheckedResourceNames((prevNames) =>
-        prevNames.filter((prevName) => prevName !== name)
-      );
-    } else {
-      // If the resource is not checked, check it
-      setCheckedResourceIds((prevIds) => [...prevIds, id]);
-      setCheckedResourceNames((prevNames) => [...prevNames, name]);
-    }
-  };
+const closePopup = () => {
+  setPopupOpen(false);
+};
 
-  const isRequestAllDisabled = checkedResourceIds.length === 0;
+const handleAddFilter = (newFilter: Filter) => {
+  setFilters([...filters, newFilter]);
+};
 
-  const handleRequestAll = () => {
-    // Use the IDs as needed, for example, redirect to a new page
-    openRequestDialog();
-  };
+const [checkedResourceIds, setCheckedResourceIds] = useState<number[]>([]);
+const [checkedResourceNames, setCheckedResourceNames] = useState<string[]>(
+  []
+);
 
-  const [projectProposedImpStartDate, setProposedImpStartDate] = useState(
-    projectDetails?.piStartDate ? new Date(projectDetails.piStartDate) : null
-  );
-  const [projectProposedImpEndDate, setProposedImpEndDate] = useState(
-    projectDetails?.piEndDate ? new Date(projectDetails.piEndDate) : null
-  );
-  
-  const { id } = useParams();
-  const [projectDetail, setProjectDetails] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+const handleCheckboxChange = (id: number, name: string) => {
+  // If the resource is already checked, uncheck it
+  if (checkedResourceIds.includes(id)) {
+    setCheckedResourceIds((prevIds) =>
+      prevIds.filter((prevId) => prevId !== id)
+    );
+    setCheckedResourceNames((prevNames) =>
+      prevNames.filter((prevName) => prevName !== name)
+    );
+  } else {
+    // If the resource is not checked, check it
+    setCheckedResourceIds((prevIds) => [...prevIds, id]);
+    setCheckedResourceNames((prevNames) => [...prevNames, name]);
+  }
+};
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        console.log("out : ",id)
-        if (id) {
-          console.log("in : ",id)
-          const response = await getProject(parseInt(id));
-          setProjectDetails(response.data);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error("Error fetching projects:", error);
+const isRequestAllDisabled = checkedResourceIds.length === 0;
+
+const handleRequestAll = () => {
+  // Use the IDs as needed, for example, redirect to a new page
+  openRequestDialog();
+};
+
+const [projectProposedImpStartDate, setProposedImpStartDate] = useState(
+  projectDetails?.piStartDate ? new Date(projectDetails.piStartDate) : null
+);
+const [projectProposedImpEndDate, setProposedImpEndDate] = useState(
+  projectDetails?.piEndDate ? new Date(projectDetails.piEndDate) : null
+);
+
+const { id } = useParams();
+const [projectDetail, setProjectDetails] = useState<any>(null);
+const [loading, setLoading] = useState(true);
+
+useEffect(() => {
+  const fetchProjects = async () => {
+    try {
+      console.log("out : ",id)
+      if (id) {
+        console.log("in : ",id)
+        const response = await getProject(parseInt(id));
+        setProjectDetails(response.data);
         setLoading(false);
       }
-    };
-    fetchProjects();
-  }, [id]);
-
-  useEffect(() => {
-    if (projectDetails) {
-        setProposedImpStartDate(projectDetails.piStartDate ? new Date(projectDetails.piStartDate) : null);
-        setProposedImpEndDate(projectDetails.piEndDate ? new Date(projectDetails.piEndDate) : null);
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+      setLoading(false);
     }
+  };
+  fetchProjects();
+}, [id]);
+
+useEffect(() => {
+  if (projectDetails) {
+      setProposedImpStartDate(projectDetails.piStartDate ? new Date(projectDetails.piStartDate) : null);
+      setProposedImpEndDate(projectDetails.piEndDate ? new Date(projectDetails.piEndDate) : null);
+  }
 
 }, [projectDetails]);
 
-  function formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  }
-  const handleSaveFilter = (filterData:FilterData) => {
-    // Do something with the filter data, such as sending it to the server or updating state
-    setProposedImpStartDate(filterData.dateFrom ? new Date(filterData.dateFrom) : null);
-    setProposedImpEndDate(filterData.dateTo ? new Date(filterData.dateTo) : null);
-    console.log('Received Filter Data in ResourceManagerPage:', filterData);
-    
-  };
+function formatDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+const handleSaveFilter = (filterData:FilterData) => {
+  // Do something with the filter data, such as sending it to the server or updating state
+  setProposedImpStartDate(filterData.dateFrom ? new Date(filterData.dateFrom) : null);
+  setProposedImpEndDate(filterData.dateTo ? new Date(filterData.dateTo) : null);
+  console.log('Received Filter Data in ResourceManagerPage:', filterData);
   
+};
 
 
-  return (
-    <div className="px-12 mb-12">
-      <div className="h-20 w-full flex items-center ">
-        <div className="w-1/2">
-          <p className="text-xl font-semibold">
-            Resource allocation for test project
-          </p>
-        </div>
-        <div className="w-1/2 flex">
-          <div className="flex border border-zinc-300 rounded-md items-center w-full mr-20">
-            <input
-              type="search"
-              name="resourceSearch"
-              id="resourceSearch"
-              placeholder="Search Resource here"
-              className="appearance-none  px-4 py-2 text-gray-700 leading-tight outline-none rounded-md w-full text-sm"
-            />
 
-            <div>
-              
-            <SearchFilter projectDetail={projectDetail} onSaveFilter={handleSaveFilter} />
-
-            
-              <div>
-                {filters.map((filter, index) => (
-                  <div key={index}>
-                    <p>
-                      {filter.column} {filter.operator} {filter.value}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <button className="bg-zinc-200  rounded-md p-1 mr-1 flex items-center">
-              <MagnifyingGlassIcon className="h-5 w-5 mx-2 text-zinc-500 " />
-            </button>
-          </div>
-        </div>
+return (
+  <div className="px-12 mb-12">
+    <div className="h-20 w-full flex items-center ">
+      <div className="w-1/2">
+        <p className="text-xl font-semibold">
+          Resource allocation for test project
+        </p>
       </div>
-      <hr />
-      <div className="mt-6">
-        <div className=" bg-green-700 flex text-white rounded py-1 px-2 w-48 justify-center items-center text-sm">
-          <CheckCircleIcon className="h-4 w-4 mr-2" /> Current Resources
-        </div>
-      </div>
-      <div className="mt-6  ">
-        <div className="">
-        <EmployeeTable
-        employees={employees}
-        selectedEmployee={selectedEmployee}
-        toggleEmployeeDetails={toggleEmployeeDetails}
-      />
-         
-        </div>
-      </div>
-      <div className="mt-12 flex">
-        <div className=" bg-violet-600 flex text-white rounded py-1 px-2 w-48 justify-center items-center text-sm">
-          <StopCircleIcon className="h-4 w-4 mr-2" /> Potential Resources
-        </div>
-        <div className="py-1 px-3 bg-zinc-200 rounded ml-12 flex text-xs flex items-center">
+      <div className="w-1/2 flex">
+        <div className="flex border border-zinc-300 rounded-md items-center w-full mr-20">
+          <input
+            type="search"
+            name="resourceSearch"
+            id="resourceSearch"
+            placeholder="Search Resource here"
+            className="appearance-none  px-4 py-2 text-gray-700 leading-tight outline-none rounded-md w-full text-sm"
+          />
+
           <div>
-            Date from :
-            <input
-              type="date"
-              name="proposedImplementStartDate"
-              id="proposedImplementStartDate"
-              className="px-1 py-1 ml-2 hover:outline-none "
-              onChange={(e) =>
-                setProposedImpStartDate(new Date(e.target.value))
-              }
-              value={
-                projectProposedImpStartDate
-                  ? formatDate(projectProposedImpStartDate)
-                  : ""
-              }/>
+            
+          <SearchFilter projectDetail={projectDetail} onSaveFilter={handleSaveFilter} />
+
+          
+            <div>
+              {filters.map((filter, index) => (
+                <div key={index}>
+                  <p>
+                    {filter.column} {filter.operator} {filter.value}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="ml-6">
-            Date To :
-            <input
-              type="date"
-              name="proposedImplementEndDate"
-              id="proposedImplementEndDate"
-              className="px-1 py-1 ml-2 hover:outline-none "
-              onChange={(e) => setProposedImpEndDate(new Date(e.target.value))}
-              value={
-                projectProposedImpEndDate
-                  ? formatDate(projectProposedImpEndDate)
-                  : ""
-              } />
-          </div>
+
+          <button className="bg-zinc-200  rounded-md p-1 mr-1 flex items-center">
+            <MagnifyingGlassIcon className="h-5 w-5 mx-2 text-zinc-500 " />
+          </button>
         </div>
       </div>
-      <div className="mt-6  ">
-        <div className="">
-        
-          <ResourceTable
-      resources={resourcesAllocated}
-      onCheckboxChange={handleCheckboxChange}
-      onRequestButtonClick={openRequestDialog}
-    />
-        </div>
-      </div>
-      <div className="mt-6 flex justify-end">
-        <button
-          className={`rounded py-2 px-4 text-xs ${isRequestAllDisabled ? 'bg-gray-400 text-gray-700' : 'bg-violet-500 text-white'}`}
-          onClick={handleRequestAll}
-          disabled={isRequestAllDisabled}
-        >
-          Request All
-        </button>
-      </div>
-      {isRequestDialogOpen &&  <RequestDialog isOpen={isRequestDialogOpen} onClose={closeRequestDialog} checkedResourceNames={checkedResourceNames} />}
     </div>
-  );
+    <hr />
+    <div className="mt-6">
+      <div className=" bg-green-700 flex text-white rounded py-1 px-2 w-48 justify-center items-center text-sm">
+        <CheckCircleIcon className="h-4 w-4 mr-2" /> Current Resources
+      </div>
+    </div>
+    <div className="mt-6  ">
+      <div className="">
+      <EmployeeTable
+      employees={employees}
+      selectedEmployee={selectedEmployee}
+      toggleEmployeeDetails={toggleEmployeeDetails}
+    />
+        
+      </div>
+    </div>
+    <div className="mt-12 flex">
+      <div className=" bg-violet-600 flex text-white rounded py-1 px-2 w-48 justify-center items-center text-sm">
+        <StopCircleIcon className="h-4 w-4 mr-2" /> Potential Resources
+      </div>
+      <div className="py-1 px-3 bg-zinc-200 rounded ml-12 flex text-xs flex items-center">
+        <div>
+          Date from :
+          <input
+            type="date"
+            name="proposedImplementStartDate"
+            id="proposedImplementStartDate"
+            className="px-1 py-1 ml-2 hover:outline-none "
+            onChange={(e) =>
+              setProposedImpStartDate(new Date(e.target.value))
+            }
+            value={
+              projectProposedImpStartDate
+                ? formatDate(projectProposedImpStartDate)
+                : ""
+            }/>
+        </div>
+        <div className="ml-6">
+          Date To :
+          <input
+            type="date"
+            name="proposedImplementEndDate"
+            id="proposedImplementEndDate"
+            className="px-1 py-1 ml-2 hover:outline-none "
+            onChange={(e) => setProposedImpEndDate(new Date(e.target.value))}
+            value={
+              projectProposedImpEndDate
+                ? formatDate(projectProposedImpEndDate)
+                : ""
+            } />
+        </div>
+      </div>
+    </div>
+    <div className="mt-6  ">
+      <div className="">
+      
+        <ResourceTable
+    resources={resourcesAllocated}
+    onCheckboxChange={handleCheckboxChange}
+    onRequestButtonClick={openRequestDialog}
+  />
+      </div>
+    </div>
+    <div className="mt-6 flex justify-end">
+      <button
+        className={`rounded py-2 px-4 text-xs ${isRequestAllDisabled ? 'bg-gray-400 text-gray-700' : 'bg-violet-500 text-white'}`}
+        onClick={handleRequestAll}
+        disabled={isRequestAllDisabled}
+      >
+        Request All
+      </button>
+    </div>
+    {isRequestDialogOpen &&  <RequestDialog isOpen={isRequestDialogOpen} onClose={closeRequestDialog} checkedResourceNames={checkedResourceNames} />}
+  </div>
+);
 }
