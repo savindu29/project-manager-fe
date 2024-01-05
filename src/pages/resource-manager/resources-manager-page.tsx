@@ -37,6 +37,7 @@ value: string;
 };
 
 interface Employee {
+id:number;
 name: string;
 status: string;
 allocated_date: string;
@@ -59,40 +60,15 @@ pendingProjects: Project[];
 
 
 
-const resourcesAllocated: Resource[] = [
-{id:1,
-  name: "Resource1",
-  status: "Active",
-  allocatedProjects: [
-    { id: 1, name: "A Project " },
-    { id: 2, name: "B Project " },
-    { id: 3, name: "C Project " },
-  ],
-  pendingProjects: [
-    { id: 3, name: "Project C" },
-    { id: 4, name: "Project D" },
-    { id: 5, name: "Project B" },
-  ],
-},
-{id:2,
-  name: "Resource2",
-  status: "Inactive",
-  allocatedProjects: [
-    { id: 5, name: "Project E" },
-    { id: 6, name: "Project F" },
-  ],
-  pendingProjects: [
-    { id: 7, name: "Project G" },
-    { id: 8, name: "Project H" },
-  ],
-},
-// Add more resource entities as needed
-];
 
-export function ResourcesManagerPage({projectDetails,}: {projectDetails: any;})  {
-const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
-const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
-const [employees, setEmployees] = useState<Employee[]>([]);
+export function ResourcesManagerPage({
+  projectDetails,
+}: {
+  projectDetails: any;
+}) {
+  // const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
+  // const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  // const [employees, setEmployees] = useState<Employee[]>([]);
 
 useEffect(() => {
   const fetchEmployees = async () => {
@@ -109,26 +85,26 @@ useEffect(() => {
 }, []);
 
 
-const openRequestDialog = () => {
-  setRequestDialogOpen(true);
-};
+  // const openRequestDialog = () => {
+  //   setRequestDialogOpen(true);
+  // };
 
-const closeRequestDialog = () => {
-  setRequestDialogOpen(false);
-};
+  // const closeRequestDialog = () => {
+  //   setRequestDialogOpen(false);
+  // };
 
-const toggleEmployeeDetails = (employee: Employee) => {
-  if (selectedEmployee && selectedEmployee.name === employee.name) {
-    // If the same employee is clicked again, hide the details
-    setSelectedEmployee(null);
-  } else {
-    // Show the details of the clicked employee
-    setSelectedEmployee(employee);
-  }
-};
+  // const toggleEmployeeDetails = (employee: Employee) => {
+  //   if (selectedEmployee && selectedEmployee.name === employee.name) {
+  //     // If the same employee is clicked again, hide the details
+  //     setSelectedEmployee(null);
+  //   } else {
+  //     // Show the details of the clicked employee
+  //     setSelectedEmployee(employee);
+  //   }
+  // };
 
-const [isPopupOpen, setPopupOpen] = useState(false);
-const [filters, setFilters] = useState<Filter[]>([]);
+  // const [isPopupOpen, setPopupOpen] = useState(false);
+  // const [filters, setFilters] = useState<Filter[]>([]);
 
 const openPopup = () => {
   setPopupOpen(true);
@@ -147,21 +123,50 @@ const [checkedResourceNames, setCheckedResourceNames] = useState<string[]>(
   []
 );
 
-const handleCheckboxChange = (id: number, name: string) => {
-  // If the resource is already checked, uncheck it
-  if (checkedResourceIds.includes(id)) {
-    setCheckedResourceIds((prevIds) =>
-      prevIds.filter((prevId) => prevId !== id)
-    );
-    setCheckedResourceNames((prevNames) =>
-      prevNames.filter((prevName) => prevName !== name)
-    );
-  } else {
-    // If the resource is not checked, check it
-    setCheckedResourceIds((prevIds) => [...prevIds, id]);
-    setCheckedResourceNames((prevNames) => [...prevNames, name]);
-  }
-};
+  const handleCheckboxChange = (id: number, name: string) => {
+    // If the resource is already checked, uncheck it
+    if (checkedResourceIds.includes(id)) {
+      setCheckedResourceIds((prevIds) =>
+        prevIds.filter((prevId) => prevId !== id)
+      );
+      setCheckedResourceNames((prevNames) =>
+        prevNames.filter((prevName) => prevName !== name)
+      );
+    } else {
+      // If the resource is not checked, check it
+      setCheckedResourceIds((prevIds) => [...prevIds, id]);
+      setCheckedResourceNames((prevNames) => [...prevNames, name]);
+    }
+  };
+  const [employeesData, setEmployeesData] = useState<Employee[]>([]);
+  const [resourcesAllocated, setResourcesAllocated] = useState<any[]>([]);
+  const [employees, setEmployees] = useState<any[]>([]);
+  const [isPopupOpen, setPopupOpen] = useState(false);
+  const [filters, setFilters] = useState<Filter[]>([]);
+
+  // const [projectProposedImpStartDate, setProposedImpStartDate] = useState<Date | null>(
+  //     projectDetails?.piStartDate ? new Date(projectDetails.piStartDate) : null
+  // );
+  // const [projectProposedImpEndDate, setProposedImpEndDate] = useState<Date | null>(
+  //     projectDetails?.piEndDate ? new Date(projectDetails.piEndDate) : null
+  // );
+  // const { id } = useParams();
+  // const [projectDetail, setProjectDetails] = useState<any>(null);
+  // const [loading, setLoading] = useState(true);
+  const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [potentialResources, setPotentialResources] = useState<Resource[]>([]);
+
+
+
+  const openRequestDialog = () => {
+    setRequestDialogOpen(true);
+  };
+
+  const closeRequestDialog = () => {
+    setRequestDialogOpen(false);
+  };
+
 
 const isRequestAllDisabled = checkedResourceIds.length === 0;
 
@@ -170,16 +175,40 @@ const handleRequestAll = () => {
   openRequestDialog();
 };
 
-const [projectProposedImpStartDate, setProposedImpStartDate] = useState(
-  projectDetails?.piStartDate ? new Date(projectDetails.piStartDate) : null
-);
-const [projectProposedImpEndDate, setProposedImpEndDate] = useState(
-  projectDetails?.piEndDate ? new Date(projectDetails.piEndDate) : null
-);
+  const [projectProposedImpStartDate, setProposedImpStartDate] = useState(
+    projectDetails?.piStartDate ? new Date(projectDetails.piStartDate) : null
+  );
+  const [projectProposedImpEndDate, setProposedImpEndDate] = useState(
+    projectDetails?.piEndDate ? new Date(projectDetails.piEndDate) : null
+  );
+  
+  const { id } = useParams();
+  const [projectDetail, setProjectDetails] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-const { id } = useParams();
-const [projectDetail, setProjectDetails] = useState<any>(null);
-const [loading, setLoading] = useState(true);
+
+  // const handleCheckboxChange = (id: number, name: string) => {
+  //   const isChecked = checkedResourceIds.includes(id);
+
+  //   setCheckedResourceIds((prevIds) =>
+  //       isChecked ? prevIds.filter((prevId) => prevId !== id) : [...prevIds, id]
+  //   );
+
+  //   setCheckedResourceNames((prevNames) =>
+  //       isChecked ? prevNames.filter((prevName) => prevName !== name) : [...prevNames, name]
+  //   );
+  // };
+
+
+
+
+
+
+
+
+
+
+
 
 useEffect(() => {
   const fetchProjects = async () => {
@@ -207,20 +236,48 @@ useEffect(() => {
 
 }, [projectDetails]);
 
-function formatDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = date.getDate().toString().padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-const handleSaveFilter = (filterData:FilterData) => {
-  // Do something with the filter data, such as sending it to the server or updating state
-  setProposedImpStartDate(filterData.dateFrom ? new Date(filterData.dateFrom) : null);
-  setProposedImpEndDate(filterData.dateTo ? new Date(filterData.dateTo) : null);
-  console.log('Received Filter Data in ResourceManagerPage:', filterData);
-  
-};
+  function formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+  const handleSaveFilter = (filterData:FilterData) => {
+    // Do something with the filter data, such as sending it to the server or updating state
+    setProposedImpStartDate(filterData.dateFrom ? new Date(filterData.dateFrom) : null);
+    setProposedImpEndDate(filterData.dateTo ? new Date(filterData.dateTo) : null);
+    console.log('Received Filter Data in ResourceManagerPage:', filterData);
+    
+  };
+  useEffect(() => {
+    const fetchEmployeesData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/api/v1/admin/employees/notAllocatedToProject?projectId=${projectDetails.id}`);
+        console.log('API Response:', response.data);
 
+        // Assuming the API response structure is as mentioned
+        const employeesDataFromAPI = response.data.data;
+
+        // Map the API response to the state variable
+        const mappedEmployeesData = employeesDataFromAPI.map((employeeData: any) => ({
+          name: employeeData.name,
+          allocatedProjects: employeeData.allocatedProjects || [],
+          pendingProjects: employeeData.pendingProjects || [],
+        }));
+
+        setEmployeesData(mappedEmployeesData);
+
+        // Set potential resources separately
+        setPotentialResources(mappedEmployeesData);
+      } catch (error) {
+        console.error('Error fetching data:', error as string);
+      }
+    };
+
+    if (projectDetails && projectDetails.id) {
+      fetchEmployeesData();
+    }
+  }, [projectDetails]);
 
 
 return (
@@ -257,85 +314,84 @@ return (
             </div>
           </div>
 
-          <button className="bg-zinc-200  rounded-md p-1 mr-1 flex items-center">
-            <MagnifyingGlassIcon className="h-5 w-5 mx-2 text-zinc-500 " />
-          </button>
+            <button className="bg-zinc-200  rounded-md p-1 mr-1 flex items-center">
+              <MagnifyingGlassIcon className="h-5 w-5 mx-2 text-zinc-500 " />
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-    <hr />
-    <div className="mt-6">
-      <div className=" bg-green-700 flex text-white rounded py-1 px-2 w-48 justify-center items-center text-sm">
-        <CheckCircleIcon className="h-4 w-4 mr-2" /> Current Resources
-      </div>
-    </div>
-    <div className="mt-6  ">
-      <div className="">
-      <EmployeeTable
-      employees={employees}
-      selectedEmployee={selectedEmployee}
-      toggleEmployeeDetails={toggleEmployeeDetails}
-    />
-        
-      </div>
-    </div>
-    <div className="mt-12 flex">
-      <div className=" bg-violet-600 flex text-white rounded py-1 px-2 w-48 justify-center items-center text-sm">
-        <StopCircleIcon className="h-4 w-4 mr-2" /> Potential Resources
-      </div>
-      <div className="py-1 px-3 bg-zinc-200 rounded ml-12 flex text-xs flex items-center">
-        <div>
-          Date from :
-          <input
-            type="date"
-            name="proposedImplementStartDate"
-            id="proposedImplementStartDate"
-            className="px-1 py-1 ml-2 hover:outline-none "
-            onChange={(e) =>
-              setProposedImpStartDate(new Date(e.target.value))
-            }
-            value={
-              projectProposedImpStartDate
-                ? formatDate(projectProposedImpStartDate)
-                : ""
-            }/>
-        </div>
-        <div className="ml-6">
-          Date To :
-          <input
-            type="date"
-            name="proposedImplementEndDate"
-            id="proposedImplementEndDate"
-            className="px-1 py-1 ml-2 hover:outline-none "
-            onChange={(e) => setProposedImpEndDate(new Date(e.target.value))}
-            value={
-              projectProposedImpEndDate
-                ? formatDate(projectProposedImpEndDate)
-                : ""
-            } />
+      <hr />
+      <div className="mt-6">
+        <div className=" bg-green-700 flex text-white rounded py-1 px-2 w-48 justify-center items-center text-sm">
+          <CheckCircleIcon className="h-4 w-4 mr-2" /> Current Resources
         </div>
       </div>
-    </div>
-    <div className="mt-6  ">
-      <div className="">
-      
-        <ResourceTable
-    resources={resourcesAllocated}
-    onCheckboxChange={handleCheckboxChange}
-    onRequestButtonClick={openRequestDialog}
-  />
+      <div className="mt-6  ">
+        <div className="">
+        <EmployeeTable
+        employees={employees}
+
+      />
+         
+        </div>
       </div>
+      <div className="mt-12 flex">
+        <div className=" bg-violet-600 flex text-white rounded py-1 px-2 w-48 justify-center items-center text-sm">
+          <StopCircleIcon className="h-4 w-4 mr-2" /> Potential Resources
+        </div>
+        <div className="py-1 px-3 bg-zinc-200 rounded ml-12 flex text-xs flex items-center">
+          <div>
+            Date from :
+            <input
+              type="date"
+              name="proposedImplementStartDate"
+              id="proposedImplementStartDate"
+              className="px-1 py-1 ml-2 hover:outline-none "
+              onChange={(e) =>
+                setProposedImpStartDate(new Date(e.target.value))
+              }
+              value={
+                projectProposedImpStartDate
+                  ? formatDate(projectProposedImpStartDate)
+                  : ""
+              }/>
+          </div>
+          <div className="ml-6">
+            Date To :
+            <input
+              type="date"
+              name="proposedImplementEndDate"
+              id="proposedImplementEndDate"
+              className="px-1 py-1 ml-2 hover:outline-none "
+              onChange={(e) => setProposedImpEndDate(new Date(e.target.value))}
+              value={
+                projectProposedImpEndDate
+                  ? formatDate(projectProposedImpEndDate)
+                  : ""
+              } />
+          </div>
+        </div>
+      </div>
+      <div className="mt-6  ">
+        <div className="">
+
+          <ResourceTable
+              resources={potentialResources}
+              onCheckboxChange={handleCheckboxChange}
+              onRequestButtonClick={openRequestDialog}
+          />
+        </div>
+      </div>
+      <div className="mt-6 flex justify-end">
+        <button
+          className={`rounded py-2 px-4 text-xs ${isRequestAllDisabled ? 'bg-gray-400 text-gray-700' : 'bg-violet-500 text-white'}`}
+          onClick={handleRequestAll}
+          disabled={isRequestAllDisabled}
+        >
+          Request All
+        </button>
+      </div>
+      {isRequestDialogOpen &&  <RequestDialog isOpen={isRequestDialogOpen} onClose={closeRequestDialog} checkedResourceNames={checkedResourceNames} />}
     </div>
-    <div className="mt-6 flex justify-end">
-      <button
-        className={`rounded py-2 px-4 text-xs ${isRequestAllDisabled ? 'bg-gray-400 text-gray-700' : 'bg-violet-500 text-white'}`}
-        onClick={handleRequestAll}
-        disabled={isRequestAllDisabled}
-      >
-        Request All
-      </button>
-    </div>
-    {isRequestDialogOpen &&  <RequestDialog isOpen={isRequestDialogOpen} onClose={closeRequestDialog} checkedResourceNames={checkedResourceNames} />}
-  </div>
-);
+  );
 }
