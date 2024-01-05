@@ -73,7 +73,7 @@ export function ResourcesManagerPage({
 useEffect(() => {
   const fetchEmployees = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/v1/projectReosurces/ResourceList?projectId=${projectDetails.id}");
+      const response = await axios.get(`http://localhost:8000/api/v1/projectReosurces/ResourceList?projectId=${id}`);
       console.log(response)
       setEmployees(response.data.data);
     } catch (error) {
