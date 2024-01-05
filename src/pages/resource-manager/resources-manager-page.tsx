@@ -38,6 +38,7 @@ type Filter = {
 };
 
 interface Employee {
+  id:number;
   name: string;
   status: string;
   allocated_date: string;
@@ -60,44 +61,15 @@ interface Resource {
 
 
 
-const resourcesAllocated: Resource[] = [
-  {id:1,
-    name: "Resource1",
-    status: "Active",
-    allocatedProjects: [
-      { id: 1, name: "A Project " },
-      { id: 2, name: "B Project " },
-      { id: 3, name: "C Project " },
-    ],
-    pendingProjects: [
-      { id: 3, name: "Project C" },
-      { id: 4, name: "Project D" },
-      { id: 5, name: "Project B" },
-    ],
-  },
-  {id:2,
-    name: "Resource2",
-    status: "Inactive",
-    allocatedProjects: [
-      { id: 5, name: "Project E" },
-      { id: 6, name: "Project F" },
-    ],
-    pendingProjects: [
-      { id: 7, name: "Project G" },
-      { id: 8, name: "Project H" },
-    ],
-  },
-  // Add more resource entities as needed
-];
 
 export function ResourcesManagerPage({
   projectDetails,
 }: {
   projectDetails: any;
 }) {
-  const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
-  const [employees, setEmployees] = useState<Employee[]>([]);
+  // const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
+  // const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  // const [employees, setEmployees] = useState<Employee[]>([]);
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -114,26 +86,26 @@ export function ResourcesManagerPage({
   }, []);
 
 
-  const openRequestDialog = () => {
-    setRequestDialogOpen(true);
-  };
+  // const openRequestDialog = () => {
+  //   setRequestDialogOpen(true);
+  // };
 
-  const closeRequestDialog = () => {
-    setRequestDialogOpen(false);
-  };
+  // const closeRequestDialog = () => {
+  //   setRequestDialogOpen(false);
+  // };
 
-  const toggleEmployeeDetails = (employee: Employee) => {
-    if (selectedEmployee && selectedEmployee.name === employee.name) {
-      // If the same employee is clicked again, hide the details
-      setSelectedEmployee(null);
-    } else {
-      // Show the details of the clicked employee
-      setSelectedEmployee(employee);
-    }
-  };
+  // const toggleEmployeeDetails = (employee: Employee) => {
+  //   if (selectedEmployee && selectedEmployee.name === employee.name) {
+  //     // If the same employee is clicked again, hide the details
+  //     setSelectedEmployee(null);
+  //   } else {
+  //     // Show the details of the clicked employee
+  //     setSelectedEmployee(employee);
+  //   }
+  // };
 
-  const [isPopupOpen, setPopupOpen] = useState(false);
-  const [filters, setFilters] = useState<Filter[]>([]);
+  // const [isPopupOpen, setPopupOpen] = useState(false);
+  // const [filters, setFilters] = useState<Filter[]>([]);
 
   const openPopup = () => {
     setPopupOpen(true);
@@ -167,6 +139,35 @@ export function ResourcesManagerPage({
       setCheckedResourceNames((prevNames) => [...prevNames, name]);
     }
   };
+  const [employeesData, setEmployeesData] = useState<Employee[]>([]);
+  const [resourcesAllocated, setResourcesAllocated] = useState<any[]>([]);
+  const [employees, setEmployees] = useState<any[]>([]);
+  const [isPopupOpen, setPopupOpen] = useState(false);
+  const [filters, setFilters] = useState<Filter[]>([]);
+
+  // const [projectProposedImpStartDate, setProposedImpStartDate] = useState<Date | null>(
+  //     projectDetails?.piStartDate ? new Date(projectDetails.piStartDate) : null
+  // );
+  // const [projectProposedImpEndDate, setProposedImpEndDate] = useState<Date | null>(
+  //     projectDetails?.piEndDate ? new Date(projectDetails.piEndDate) : null
+  // );
+  // const { id } = useParams();
+  // const [projectDetail, setProjectDetails] = useState<any>(null);
+  // const [loading, setLoading] = useState(true);
+  const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [potentialResources, setPotentialResources] = useState<Resource[]>([]);
+
+
+
+  const openRequestDialog = () => {
+    setRequestDialogOpen(true);
+  };
+
+  const closeRequestDialog = () => {
+    setRequestDialogOpen(false);
+  };
+
 
   const isRequestAllDisabled = checkedResourceIds.length === 0;
 
@@ -185,6 +186,30 @@ export function ResourcesManagerPage({
   const { id } = useParams();
   const [projectDetail, setProjectDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+
+
+  // const handleCheckboxChange = (id: number, name: string) => {
+  //   const isChecked = checkedResourceIds.includes(id);
+
+  //   setCheckedResourceIds((prevIds) =>
+  //       isChecked ? prevIds.filter((prevId) => prevId !== id) : [...prevIds, id]
+  //   );
+
+  //   setCheckedResourceNames((prevNames) =>
+  //       isChecked ? prevNames.filter((prevName) => prevName !== name) : [...prevNames, name]
+  //   );
+  // };
+
+
+
+
+
+
+
+
+
+
+
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -225,7 +250,35 @@ export function ResourcesManagerPage({
     console.log('Received Filter Data in ResourceManagerPage:', filterData);
     
   };
-  
+  useEffect(() => {
+    const fetchEmployeesData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/api/v1/admin/employees/notAllocatedToProject?projectId=${projectDetails.id}`);
+        console.log('API Response:', response.data);
+
+        // Assuming the API response structure is as mentioned
+        const employeesDataFromAPI = response.data.data;
+
+        // Map the API response to the state variable
+        const mappedEmployeesData = employeesDataFromAPI.map((employeeData: any) => ({
+          name: employeeData.name,
+          allocatedProjects: employeeData.allocatedProjects || [],
+          pendingProjects: employeeData.pendingProjects || [],
+        }));
+
+        setEmployeesData(mappedEmployeesData);
+
+        // Set potential resources separately
+        setPotentialResources(mappedEmployeesData);
+      } catch (error) {
+        console.error('Error fetching data:', error as string);
+      }
+    };
+
+    if (projectDetails && projectDetails.id) {
+      fetchEmployeesData();
+    }
+  }, [projectDetails]);
 
 
   return (
@@ -278,8 +331,7 @@ export function ResourcesManagerPage({
         <div className="">
         <EmployeeTable
         employees={employees}
-        selectedEmployee={selectedEmployee}
-        toggleEmployeeDetails={toggleEmployeeDetails}
+
       />
          
         </div>
@@ -323,12 +375,12 @@ export function ResourcesManagerPage({
       </div>
       <div className="mt-6  ">
         <div className="">
-        
+
           <ResourceTable
-      resources={resourcesAllocated}
-      onCheckboxChange={handleCheckboxChange}
-      onRequestButtonClick={openRequestDialog}
-    />
+              resources={potentialResources}
+              onCheckboxChange={handleCheckboxChange}
+              onRequestButtonClick={openRequestDialog}
+          />
         </div>
       </div>
       <div className="mt-6 flex justify-end">
