@@ -67,7 +67,7 @@ interface ResourceTableProps {
   onRequestButtonClick: () => void;
 }
 const ResourcesManagerPage: React.FC<ResourcesManagerPageProps> = ({ projectDetails }) => {
-  // ... other useState declarations
+
   const [employeesData, setEmployeesData] = useState<Employee[]>([]);
   const [resourcesAllocated, setResourcesAllocated] = useState<any[]>([]);
   const [employees, setEmployees] = useState<any[]>([]);
@@ -103,14 +103,6 @@ interface Resource {
 }
 
 
-export function ResourcesManagerPage({
-  projectDetails,
-}: {
-  projectDetails: any;
-}) {
-  const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
-  const [employees, setEmployees] = useState<Employee[]>([]);
 
   useEffect(() => {
     const fetchEmployees = async () => {
