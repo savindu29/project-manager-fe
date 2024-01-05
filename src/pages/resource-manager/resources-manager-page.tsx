@@ -180,6 +180,7 @@ export function ResourcesManagerPage({
 
         // Map the API response to the state variable
         const mappedEmployeesData = employeesDataFromAPI.map((employeeData: any) => ({
+          id:employeeData.id,
           name: employeeData.name,
           allocatedProjects: employeeData.allocatedProjects || [],
           pendingProjects: employeeData.pendingProjects || [],

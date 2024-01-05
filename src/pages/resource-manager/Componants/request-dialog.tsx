@@ -1,18 +1,28 @@
 import React, { useState } from "react";
 import { XMarkIcon } from "@heroicons/react/20/solid";
 import { Resource } from "./potential-resource-table";
+import ResourceDetailsPane from "./selected-resource-details-table";
+import EditableTable from "./send-request-box";
 
 interface RequestDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  checkedResources: Resource[];
+  checkedResources: { [key: number]: boolean };
+  resources: Resource[];
 }
 
 const RequestDialog: React.FC<RequestDialogProps> = ({
   isOpen,
   onClose,
   checkedResources,
+  resources,
 }) => {
+  const [selectedResourceId, setSelectedResourceId] = useState<number | null>(null);
+
+  const handleResourceClick = (resourceId: number) => {
+    setSelectedResourceId(resourceId);
+  };
+
   return (
     <div className={`fixed ${isOpen ? "block" : "hidden"} top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex justify-end items-center py-6 pl-20 pr-4 z-50`}>
       <div className="bg-white p-6 rounded-md h-full w-5/6 relative overflow-y-scroll">
@@ -24,16 +34,27 @@ const RequestDialog: React.FC<RequestDialogProps> = ({
         </button>
         <div className="flex mt-6">
           {/* Left Column (1/3 of the window) */}
-          <div className="w-1/4 p-4">
-            <div className="text-lg font-bold mb-4">Selected Resources:</div>
-            <ul>
-              {checkedResources.map((resource, index) => (
-                <li key={index}>{resource.name}</li>
-              ))}
-            </ul>
+          <div className="w-1/4 h-full overflow-y-auto">
+            {Object.keys(checkedResources).map((resourceId, index) => (
+              <div
+                key={index}
+                className={`border-b pb-1 text-sm pt-2 cursor-pointer ${parseInt(resourceId, 10) === selectedResourceId ? 'text-black' : 'text-zinc-500'}`}
+                onClick={() => handleResourceClick(parseInt(resourceId, 10))}
+              >
+                {`ID: ${resourceId}, Name: ${resources.find(resource => resource.id === parseInt(resourceId, 10))?.name || 'N/A'}`}
+              </div>
+            ))}
           </div>
+
           {/* Right Details Pane (2/3 of the window) */}
-          
+          <div className="w-3/4 h-full bg-white px-6 rounded-md ml-4  ">
+            {selectedResourceId !== null && (
+              <ResourceDetailsPane resourceId={selectedResourceId} />
+            )}
+
+            <EditableTable allocateDate={"2023/12/31"} releaseDate={"2024/03/29"} employeeId={0} editable={true}/>
+
+          </div>
         </div>
       </div>
     </div>
