@@ -5,16 +5,32 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
+
 import RequestDialog from "./Componants/request-dialog";
 import React from "react";
 import WorkPerecentageCurrent from "./Componants/work-perecentage-current";
-import { Button } from "@mui/material";
-import FilterPopup from "./Componants/filter";
-import Filter from "./Componants/filter";
-import FilterButton from "./Componants/filter";
-import { APP_API_BASE_URL, DateType } from "../../apis";
+import { Button } from '@mui/material';
+import Filter from "./Componants/search-filter";
+import SearchFilter from "./Componants/search-filter";
+import EmployeeTable from "./Componants/current-resources";
+import ResourceTable from "./Componants/potential-resource-table";
 import axios from "axios";
+import { useParams } from "react-router-dom";
+import { getProject } from "../../apis/project-api";
 
+export interface SearchFilterProps {
+  projectDetail: any;
+  onSaveFilter: (filterData: any) => void;
+}
+
+interface FilterData {
+  dateFrom?: string;
+  dateTo?: string;
+  selectedValues?: number[];
+  availability?: number;
+  // Add other properties as needed
+}
+ 
 type Filter = {
   column: string;
   operator: string;
@@ -22,10 +38,11 @@ type Filter = {
 };
 
 interface Employee {
+  id:number;
   name: string;
   status: string;
-  allocatedDate: string;
-  releaseDate: string;
+  allocated_date: string;
+  released_date: string;
   percentage: number;
 }
 
@@ -35,154 +52,58 @@ interface Project {
 }
 
 interface Resource {
-  id: number;
+  id:number;
   name: string;
   status: string;
   allocatedProjects: Project[];
   pendingProjects: Project[];
 }
 
-const employees: Employee[] = [
-  {
-    name: "John Doe",
-    status: "Active",
-    allocatedDate: "2023-01-01",
-    releaseDate: "2023-12-31",
-    percentage: 80,
-  },
-  {
-    name: "Jane Smith",
-    status: "Inactive",
-    allocatedDate: "2023-02-15",
-    releaseDate: "2023-10-31",
-    percentage: 60,
-  },
-  {
-    name: "Bob Johnson",
-    status: "Active",
-    allocatedDate: "2023-03-20",
-    releaseDate: "2023-09-30",
-    percentage: 75,
-  },
-  {
-    name: "Alice Williams",
-    status: "Inactive",
-    allocatedDate: "2023-04-10",
-    releaseDate: "2023-08-15",
-    percentage: 90,
-  },
-  {
-    name: "Charlie Brown",
-    status: "Active",
-    allocatedDate: "2023-05-05",
-    releaseDate: "2023-07-01",
-    percentage: 85,
-  },
-  // Add more employee data as needed
-];
 
-const resourcesAllocated: Resource[] = [
-  {
-    id: 1,
-    name: "Resource1",
-    status: "Active",
-    allocatedProjects: [
-      { id: 1, name: "A Project " },
-      { id: 2, name: "B Project " },
-      { id: 3, name: "C Project " },
-    ],
-    pendingProjects: [
-      { id: 3, name: "Project C" },
-      { id: 4, name: "Project D" },
-      { id: 5, name: "Project B" },
-    ],
-  },
-  {
-    id: 2,
-    name: "Resource2",
-    status: "Inactive",
-    allocatedProjects: [
-      { id: 5, name: "Project E" },
-      { id: 6, name: "Project F" },
-    ],
-    pendingProjects: [
-      { id: 7, name: "Project G" },
-      { id: 8, name: "Project H" },
-    ],
-  },
-  // Add more resource entities as needed
-];
+
 
 export function ResourcesManagerPage({
   projectDetails,
 }: {
   projectDetails: any;
 }) {
-  const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
-    null
-  );
+  // const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
+  // const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  // const [employees, setEmployees] = useState<Employee[]>([]);
 
-  const openRequestDialog = () => {
-    setRequestDialogOpen(true);
-  };
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/api/v1/projectReosurces/ResourceList");
+        console.log(response)
+        setEmployees(response.data.data);
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+      } 
+    };
 
-  const closeRequestDialog = () => {
-    setRequestDialogOpen(false);
-  };
+    fetchEmployees();
+  }, []);
 
-  const toggleEmployeeDetails = (employee: Employee) => {
-    if (selectedEmployee && selectedEmployee.name === employee.name) {
-      // If the same employee is clicked again, hide the details
-      setSelectedEmployee(null);
-    } else {
-      // Show the details of the clicked employee
-      setSelectedEmployee(employee);
-    }
-  };
 
+
+
+  
+
+  const [employeesData, setEmployeesData] = useState<Employee[]>([]);
+
+  const [employees, setEmployees] = useState<any[]>([]);
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [filters, setFilters] = useState<Filter[]>([]);
 
-  const openPopup = () => {
-    setPopupOpen(true);
-  };
 
-  const closePopup = () => {
-    setPopupOpen(false);
-  };
 
-  const handleAddFilter = (newFilter: Filter) => {
-    setFilters([...filters, newFilter]);
-  };
+  const [potentialResources, setPotentialResources] = useState<Resource[]>([]);
 
-  const [checkedResourceIds, setCheckedResourceIds] = useState<number[]>([]);
-  const [checkedResourceNames, setCheckedResourceNames] = useState<string[]>(
-    []
-  );
 
-  const handleCheckboxChange = (id: number, name: string) => {
-    // If the resource is already checked, uncheck it
-    if (checkedResourceIds.includes(id)) {
-      setCheckedResourceIds((prevIds) =>
-        prevIds.filter((prevId) => prevId !== id)
-      );
-      setCheckedResourceNames((prevNames) =>
-        prevNames.filter((prevName) => prevName !== name)
-      );
-    } else {
-      // If the resource is not checked, check it
-      setCheckedResourceIds((prevIds) => [...prevIds, id]);
-      setCheckedResourceNames((prevNames) => [...prevNames, name]);
-    }
-  };
 
-  const isRequestAllDisabled = checkedResourceIds.length === 0;
-
-  const handleRequestAll = () => {
-    // Use the IDs as needed, for example, redirect to a new page
-    openRequestDialog();
-  };
+  
+ 
 
   const [projectProposedImpStartDate, setProposedImpStartDate] = useState(
     projectDetails?.piStartDate ? new Date(projectDetails.piStartDate) : null
@@ -190,6 +111,42 @@ export function ResourcesManagerPage({
   const [projectProposedImpEndDate, setProposedImpEndDate] = useState(
     projectDetails?.piEndDate ? new Date(projectDetails.piEndDate) : null
   );
+  
+  const { id } = useParams();
+  const [projectDetail, setProjectDetails] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        console.log("out : ",id)
+        if (id) {
+          console.log("in : ",id)
+          const response = await getProject(parseInt(id));
+          setProjectDetails(response.data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+        setLoading(false);
+      }
+    };
+    fetchProjects();
+  }, [id]);
 
   useEffect(() => {
     if (projectDetails) {
@@ -205,9 +162,46 @@ export function ResourcesManagerPage({
     const day = date.getDate().toString().padStart(2, "0");
     return `${year}-${month}-${day}`;
   }
+  const handleSaveFilter = (filterData:FilterData) => {
+    // Do something with the filter data, such as sending it to the server or updating state
+    setProposedImpStartDate(filterData.dateFrom ? new Date(filterData.dateFrom) : null);
+    setProposedImpEndDate(filterData.dateTo ? new Date(filterData.dateTo) : null);
+    console.log('Received Filter Data in ResourceManagerPage:', filterData);
+    
+  };
+  useEffect(() => {
+    const fetchEmployeesData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/api/v1/admin/employees/notAllocatedToProject?projectId=${projectDetails.id}`);
+        console.log('API Response:', response.data);
+
+        // Assuming the API response structure is as mentioned
+        const employeesDataFromAPI = response.data.data;
+
+        // Map the API response to the state variable
+        const mappedEmployeesData = employeesDataFromAPI.map((employeeData: any) => ({
+          name: employeeData.name,
+          allocatedProjects: employeeData.allocatedProjects || [],
+          pendingProjects: employeeData.pendingProjects || [],
+        }));
+
+        setEmployeesData(mappedEmployeesData);
+
+        // Set potential resources separately
+        setPotentialResources(mappedEmployeesData);
+      } catch (error) {
+        console.error('Error fetching data:', error as string);
+      }
+    };
+
+    if (projectDetails && projectDetails.id) {
+      fetchEmployeesData();
+    }
+  }, [projectDetails]);
+
 
   return (
-    <div className="px-12">
+    <div className="px-12 mb-12">
       <div className="h-20 w-full flex items-center ">
         <div className="w-1/2">
           <p className="text-xl font-semibold">
@@ -225,9 +219,10 @@ export function ResourcesManagerPage({
             />
 
             <div>
-              <FilterButton />
+              
+            <SearchFilter projectDetail={projectDetail} onSaveFilter={handleSaveFilter} />
 
-              {/* Display existing filters */}
+            
               <div>
                 {filters.map((filter, index) => (
                   <div key={index}>
@@ -253,52 +248,15 @@ export function ResourcesManagerPage({
       </div>
       <div className="mt-6  ">
         <div className="">
-          <table className="min-w-full  table-auto">
-            <thead className="">
-              <tr className="text-zinc-400 font-normal text-left">
-                <th className="p-2 font-normal text-sm">Name</th>
-                <th className="p-2 font-normal text-sm">Status</th>
-                <th className="p-2 font-normal text-sm">Allocated date</th>
-                <th className="p-2 font-normal text-sm">Relese Date</th>
-              </tr>
-            </thead>
-            <tbody className="border-y border-gray-300 text-sm">
-              {employees.map((employee, index) => (
-                <React.Fragment key={index}>
-                  <tr>
-                    <td className="border-b p-2">
-                      <button
-                        className="hover:underline"
-                        onClick={() => toggleEmployeeDetails(employee)}
-                      >
-                        {employee.name}
-                      </button>
-                    </td>
-                    <td className="border-b p-2 ">
-                      <div className=" bg-green-700 flex text-white rounded py-1  w-28 pl-4 items-center text-xs">
-                        <CheckCircleIcon className="h-4 w-4 mr-2" />{" "}
-                        {employee.status}
-                      </div>
-                    </td>
-                    <td className="border-b p-2">{employee.allocatedDate}</td>
-                    <td className="border-b p-2">{employee.releaseDate}</td>
-                  </tr>
-                  {selectedEmployee &&
-                    selectedEmployee.name === employee.name && (
-                      <tr>
-                        <td colSpan={5} className="p-2  duration-300 pl-12 ">
-                          <WorkPerecentageCurrent />
-                        </td>
-                      </tr>
-                    )}
-                </React.Fragment>
-              ))}
-            </tbody>
-          </table>
+        <EmployeeTable
+        employees={employees}
+
+      />
+         
         </div>
       </div>
-      <div className="mt-6 flex">
-        <div className=" bg-violet-600 flex text-white rounded py-1 px-2 w-48  justify-center items-center text-sm">
+      <div className="mt-12 flex">
+        <div className=" bg-violet-600 flex text-white rounded py-1 px-2 w-48 justify-center items-center text-sm">
           <StopCircleIcon className="h-4 w-4 mr-2" /> Potential Resources
         </div>
         <div className="py-1 px-3 bg-zinc-200 rounded ml-12 flex text-xs flex items-center">
@@ -308,6 +266,7 @@ export function ResourcesManagerPage({
               type="date"
               name="proposedImplementStartDate"
               id="proposedImplementStartDate"
+              className="px-1 py-1 ml-2 hover:outline-none "
               onChange={(e) =>
                 setProposedImpStartDate(new Date(e.target.value))
               }
@@ -315,8 +274,7 @@ export function ResourcesManagerPage({
                 projectProposedImpStartDate
                   ? formatDate(projectProposedImpStartDate)
                   : ""
-              }
-            />
+              }/>
           </div>
           <div className="ml-6">
             Date To :
@@ -324,113 +282,25 @@ export function ResourcesManagerPage({
               type="date"
               name="proposedImplementEndDate"
               id="proposedImplementEndDate"
+              className="px-1 py-1 ml-2 hover:outline-none "
               onChange={(e) => setProposedImpEndDate(new Date(e.target.value))}
               value={
                 projectProposedImpEndDate
                   ? formatDate(projectProposedImpEndDate)
                   : ""
-              }
-            />
+              } />
           </div>
         </div>
       </div>
       <div className="mt-6  ">
         <div className="">
-          <table className="min-w-full  table-auto">
-            <thead className="">
-              <tr className="text-zinc-400 font-normal text-left">
-                <th className="p-2 font-normal text-sm">Name</th>
-                <th className="p-2 font-normal text-sm">Status</th>
-                <th className="p-2 font-normal text-sm">Allocated Projects</th>
-                <th className="p-2 font-normal text-sm">Pending Projects</th>
-                <th className="p-2 font-normal text-sm">Request</th>
-              </tr>
-            </thead>
-            <tbody className="border-y border-gray-300 text-sm">
-              {resourcesAllocated.map((resource, index) => (
-                <tr key={index}>
-                  <td className="border-b p-2 ">
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        onChange={() =>
-                          handleCheckboxChange(resource.id, resource.name)
-                        }
-                      />
-                      {resource.name}
-                    </div>
-                  </td>
-                  <td className="border-b p-2  ">
-                    <div
-                      className={
-                        "bg-violet-600 flex text-white rounded py-1 w-28 pl-4 items-center text-xs"
-                      }
-                    >
-                      <StopCircleIcon className="h-4 w-4 mr-2" />{" "}
-                      {resource.status}
-                    </div>
-                  </td>
-                  <td className="border-b p-2 ">
-                    <div className="flex">
-                      {resource.allocatedProjects.map(
-                        (project, projectIndex) => (
-                          <div
-                            key={projectIndex}
-                            className="w-8 h-8 flex items-center justify-center text-white rounded-full bg-violet-300 -mr-2 border-2 border-white"
-                          >
-                            {project.name.charAt(0).toUpperCase()}
-                          </div>
-                        )
-                      )}
-                    </div>
-                  </td>
-                  <td className="border-b p-2 ">
-                    <div className="flex">
-                      {resource.pendingProjects.map((project, projectIndex) => (
-                        <div
-                          key={projectIndex}
-                          className="w-8 h-8 flex items-center justify-center text-white rounded-full bg-violet-300 -mr-2 border-2 border-white"
-                        >
-                          {project.name.charAt(0).toUpperCase()}
-                        </div>
-                      ))}
-                    </div>
-                  </td>
-                  <td className="border-b p-2 ">
-                    <button
-                      className="bg-violet-500 flex text-white rounded py-1 px-3  justify-center items-center text-xs"
-                      onClick={openRequestDialog}
-                    >
-                      Request
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+
+          <ResourceTable
+              resources={potentialResources}
+          />
         </div>
       </div>
-      <div className="mt-6 flex justify-end">
-        <button
-          className={`rounded py-2 px-4 text-xs ${
-            isRequestAllDisabled
-              ? "bg-gray-400 text-gray-700"
-              : "bg-violet-500 text-white"
-          }`}
-          onClick={handleRequestAll}
-          disabled={isRequestAllDisabled}
-        >
-          Request All
-        </button>
-      </div>
-      {isRequestDialogOpen && (
-        <RequestDialog
-          isOpen={isRequestDialogOpen}
-          onClose={closeRequestDialog}
-          checkedResourceNames={checkedResourceNames}
-        />
-      )}
+      
     </div>
   );
 }

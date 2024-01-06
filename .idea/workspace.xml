@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="86dd1f25-2d5e-47ae-9abd-87e721f59666" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/pages/resource-manager/Componants/MultiSelectDropdown.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/resource-manager/Componants/current-resources.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/resource-manager/Componants/potential-resource-table.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/resource-manager/Componants/search-filter.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/project-manager-fe.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layout/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layout/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Login/popupFailedRegister.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Login/popupFailedRegister.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Login/popupLogin.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Login/popupLogin.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Login/popupregister.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Login/popupregister.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/resource-manager/Componants/filter.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/resource-manager/Componants/request-dialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/resource-manager/Componants/request-dialog.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/resource-manager/Componants/work-perecentage-current.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/resource-manager/Componants/work-perecentage-current.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/resource-manager/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/resource-manager/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/resource-manager/resources-manager-page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/resource-manager/resources-manager-page.tsx" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2aXIjZnJdGTHPQ6krXvTscfizMl" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "nodejs_package_manager_path": "npm"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="86dd1f25-2d5e-47ae-9abd-87e721f59666" name="Changes" comment="" />
+      <created>1704458633289</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1704458633289</updated>
+      <workItem from="1704458635726" duration="233000" />
+    </task>
+    <servers />
+  </component>
+</project>

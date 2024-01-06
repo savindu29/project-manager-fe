@@ -7,3 +7,21 @@ body{
   font-family: 'Nunito Sans', sans-serif;
 font-family: 'Poppins', sans-serif;
 }
+/* scrollbar.css */
+
+/* WebKit (Chrome, Safari, etc.) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #aeaaaa; /* color of the scrollbar */
+  border-radius: 4px;
+}
+
+/* Firefox */
+/* You might need to use !important to override the default Firefox styles */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #818080 transparent; /* color of the scrollbar */
+}
