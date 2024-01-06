@@ -14,9 +14,9 @@ import Filter from "./Componants/search-filter";
 import SearchFilter from "./Componants/search-filter";
 import EmployeeTable from "./Componants/current-resources";
 import ResourceTable from "./Componants/potential-resource-table";
+import axios from "axios";
 import { useParams } from "react-router-dom";
 import { getProject } from "../../apis/project-api";
-import axios from "axios";
 
 export interface SearchFilterProps {
   projectDetail: any;
@@ -37,57 +37,14 @@ type Filter = {
   value: string;
 };
 
-interface Resource {
-  id: number;
-  name: string;
-  status: string;
-  allocatedProjects: { id: number; name: string }[];
-  pendingProjects: { id: number; name: string }[];
-}
-interface Project {
-  id: number;
-  name: string;
-}
-
 interface Employee {
+  id:number;
   name: string;
   status: string;
   allocated_date: string;
   released_date: string;
   percentage: number;
 }
-
-
-interface ResourcesManagerPageProps {
-  projectDetails: any;
-}
-interface ResourceTableProps {
-  resources: Employee[];
-  onCheckboxChange: (id: number, name: string) => void;
-  onRequestButtonClick: () => void;
-}
-const ResourcesManagerPage: React.FC<ResourcesManagerPageProps> = ({ projectDetails }) => {
-
-  const [employeesData, setEmployeesData] = useState<Employee[]>([]);
-  const [resourcesAllocated, setResourcesAllocated] = useState<any[]>([]);
-  const [employees, setEmployees] = useState<any[]>([]);
-  const [isPopupOpen, setPopupOpen] = useState(false);
-  const [filters, setFilters] = useState<Filter[]>([]);
-  const [checkedResourceIds, setCheckedResourceIds] = useState<number[]>([]);
-  const [checkedResourceNames, setCheckedResourceNames] = useState<string[]>([]);
-  const [projectProposedImpStartDate, setProposedImpStartDate] = useState<Date | null>(
-    projectDetails?.piStartDate ? new Date(projectDetails.piStartDate) : null
-  );
-  const [projectProposedImpEndDate, setProposedImpEndDate] = useState<Date | null>(
-    projectDetails?.piEndDate ? new Date(projectDetails.piEndDate) : null
-  );
-  const { id } = useParams();
-  const [projectDetail, setProjectDetails] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
-  const [potentialResources, setPotentialResources] = useState<Resource[]>([]);
-
 
 interface Project {
   id: number;
@@ -103,6 +60,16 @@ interface Resource {
 }
 
 
+
+
+export function ResourcesManagerPage({
+  projectDetails,
+}: {
+  projectDetails: any;
+}) {
+  // const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
+  // const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  // const [employees, setEmployees] = useState<Employee[]>([]);
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -120,98 +87,100 @@ interface Resource {
 
 
 
-  const openRequestDialog = () => {
-    setRequestDialogOpen(true);
-  };
 
-  const closeRequestDialog = () => {
-    setRequestDialogOpen(false);
-  };
+  
 
-  const toggleEmployeeDetails = (employee: Employee) => {
-    setSelectedEmployee((prevSelectedEmployee) =>
-      prevSelectedEmployee && prevSelectedEmployee.name === employee.name ? null : employee
-    );
-  };
+  const [employeesData, setEmployeesData] = useState<Employee[]>([]);
 
-  const openPopup = () => {
-    setPopupOpen(true);
-  };
+  const [employees, setEmployees] = useState<any[]>([]);
+  const [isPopupOpen, setPopupOpen] = useState(false);
+  const [filters, setFilters] = useState<Filter[]>([]);
 
-  const closePopup = () => {
-    setPopupOpen(false);
-  };
 
-  const handleAddFilter = (newFilter: Filter) => {
-    setFilters((prevFilters) => [...prevFilters, newFilter]);
-  };
 
-  const handleCheckboxChange = (id: number, name: string) => {
-    const isChecked = checkedResourceIds.includes(id);
+  const [potentialResources, setPotentialResources] = useState<Resource[]>([]);
 
-    setCheckedResourceIds((prevIds) =>
-      isChecked ? prevIds.filter((prevId) => prevId !== id) : [...prevIds, id]
-    );
 
-    setCheckedResourceNames((prevNames) =>
-      isChecked ? prevNames.filter((prevName) => prevName !== name) : [...prevNames, name]
-    );
-  };
 
-  const isRequestAllDisabled = checkedResourceIds.length === 0;
+  
+ 
 
-  const handleRequestAll = () => {
-    openRequestDialog();
-  };
+  const [projectProposedImpStartDate, setProposedImpStartDate] = useState(
+    projectDetails?.piStartDate ? new Date(projectDetails.piStartDate) : null
+  );
+  const [projectProposedImpEndDate, setProposedImpEndDate] = useState(
+    projectDetails?.piEndDate ? new Date(projectDetails.piEndDate) : null
+  );
+  
+  const { id } = useParams();
+  const [projectDetail, setProjectDetails] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
 
   useEffect(() => {
     const fetchProjects = async () => {
       try {
+        console.log("out : ",id)
         if (id) {
+          console.log("in : ",id)
           const response = await getProject(parseInt(id));
           setProjectDetails(response.data);
           setLoading(false);
         }
       } catch (error) {
-        console.error('Error fetching projects:', error);
+        console.error("Error fetching projects:", error);
         setLoading(false);
       }
     };
-
     fetchProjects();
   }, [id]);
 
   useEffect(() => {
     if (projectDetails) {
-      setProposedImpStartDate(projectDetails.piStartDate ? new Date(projectDetails.piStartDate) : null);
-      setProposedImpEndDate(projectDetails.piEndDate ? new Date(projectDetails.piEndDate) : null);
+        setProposedImpStartDate(projectDetails.piStartDate ? new Date(projectDetails.piStartDate) : null);
+        setProposedImpEndDate(projectDetails.piEndDate ? new Date(projectDetails.piEndDate) : null);
     }
-  }, [projectDetails]);
 
-  const formatDate = (date: Date): string => {
+}, [projectDetails]);
+
+  function formatDate(date: Date): string {
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
     return `${year}-${month}-${day}`;
-  };
-
-  const handleSaveFilter = (filterData: FilterData) => {
+  }
+  const handleSaveFilter = (filterData:FilterData) => {
+    // Do something with the filter data, such as sending it to the server or updating state
     setProposedImpStartDate(filterData.dateFrom ? new Date(filterData.dateFrom) : null);
     setProposedImpEndDate(filterData.dateTo ? new Date(filterData.dateTo) : null);
     console.log('Received Filter Data in ResourceManagerPage:', filterData);
+    
   };
-
   useEffect(() => {
     const fetchEmployeesData = async () => {
       try {
         const response = await axios.get(`http://localhost:8000/api/v1/admin/employees/notAllocatedToProject?projectId=${projectDetails.id}`);
-        console.log('API Response:', response.data); 
+        console.log('API Response:', response.data);
 
         // Assuming the API response structure is as mentioned
         const employeesDataFromAPI = response.data.data;
 
         // Map the API response to the state variable
         const mappedEmployeesData = employeesDataFromAPI.map((employeeData: any) => ({
+          id:employeeData.id,
           name: employeeData.name,
           allocatedProjects: employeeData.allocatedProjects || [],
           pendingProjects: employeeData.pendingProjects || [],
@@ -230,7 +199,7 @@ interface Resource {
       fetchEmployeesData();
     }
   }, [projectDetails]);
-    
+
 
   return (
     <div className="px-12 mb-12">
@@ -281,10 +250,10 @@ interface Resource {
       <div className="mt-6  ">
         <div className="">
         <EmployeeTable
-            employees={employeesData}
-            selectedEmployee={selectedEmployee}
-            toggleEmployeeDetails={toggleEmployeeDetails}
-          />   
+        employees={employees}
+
+      />
+         
         </div>
       </div>
       <div className="mt-12 flex">
@@ -326,25 +295,13 @@ interface Resource {
       </div>
       <div className="mt-6  ">
         <div className="">
-        <ResourceTable
-            resources={potentialResources}
-            onCheckboxChange={handleCheckboxChange}
-            onRequestButtonClick={openRequestDialog}
+
+          <ResourceTable
+              resources={potentialResources}
           />
         </div>
       </div>
-      <div className="mt-6 flex justify-end">
-        <button
-          className={`rounded py-2 px-4 text-xs ${isRequestAllDisabled ? 'bg-gray-400 text-gray-700' : 'bg-violet-500 text-white'}`}
-          onClick={handleRequestAll}
-          disabled={isRequestAllDisabled}
-        >
-          Request All
-        </button>
-      </div>
-      {isRequestDialogOpen &&  <RequestDialog isOpen={isRequestDialogOpen} onClose={closeRequestDialog} checkedResourceNames={checkedResourceNames} />}
+      
     </div>
   );
 }
-
-export default ResourcesManagerPage;

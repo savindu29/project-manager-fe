@@ -36,7 +36,7 @@ const ResourceDetailsPane: React.FC<ResourceDetailsPaneProps> = ({ resourceId })
         <div className="mb-2 text-xs py-1 px-2 bg-green-600 text-white rounded w-56 text-center">
           Existing Project Allocations
         </div>
-        <table className="min-w-full table-auto">
+        <table className="min-w-full table-auto mt-4">
           <thead className="">
             <tr className="text-zinc-400 font-normal text-left">
               <th className="p-2 font-normal text-sm">Project</th>
