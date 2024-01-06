@@ -31,7 +31,7 @@ interface ResourceTableProps {
 
 const ResourceTable: React.FC<ResourceTableProps> = ({
   resources,
-  itemsPerPage = 5,
+  itemsPerPage = 10,
 }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(itemsPerPage);
@@ -87,7 +87,7 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
               <TableCell>Name</TableCell>
               <TableCell>Allocated Projects</TableCell>
               <TableCell>Pending Projects</TableCell>
-              <TableCell>Request</TableCell>
+      
             </TableRow>
           </TableHead>
           <TableBody>

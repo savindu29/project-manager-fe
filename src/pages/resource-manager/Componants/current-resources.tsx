@@ -9,7 +9,7 @@ import WorkPerecentageCurrent from "./work-perecentage-current";
 interface Employee {
     id: number; // Assuming id is a number
     name: string;
-    status: string;
+    status: boolean;
     allocated_date: string;
     released_date: string;
     percentage: number;
@@ -22,7 +22,7 @@ interface EmployeeTableProps {
 
 const EmployeeTable: React.FC<EmployeeTableProps> = ({
                                                          employees,
-                                                         itemsPerPage = 5,
+                                                         itemsPerPage = 10,
                                                      }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(itemsPerPage);
@@ -38,6 +38,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
     };
 
     const toggleEmployeeDetails = (employee: Employee) => {
+        console.log(employees)
         setSelectedEmployee((prevSelectedEmployee) =>
             prevSelectedEmployee && prevSelectedEmployee.name === employee.name ? null : employee
         );
@@ -73,7 +74,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                                 <TableCell>
                                     <div className="bg-green-700 flex text-white rounded py-1 w-28 pl-4 items-center text-xs">
                                         <CheckCircleIcon className="h-4 w-4 mr-2" />
-                                        {employee.status}
+                                        {employee.status ? 'Approved' : 'Pending'}
                                     </div>
                                 </TableCell>
                                 <TableCell>{employee.allocated_date}</TableCell>

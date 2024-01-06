@@ -7,7 +7,7 @@ import axios from "axios";
 interface Employee {
   id: number; // Assuming id is a number
   name: string;
-  status: string;
+  status: boolean;
   allocated_date: string;
   released_date: string;
   percentage: number;
