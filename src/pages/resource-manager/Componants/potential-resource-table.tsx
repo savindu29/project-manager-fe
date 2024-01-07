@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { StopCircleIcon } from "@heroicons/react/20/solid";
 import {
   Table,
   TableBody,
@@ -32,10 +31,12 @@ interface ResourceTableProps {
 
 const ResourceTable: React.FC<ResourceTableProps> = ({
   resources,
-  itemsPerPage = 5,
+  itemsPerPage = 10,
 }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(itemsPerPage);
+  const [checkedResources, setCheckedResources] = useState<{ [key: number]: boolean }>({});
+  const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -52,22 +53,20 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
   const endIndex = startIndex + rowsPerPage;
   const currentResources = resources.slice(startIndex, endIndex);
 
-  const [checkedResources, setCheckedResources] = useState<Resource[]>([]);
-
-  const handleCheckboxChange = (resource: Resource) => {
-    const isChecked = checkedResources.some((r) => r.id === resource.id);
-
-    if (isChecked) {
-      setCheckedResources((prev) => prev.filter((r) => r.id !== resource.id));
-    } else {
-      setCheckedResources((prev) => [...prev, resource]);
-    }
-  };
-
   const isRequestAllDisabled = false;
 
+  const handleCheckboxChange = (resource: Resource) => {
+    setCheckedResources((prev) => {
+      const isChecked = !!prev[resource.id];
+  
+      return {
+        ...prev,
+        [resource.id]: !isChecked,
+      };
+    });
+  };
+ 
   const handleRequestAll = () => {
-    console.log(checkedResources)
     openRequestDialog();
   };
 
@@ -79,19 +78,16 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
     setRequestDialogOpen(false);
   };
 
-  const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
-
   return (
     <div>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-           
               <TableCell>Name</TableCell>
               <TableCell>Allocated Projects</TableCell>
               <TableCell>Pending Projects</TableCell>
-              <TableCell>Request</TableCell>
+      
             </TableRow>
           </TableHead>
           <TableBody>
@@ -102,35 +98,36 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
                     <input
                       type="checkbox"
                       className="mr-2"
+                      checked={!!checkedResources[resource.id]}
                       onChange={() => handleCheckboxChange(resource)}
                     />
                     {resource.name}
                   </div>
                 </TableCell>
-                <TableCell>
-                  <div className="flex">
-                    {resource.allocatedProjects.map((project, projectIndex) => (
-                      <div
-                        key={projectIndex}
-                        className="w-8 h-8 flex items-center justify-center text-white rounded-full bg-violet-300 -mr-2 border-2 border-white"
-                      >
-                        {project.name.charAt(0).toUpperCase()}
-                      </div>
-                    ))}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex">
-                    {resource.pendingProjects.map((project, projectIndex) => (
-                      <div
-                        key={projectIndex}
-                        className="w-8 h-8 flex items-center justify-center text-white rounded-full bg-violet-300 -mr-2 border-2 border-white"
-                      >
-                        {project.name.charAt(0).toUpperCase()}
-                      </div>
-                    ))}
-                  </div>
-                </TableCell>
+                                 <TableCell>
+                   <div className="flex">
+                     {resource.allocatedProjects.map((project, projectIndex) => (
+                       <div
+                         key={projectIndex}
+                         className="w-8 h-8 flex items-center justify-center text-white rounded-full bg-violet-300 -mr-2 border-2 border-white"
+                       >
+                         {project.name.charAt(0).toUpperCase()}
+                       </div>
+                     ))}
+                   </div>
+                 </TableCell>
+                 <TableCell>
+                   <div className="flex">
+                     {resource.pendingProjects.map((project, projectIndex) => (
+                       <div
+                         key={projectIndex}
+                         className="w-8 h-8 flex items-center justify-center text-white rounded-full bg-violet-300 -mr-2 border-2 border-white"
+                       >
+                         {project.name.charAt(0).toUpperCase()}
+                       </div>
+                     ))}
+                   </div>
+                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -163,6 +160,7 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
           isOpen={isRequestDialogOpen}
           onClose={closeRequestDialog}
           checkedResources={checkedResources}
+          resources={resources}
         />
       )}
     </div>
