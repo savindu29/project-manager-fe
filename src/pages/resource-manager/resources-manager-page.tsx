@@ -71,24 +71,6 @@ export function ResourcesManagerPage({
   // const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   // const [employees, setEmployees] = useState<Employee[]>([]);
 
-  useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        const response = await axios.get("http://localhost:8000/api/v1/projectReosurces/ResourceList");
-        console.log(response)
-        setEmployees(response.data.data);
-      } catch (error) {
-        console.error("Error fetching employees:", error);
-      } 
-    };
-
-    fetchEmployees();
-  }, []);
-
-
-
-
-  
 
   const [employeesData, setEmployeesData] = useState<Employee[]>([]);
 
@@ -100,11 +82,6 @@ export function ResourcesManagerPage({
 
   const [potentialResources, setPotentialResources] = useState<Resource[]>([]);
 
-
-
-  
- 
-
   const [projectProposedImpStartDate, setProposedImpStartDate] = useState(
     projectDetails?.piStartDate ? new Date(projectDetails.piStartDate) : null
   );
@@ -115,20 +92,6 @@ export function ResourcesManagerPage({
   const { id } = useParams();
   const [projectDetail, setProjectDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -177,6 +140,10 @@ export function ResourcesManagerPage({
 
         // Assuming the API response structure is as mentioned
         const employeesDataFromAPI = response.data.data;
+
+        const response1 = await axios.get(`http://localhost:8000/api/v1/projectReosurces/ResourceList?projectId=${projectDetails.id}`);
+        console.log(response1)
+        setEmployees(response1.data.data);
 
         // Map the API response to the state variable
         const mappedEmployeesData = employeesDataFromAPI.map((employeeData: any) => ({
@@ -298,6 +265,8 @@ export function ResourcesManagerPage({
 
           <ResourceTable
               resources={potentialResources}
+              dateFrom={projectProposedImpStartDate}
+              dateTo={projectProposedImpEndDate}
           />
         </div>
       </div>

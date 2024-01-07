@@ -13,7 +13,7 @@ import axios from "axios";
 import { APP_API_BASE_URL } from "../../../apis";
 import { Slider } from "@mui/material";
 import MultiSelectDropdown from "./MultiSelectDropdown";
-import { SearchFilterProps } from "../resources-manager-page";
+import { SearchFilterProps } from "../resource-employees-page";
 
 interface Option {
   id: number;
@@ -198,7 +198,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ projectDetail, onSaveFilter
 />
 
                     </div>
-                    <div className="w-1/6 p-2">
+                    <div className="w-1/3 p-2">
                       <div className="block mt-8 w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset sm:text-sm sm:leading-6">
                         Duration
                       </div>
@@ -275,7 +275,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ projectDetail, onSaveFilter
                         checked={areaEditMode}
                       />
                     </div>
-                    <div className="w-1/6 p-2">
+                    <div className="w-1/3 p-2">
                       <div className="block mt-8 w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset sm:text-sm sm:leading-6">
                         Area
                       </div>
@@ -325,7 +325,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ projectDetail, onSaveFilter
                         checked={availabilityEditMode}
                       />
                     </div>
-                    <div className="w-1/6 p-2">
+                    <div className="w-1/3 p-2">
                       <div className="block mt-8 w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset sm:text-sm sm:leading-6">
                         Availability
                       </div>

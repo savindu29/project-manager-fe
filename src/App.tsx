@@ -17,6 +17,7 @@ import SignupPage from './pages/Login/RegisterUaerAdmin';
 import AccRequest from './pages/Login/accRequest';
 // import ManageResources from './pages/resource-manager';
 import ManageResources from './pages/resource-manager';
+import ManageResourceEmployees from './pages/resource-employees';
 
 
 
@@ -38,6 +39,10 @@ const App = () => {
       <Route
         path="/employees"
         element={isAuthenticated ? <UpdatePeoplePage /> : <Navigate to="/login" />}
+      />
+      <Route
+        path="/resources"
+        element={isAuthenticated ? <ManageResourceEmployees /> : <Navigate to="/login" />}
       />
 
       <Route

@@ -7,7 +7,7 @@ import axios from "axios";
 interface Employee {
   id: number; // Assuming id is a number
   name: string;
-  status: string;
+  status: boolean;
   allocated_date: string;
   released_date: string;
   percentage: number;
@@ -60,18 +60,6 @@ useEffect(() => {
   fetchData();
 }, [employee]);
 
-const percentageComponents = percentageData.map((data, index) => (
-  <CustomTooltip key={index} title={`Date From : ${data.fromDate} Date To : ${data.toDate}`}>
-    <div className={`w-[${Math.round(52 / percentageData.length)}rem] ${backgroundColors[index]} text-center rounded-full text-white mx-1`}>
-      {data.percentage}%
-    </div>
-  </CustomTooltip>
-));
-
-// Rest of your component...
-
-
-// Rest of your component...
 
   return (
     <div>
@@ -86,9 +74,24 @@ const percentageComponents = percentageData.map((data, index) => (
             <div className="w-28 text-center pr-6">{formattedDateTo}</div>
           </div>
           <div className="flex w-full text-xs py-2">
-            <div className="w-[12rem] ">Software engineer</div>
-            <div className="w-[52rem] flex items-center ">
-              {percentageComponents}
+            <div className="w-[11rem] ">Software engineer</div>
+            <div className="w-[56rem] flex items-center ">
+              {
+                percentageData.map((data, index) => (
+                  <div className='w-full relative group'>
+                  <div className={`w-full ${backgroundColors[index]} text-center rounded-full text-white group-hover:opacity-100 transition-opacity duration-300`}>
+                    {data.percentage}%
+                  </div>
+                  <div className='absolute w-full bottom-5 bg-zinc-100 rounded-xl border text-sm font-medium flex justify-between px-6 py-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
+                    <div>From: {data.fromDate}</div>
+                    <div>To: {data.toDate}</div>
+                  </div>
+                </div>
+                
+              
+                ))
+              }
+            
             </div>
           </div>
 

@@ -27,11 +27,15 @@ export interface Resource {
 interface ResourceTableProps {
   resources: Resource[];
   itemsPerPage?: number;
+  dateFrom:Date | null;
+  dateTo:Date | null;
 }
 
 const ResourceTable: React.FC<ResourceTableProps> = ({
   resources,
-  itemsPerPage = 5,
+  dateFrom,
+  dateTo,
+  itemsPerPage = 10,
 }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(itemsPerPage);
@@ -87,7 +91,7 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
               <TableCell>Name</TableCell>
               <TableCell>Allocated Projects</TableCell>
               <TableCell>Pending Projects</TableCell>
-              <TableCell>Request</TableCell>
+      
             </TableRow>
           </TableHead>
           <TableBody>
@@ -161,6 +165,8 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
           onClose={closeRequestDialog}
           checkedResources={checkedResources}
           resources={resources}
+          dateFrom={dateFrom}
+          dateTo={dateTo}
         />
       )}
     </div>
