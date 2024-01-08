@@ -19,7 +19,10 @@ const EditableTable: React.FC<EditableTableProps> = ({ employeeId, allocateDate,
     { allocateDate: '', releaseDate: '', percentage: 50, editable: true },
   ]);
 
-
+  const handleAddRow = () => {
+    // Add a new row with default values
+    setEditableData([...editableData, { allocateDate: '', releaseDate: '', percentage: 0, editable: false }]);
+  };
   
   useEffect(() => {
 
@@ -149,8 +152,18 @@ const EditableTable: React.FC<EditableTableProps> = ({ employeeId, allocateDate,
         <tr className=''>
 
         </tr>
+        
       </tbody>
     </table>
+    <div className="flex justify-end mt-2">
+        {/* Plus button for adding a new row */}
+        <button
+          className="p-2 text-xs px-3 bg-green-500 text-white rounded-md"
+          onClick={handleAddRow}
+        >
+          +
+        </button>
+      </div>
     <div className="mt-4 flex flex-col">
       <label
         htmlFor="role"
