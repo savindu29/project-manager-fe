@@ -12,14 +12,40 @@ interface EditableTableProps {
   releaseDate: string;
   employeeId: number;
   editable: boolean;
-    
-  }
-  
-const EditableTable: React.FC<EditableTableProps> = () => {
+}
+
+const EditableTable: React.FC<EditableTableProps> = ({ employeeId, allocateDate,releaseDate}) => {
   const [editableData, setEditableData] = useState<EditableDataItem[]>([
     { allocateDate: '', releaseDate: '', percentage: 50, editable: true },
   ]);
 
+
+  
+  useEffect(() => {
+
+    fetch(`http://localhost:8000/api/v1/project/available_percentages`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        empId: employeeId,
+        fromDate: allocateDate,
+        toDate: releaseDate,
+      }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        setEditableData(data.map((item: any) => ({
+          allocateDate: item.fromDate,
+          releaseDate: item.toDate,
+          percentage: item.percentage,
+          editable: true, 
+        })));
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  }, [employeeId]);
   const handleInputChange = (index: number, field: keyof EditableDataItem, value: string | number) => {
     const newData = [...editableData];
     newData[index] = {
@@ -28,13 +54,12 @@ const EditableTable: React.FC<EditableTableProps> = () => {
     };
     setEditableData(newData);
   };
-  
+
   const handleCheckboxChange = (index: number, checked: boolean) => {
     const newData = [...editableData];
     newData[index].editable = checked;
     setEditableData(newData);
   };
-
   const handleSendRequest = () => {
     // Handle sending the request with the editable data to the API
     console.log('Sending request with data:', editableData);
@@ -53,7 +78,7 @@ const EditableTable: React.FC<EditableTableProps> = () => {
         <tr className="text-zinc-400 font-normal text-left my-0 py-1">
           <th className="p-2 font-normal text-sm">Allocate Date</th>
           <th className="p-2 font-normal text-sm">Date From</th>
-          <th className="p-2 font-normal text-sm">Date To</th>
+          <th className="p-2 font-normal text-sm">Percentage</th>
           <th className="p-2 font-normal text-sm">Select</th>
         </tr>
       </thead>
@@ -62,19 +87,16 @@ const EditableTable: React.FC<EditableTableProps> = () => {
         {editableData.map((data, index) => (
           <tr key={index}>
             <td className="border-b p-0.5 ">
-              <input
-                className="px-4 py-2 border rounded-md   focus:outline-none  focus:border-zinc-300 "
-                type="date"
-                style={{ width: "176px" }}
-                value={data.allocateDate}
-                onChange={(e) =>
-                  handleInputChange(
-                    index,
-                    "allocateDate",
-                    e.target.value
-                  )
-                }
-              />
+            <input
+  className="px-4 py-2 border rounded-md focus:outline-none focus:border-zinc-300"
+  type="date"
+  style={{ width: "176px" }}
+  value={data.allocateDate}
+  onChange={(e) =>
+    handleInputChange(index, "allocateDate", e.target.value)
+  }
+  // min={data.allocateDate}  // Replace this with the minimum date you want
+/>
             </td>
             <td className="border-b p-2 ">
               <input
@@ -89,6 +111,7 @@ const EditableTable: React.FC<EditableTableProps> = () => {
                     e.target.value
                   )
                 }
+                min={data.releaseDate} 
               />
             </td>
             <td className="border-b p-2 ">
@@ -123,6 +146,9 @@ const EditableTable: React.FC<EditableTableProps> = () => {
             </td>
           </tr>
         ))}
+        <tr className=''>
+
+        </tr>
       </tbody>
     </table>
     <div className="mt-4 flex flex-col">
@@ -152,14 +178,14 @@ const EditableTable: React.FC<EditableTableProps> = () => {
           <textarea
             id="note"
             className="w-full p-2 border border-gray-300 rounded-md"
-            // Add onChange or value props
+
           />
         </div>
 
         <div className="flex-none ml-4 mb-2">
           <button
             className="p-2 text-xs px-3 bg-purple-600 text-white rounded-md "
-            //   onClick={handleSendRequest} // Add the function to handle the button click
+             onClick={handleSendRequest} 
           >
             Send Request
           </button>

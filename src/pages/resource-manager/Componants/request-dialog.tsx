@@ -9,14 +9,41 @@ interface RequestDialogProps {
   onClose: () => void;
   checkedResources: { [key: number]: boolean };
   resources: Resource[];
+
+
+  dateFrom:Date |null;
+  dateTo:Date | null;
+
 }
 
 const RequestDialog: React.FC<RequestDialogProps> = ({
   isOpen,
   onClose,
   checkedResources,
+  dateFrom,
+  dateTo,
+
   resources,
 }) => {
+
+
+
+
+
+  function formatDate(date: Date|null): string {
+    if(date !== null){
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    return `${year}/${month}/${day}`;
+    }else{
+      return "";
+    }
+  }
+
+
+
+
   const [selectedResourceId, setSelectedResourceId] = useState<number | null>(null);
 
   const handleResourceClick = (resourceId: number) => {
@@ -49,10 +76,13 @@ const RequestDialog: React.FC<RequestDialogProps> = ({
           {/* Right Details Pane (2/3 of the window) */}
           <div className="w-3/4 h-full bg-white px-6 rounded-md ml-4  ">
             {selectedResourceId !== null && (
+              <div>
               <ResourceDetailsPane resourceId={selectedResourceId} />
+              <EditableTable allocateDate={formatDate(dateFrom)} releaseDate={formatDate(dateTo)} employeeId={1} editable={true}/>
+              </div>
             )}
 
-            <EditableTable allocateDate={"2023/12/31"} releaseDate={"2024/03/29"} employeeId={0} editable={true}/>
+           
 
           </div>
         </div>

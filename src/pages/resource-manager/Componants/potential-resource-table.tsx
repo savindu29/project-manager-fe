@@ -27,10 +27,14 @@ export interface Resource {
 interface ResourceTableProps {
   resources: Resource[];
   itemsPerPage?: number;
+  dateFrom:Date | null;
+  dateTo:Date | null;
 }
 
 const ResourceTable: React.FC<ResourceTableProps> = ({
   resources,
+  dateFrom,
+  dateTo,
   itemsPerPage = 10,
 }) => {
   const [page, setPage] = useState(0);
@@ -161,6 +165,9 @@ const ResourceTable: React.FC<ResourceTableProps> = ({
           onClose={closeRequestDialog}
           checkedResources={checkedResources}
           resources={resources}
+          dateFrom={dateFrom}
+          dateTo={dateTo}
+
         />
       )}
     </div>

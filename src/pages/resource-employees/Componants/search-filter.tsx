@@ -24,41 +24,45 @@ interface Area {
   name: string;
 }
 export interface Framework {
+  
   id: number;
   name: string;
 }
-const options: Option[] = [
-  { id: 1, name: "Area" },
-  { id: 2, name: "Duration" },
-  { id: 3, name: "Availability" },
-];
-// ... (previous imports)
+
+export interface Level {
+  
+  id: number;
+  name: string;
+}
+
+
 
 const SearchFilter: React.FC<SearchFilterProps> = ({
   projectDetail,
   onSaveFilter,
 }) => {
+
+  
+  
+
+  const [selectedSkill, setSelectedSkill] = useState<Option | null>(null);
+  const [selectedSkillLevel, setSelectedSkillLevel] = useState<Option | null>(
+    null
+  );
+
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [filterOption, setFilterOption] = useState<Option | null>(null);
   const [selectArea, setSelectArea] = useState<Area | null>(null);
+  
 
   const [availability, setAvailability] = useState<number>(50);
   const [areas, setAreas] = useState([]);
+  const [levels, setLevels] = useState([]);
   const [frameworks, setFrameworks] = useState<Framework[]>([]);
   const [durationEditMode, setDurationEditMode] = useState(false);
   const [areaEditMode, setAreaEditMode] = useState(false);
   const [availabilityEditMode, setAvailabilityEditMode] = useState(false);
-  const handleDurationCheckboxChange = () => {
-    setDurationEditMode(!durationEditMode);
-  };
-
-  const handleAreaCheckboxChange = () => {
-    setAreaEditMode(!areaEditMode);
-  };
-
-  const handleAvailabilityCheckboxChange = () => {
-    setAvailabilityEditMode(!availabilityEditMode);
-  };
+ 
 
   const [selectedValues, setSelectedValues] = useState<number[]>([]);
 
@@ -70,40 +74,27 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
     setPopupOpen(false);
   };
 
+
   useEffect(() => {
     // Fetch project status data
     axios
-      .get(`${APP_API_BASE_URL}/api/v1/specification/specificationAreas`)
+      .get(`${APP_API_BASE_URL}/api/v1/specification/specifications`)
       .then((response) => setAreas(response.data.data))
+      .catch((error) =>
+        console.error("Error fetching project status data:", error)
+      );
+      axios
+      .get(`${APP_API_BASE_URL}/api/specification Level/SpecificationLevel`)
+      .then((response) => setLevels(response.data.data))
       .catch((error) =>
         console.error("Error fetching project status data:", error)
       );
   }, []);
 
-  const onSelectOption = (selectedOption: Option | null) => {
-    setFilterOption(selectedOption);
-  };
+  
 
-  const onSelectArea = async (selectedOption: Area | null) => {
-    setSelectArea(selectedOption);
+  
 
-    if (selectedOption) {
-      const area = selectedOption.id;
-      try {
-        const response = await axios.get(
-          `${APP_API_BASE_URL}/api/v1/specification/specificationByArea/${area}`
-        );
-        setFrameworks(response.data.data);
-        setSelectedValues([]);
-      } catch (error) {
-        console.error("Error fetching development field data:", error);
-      }
-    }
-  };
-
-  const handleSelectionChange = (selectedItems: number[]) => {
-    setSelectedValues(selectedItems);
-  };
 
   const save = () => {
     let filterData = {};
@@ -127,6 +118,22 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
         availability: availability,
       };
     }
+
+    if (selectedSkill) {
+      filterData = {
+        ...filterData,
+        selectedSkill: selectedSkill,
+      };
+    }
+
+    if (selectedSkillLevel) {
+      filterData = {
+        ...filterData,
+        selectedSkillLevel: selectedSkillLevel,
+      };
+    }
+    console.log("Filter Data:", filterData);
+
 
     // console.log("Filter Data:", filterData);
     onSaveFilter(filterData);
@@ -182,7 +189,8 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                           <DropDown
                             data={areas}
                             dropdownFor={""}
-                            onSelect={onSelectArea}
+                            onChanged={setSelectedSkill}
+                            
                           />
                         </div>
                         {/* {selectArea && (
@@ -198,9 +206,9 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                             Skill Level
                           </label>
                           <DropDown
-                            data={areas}
+                            data={levels}
                             dropdownFor={""}
-                            onSelect={onSelectArea}
+                            onChanged={setSelectedSkillLevel}
               
                           />
                         </div>

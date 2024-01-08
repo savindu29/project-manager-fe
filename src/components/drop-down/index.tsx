@@ -9,6 +9,7 @@ interface DropdownProps {
     value: { id: number; name: string; [key: string]: any } | null
   ) => void;
   disabled?: boolean; // New prop for disabling the dropdown
+  onChanged?: any;
 }
 
 const classNames = (...classes: string[]): string => {
@@ -21,6 +22,7 @@ const DropDown: FC<DropdownProps & { defaultSelectedId?: number }> = ({
   onSelect,
   defaultSelectedId,
   disabled,
+  onChanged,
 }) => {
   const [selected, setSelected] = useState<{
     id: number;
