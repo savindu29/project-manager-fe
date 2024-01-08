@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { XMarkIcon } from "@heroicons/react/20/solid";
 import ResourceDetailsPane from "./resource-details";
+import EmployeeSkillsView from "./employeeSkils";
 
 interface EmployeeDetailsProps {
   employeeId: number;
@@ -12,9 +13,9 @@ const EmployeeDetailsPopup: React.FC<EmployeeDetailsProps> = ({
   onClose,
 }) => {
   return (
-    <div style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }} className="fixed inset-0 h-screen w-screen flex items-center justify-end z-50">
+    <div style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }} className="fixed inset-0 h-screen w-screen flex items-center justify-end z-50 ">
     <div className=" flex items-center justify-end mr-20 ">
-      <div className="bg-white shadow-lg p-4 w-[60rem] h-[40rem] relative">
+      <div className="bg-white shadow-lg p-4 w-[60rem] h-[40rem] relative p-8">
         <button
           onClick={onClose}
           className="rounded-full p-2 absolute top-2 right-2 bg-gray-200 hover:bg-gray-300 focus:outline-none"
@@ -26,6 +27,7 @@ const EmployeeDetailsPopup: React.FC<EmployeeDetailsProps> = ({
         </div>
         <div className="flex-grow overflow-y-auto">
           <ResourceDetailsPane resourceId={employeeId} />
+          <EmployeeSkillsView employeeId={employeeId} />
         </div>
       </div>
     </div>
