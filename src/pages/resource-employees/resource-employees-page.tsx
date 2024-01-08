@@ -133,12 +133,8 @@ export function ResourcesManagePage({
         </div>
       </div>
       <hr />
-      <div className="mt-12 flex">
-        <div className=" bg-cyan-800 flex text-white rounded py-1 px-2 w-full justify-center items-center text-sm">
-          Resources
-        </div>
-      </div>
-      <div className="mt-6  ">
+      
+      <div className="mt-12  ">
         <div className="">
           <ResourceSkillSTable resourceSkills={resourceSkills}  />
         </div>
