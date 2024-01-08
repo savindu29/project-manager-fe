@@ -6,7 +6,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import SearchFilter from "./Componants/search-filter";
 
@@ -133,8 +133,16 @@ export function ResourcesManagePage({
         </div>
       </div>
       <hr />
+
+      <div className='justify-end fixed z-10 shadow left mt-1.5'>
+            <Link to="">
+              <div className="bg-black  text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer">
+                Add new Employee
+              </div>
+            </Link>
+          </div>
       
-      <div className="mt-12  ">
+      <div className="mt-14  ">
         <div className="">
           <ResourceSkillSTable resourceSkills={resourceSkills}  />
         </div>
