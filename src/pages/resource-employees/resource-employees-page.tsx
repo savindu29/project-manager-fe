@@ -135,7 +135,7 @@ export function ResourcesManagePage({
       <hr />
 
       <div className='justify-end fixed z-10 shadow left mt-1.5'>
-            <Link to="/employees/new">
+            <Link to="">
               <div className="bg-black  text-semibold text-xs text-white px-4 py-2 rounded hover:cursor-pointer">
                 Add new Employee
               </div>
