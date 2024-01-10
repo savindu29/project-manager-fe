@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import MiniDrawer from '../../layout';
-
+import { fetchProjectData, fetchProposalStats, fetchImplementationStats, fetchLessonsLearned } from '../../apis/dashboard-api';
 interface Project {
   id: string;
   projectName: string;
@@ -24,8 +24,8 @@ const Dashboard = () => {
 
   const [greeting, setGreeting] = useState<string>('');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [selectedCard, setSelectedCard] = useState<string | null>(null);
-  const [lessonsLearned, setLessonsLearned] = useState([]);
+const [selectedCard, setSelectedCard] = useState<CardId | null>(null);
+const [lessonsLearned, setLessonsLearned] = useState([]);
 
  const apiEndpoints = {
   ongoing: 'InprogressPropsalNames',
@@ -35,67 +35,38 @@ const Dashboard = () => {
   successful: 'SucessImplenetationNames',
   failed: 'ImplementationFailedNames',
 };
-
 type CardId = keyof typeof apiEndpoints;
-
 const handleCardClick = (cardId: CardId) => {
-  axios.get(`http://localhost:8000/api/v1/project/${apiEndpoints[cardId]}`)
-    .then(response => {
-  
-      const projects = response.data.data;
+  fetchProjectData(apiEndpoints[cardId])
+    .then((projects) => {
       const selectedProjectData = projects.length > 0 ? projects[0] : null;
-
       setSelectedProject(selectedProjectData);
       setSelectedCard(cardId);
     })
-    .catch(error => {
+    .catch((error) => {
       console.error('Error fetching data:', error);
     });
 };
+useEffect(() => {
+  // Fetch data for Proposals' Statuses
+  fetchProposalStats()
+    .then((data) => setProposalStats(data))
+    .catch((error) => console.error('Error fetching proposal data:', error));
 
-  useEffect(() => {
-    // Fetch data for Proposals' Statuses
-    axios.get('http://localhost:8000/api/v1/project/proposalStats')
-      .then(response => {
-        //console.log('Proposal Stats:', response.data.data);
-        setProposalStats(response.data.data);
-      })
-      .catch(error => {
-        console.error('Error fetching proposal data:', error);
-      });
-  
-    // Fetch data for Implementation Statuses
-    axios.get('http://localhost:8000/api/v1/project/implementationStats')
-      .then(response => {
-       // console.log('Implementation Stats:', response.data.data);
-        setImplementationStats(response.data.data);
-      })
-      .catch(error => {
-        console.error('Error fetching implementation data:', error);
-      });
+  // Fetch data for Implementation Statuses
+  fetchImplementationStats()
+    .then((data) => setImplementationStats(data))
+    .catch((error) => console.error('Error fetching implementation data:', error));
 
-               // Fetch data for Lessons Learned
-    axios.get('http://localhost:8000/api/v1/project/lessonsLearned')
-    .then(response => {
-      console.log('Lessons Learned:', response.data.data);
-      setLessonsLearned(response.data.data);
+  // Fetch data for Lessons Learned
+  fetchLessonsLearned()
+    .then((data) => {
+      console.log('Lessons Learned:', data);
+      setLessonsLearned(data);
     })
-    .catch(error => {
-      console.error('Error fetching lessons learned data:', error);
-    });
+    .catch((error) => console.error('Error fetching lessons learned data:', error));
+}, []);
 
-       // Set greeting based on the time of day
-       const currentHour = new Date().getHours();
-       if (currentHour >= 0 && currentHour < 12) {
-         setGreeting('Good Morning');
-       } else if (currentHour >= 12 && currentHour < 18) {
-         setGreeting('Good Afternoon');
-       } else {
-         setGreeting('Good Evening');
-       }
-       
-  }, 
-  []);
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (selectedCard && !(event.target as HTMLElement).closest('.selected-card')) {

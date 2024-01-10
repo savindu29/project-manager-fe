@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-
+import { fetchResourceDetails  } from '../../../apis/resource-manager-api';
 interface ProjectAllocation {
   fromDate: string;
   toDate: string;
@@ -18,15 +17,13 @@ const ResourceDetailsPane: React.FC<ResourceDetailsPaneProps> = ({ resourceId })
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get<{ data: ProjectAllocation[] }>(
-          `http://localhost:8000/api/v1/project/resources-projects/${resourceId}`
-        );
-        setResourceDetails(response.data.data);
+        const data = await fetchResourceDetails(resourceId);
+        setResourceDetails(data);
       } catch (error) {
         console.error('Error fetching resource details:', error);
       }
     };
-
+  
     fetchData();
   }, [resourceId]);
 

@@ -54,7 +54,7 @@ export const getProject = async (id: number) => {
 export const updateProject = async (id: number, updatedData: any) => {
   try {
     const url = `${APP_API_BASE_URL}/api/v1/project/${id}`;
-    const result = await axios.put(url, updatedData); // Assuming you're using a PUT request for updates
+    const result = await axios.put(url, updatedData); 
     return result.data;
   } catch (error: any) {
     console.error("error update: ", error.message);

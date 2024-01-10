@@ -1,12 +1,13 @@
 import React, { ChangeEvent, useState } from 'react';
 import { APP_API_BASE_URL } from '../../apis';
 import axios from 'axios';
+import { sendVerificationCode, setNewPassword } from '../../apis/login-api';
 
 const ForgotPasswordPage2: React.FC = () => {
   const [email, setEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [stage, setStage] = useState('email'); 
+  const [newPassword, setNewPasswordValue] = useState('');
+  const [stage, setStage] = useState('email');
   const [error, setError] = useState('');
   const [isSettingPassword, setIsSettingPassword] = useState(false);
   const [isSendingVerificationCode, setIsSendingVerificationCode] = useState(false);
@@ -49,11 +50,9 @@ const ForgotPasswordPage2: React.FC = () => {
         setError('Please enter a valid email address');
         return;
       }
-    let url = `${APP_API_BASE_URL}/api/password/reset-request?email=${email}`
-    const response = await axios.post(url)
-      console.log(response);
-      if (response.data.code==200) {
-     
+      const isSuccess = await sendVerificationCode(email);
+
+      if (isSuccess) {
         setStage('verification');
       } else {
         console.error('Verification code sending failed:');
@@ -61,43 +60,29 @@ const ForgotPasswordPage2: React.FC = () => {
       }
     } catch (error) {
       console.error('Error during verification code sending:', error);
-      setError('Error during verification code sending.Please try again.');
+      setError('Error during verification code sending. Please try again.');
     }
   };
 
   const handleSetNewPassword = async () => {
     setIsSettingPassword(true);
+
     try {
-      const response = await axios.post(
-        `${APP_API_BASE_URL}/api/password/reset?resetCode=${verificationCode}&newPassword=${newPassword}`
-      );
-      console.log('Response:', response);
-  
-      if (response.data === "Password reset successful.") {
+      const isSuccess = await setNewPassword(verificationCode, newPassword);
+
+      if (isSuccess) {
         setStage('passwordSetSuccessfully');
-        window.location.href = "/login";
+        window.location.href = '/login';
       } else {
         console.error('Setting new password failed:');
-  
-        if (response.data && (response.data.code === 401 || response.data.code === 500)) {
-          setError('Verification code does not match. Please check and try again.');
-        } else if (response.data && response.data.code === 400) {
-          setError('Weak password. Please enter a stronger password.');
-        } else {
-          setError('Failed to set a new password. Please try again.');
-        }
+        setError('Failed to set a new password. Please try again.');
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error during setting new password:', error);
-  
-      if (error.response) {
-        console.error('Response from server:', error.response);
-      }
-  
       setError('An unexpected error occurred. Please try again.');
     }
   };
-  
+
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
       <div className="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1">
@@ -145,16 +130,16 @@ const ForgotPasswordPage2: React.FC = () => {
                       value={verificationCode}
                       onChange={(e) => setVerificationCode(e.target.value)}
                     />
-                   <input
-        className="mt-5 w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-        type="password"
-        placeholder="New Password"
-        value={newPassword}
-        onChange={(e) => {
-          setNewPassword(e.target.value);
-          checkPasswordStrength(e.target.value);
-        }}
-      />
+                    <input
+                className="mt-5 w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                type="password"
+                placeholder="New Password"
+                value={newPassword}
+                onChange={(e) => {
+                  setNewPasswordValue(e.target.value);  
+                  checkPasswordStrength(e.target.value);
+                }}
+              />
 
       {/* Password strength indicator */}
       <div>

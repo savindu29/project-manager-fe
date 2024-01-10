@@ -15,6 +15,8 @@ import { Slider } from "@mui/material";
 import MultiSelectDropdown from "./MultiSelectDropdown";
 import { SearchFilterProps } from "../resources-manager-page";
 
+import { fetchProjectStatusData, fetchSpecificationByArea } from '../../../apis/resource-manager-api';
+
 interface Option {
   id: number;
   name: string;
@@ -66,38 +68,6 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ projectDetail, onSaveFilter
   const closePopup = () => {
     setPopupOpen(false);
   };
-
-  useEffect(() => {
-    // Fetch project status data
-    axios
-      .get(`${APP_API_BASE_URL}/api/v1/specification/specificationAreas`)
-      .then((response) => setAreas(response.data.data))
-      .catch((error) =>
-        console.error("Error fetching project status data:", error)
-      );
-  }, []);
-
-  const onSelectOption = (selectedOption: Option | null) => {
-    setFilterOption(selectedOption);
-  };
-
-  const onSelectArea = async (selectedOption: Area | null) => {
-    setSelectArea(selectedOption);
-
-    if (selectedOption) {
-      const area = selectedOption.id;
-      try {
-        const response = await axios.get(
-          `${APP_API_BASE_URL}/api/v1/specification/specificationByArea/${area}`
-        );
-        setFrameworks(response.data.data);
-        setSelectedValues([]);
-      } catch (error) {
-        console.error("Error fetching development field data:", error);
-      }
-    }
-  };
-
   const handleSelectionChange = (selectedItems: number[]) => {
     setSelectedValues(selectedItems);
   };
@@ -159,7 +129,29 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ projectDetail, onSaveFilter
     const day = date.getDate().toString().padStart(2, "0");
     return `${year}-${month}-${day}`;
   }
- 
+ // For fetching project status data
+useEffect(() => {
+  fetchProjectStatusData()
+    .then((data) => setAreas(data))
+    .catch((error) => console.error("Error fetching project status data:", error));
+}, []);
+
+// For onSelectArea function
+const onSelectArea = async (selectedOption: Area | null) => {
+  setSelectArea(selectedOption);
+
+  if (selectedOption) {
+    const area = selectedOption.id;
+    try {
+      const data = await fetchSpecificationByArea(area);
+      setFrameworks(data);
+      setSelectedValues([]);
+    } catch (error) {
+      console.error("Error fetching development field data:", error);
+    }
+  }
+};
+
   return (
     <div>
       <button

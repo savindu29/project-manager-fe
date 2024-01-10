@@ -17,7 +17,7 @@ import ResourceTable from "./Componants/potential-resource-table";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { getProject } from "../../apis/project-api";
-
+import { fetchEmployees, fetchEmployeesData } from '../../apis/resource-manager-api';
 export interface SearchFilterProps {
   projectDetail: any;
   onSaveFilter: (filterData: any) => void;
@@ -67,44 +67,25 @@ export function ResourcesManagerPage({
 }: {
   projectDetails: any;
 }) {
-  // const [isRequestDialogOpen, setRequestDialogOpen] = useState(false);
-  // const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
-  // const [employees, setEmployees] = useState<Employee[]>([]);
-
   useEffect(() => {
-    const fetchEmployees = async () => {
+    const fetchEmployeesData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/v1/projectReosurces/ResourceList");
-        console.log(response)
-        setEmployees(response.data.data);
+        const data = await fetchEmployees();
+        setEmployees(data);
       } catch (error) {
         console.error("Error fetching employees:", error);
-      } 
+      }
     };
-
-    fetchEmployees();
-  }, []);
-
-
-
-
   
+    fetchEmployeesData();
+  }, []);
 
   const [employeesData, setEmployeesData] = useState<Employee[]>([]);
 
   const [employees, setEmployees] = useState<any[]>([]);
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [filters, setFilters] = useState<Filter[]>([]);
-
-
-
   const [potentialResources, setPotentialResources] = useState<Resource[]>([]);
-
-
-
-  
- 
-
   const [projectProposedImpStartDate, setProposedImpStartDate] = useState(
     projectDetails?.piStartDate ? new Date(projectDetails.piStartDate) : null
   );
@@ -115,20 +96,6 @@ export function ResourcesManagerPage({
   const { id } = useParams();
   const [projectDetail, setProjectDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -169,38 +136,22 @@ export function ResourcesManagerPage({
     console.log('Received Filter Data in ResourceManagerPage:', filterData);
     
   };
+
+
   useEffect(() => {
-    const fetchEmployeesData = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/v1/admin/employees/notAllocatedToProject?projectId=${projectDetails.id}`);
-        console.log('API Response:', response.data);
-
-        // Assuming the API response structure is as mentioned
-        const employeesDataFromAPI = response.data.data;
-
-        // Map the API response to the state variable
-        const mappedEmployeesData = employeesDataFromAPI.map((employeeData: any) => ({
-          id:employeeData.id,
-          name: employeeData.name,
-          allocatedProjects: employeeData.allocatedProjects || [],
-          pendingProjects: employeeData.pendingProjects || [],
-        }));
-
-        setEmployeesData(mappedEmployeesData);
-
-        // Set potential resources separately
-        setPotentialResources(mappedEmployeesData);
+        const data = await fetchEmployeesData(projectDetails.id);
+        setEmployeesData(data);
+        setPotentialResources(data);
       } catch (error) {
-        console.error('Error fetching data:', error as string);
+        console.error('Error fetching data:', error);
       }
     };
-
-    if (projectDetails && projectDetails.id) {
-      fetchEmployeesData();
-    }
-  }, [projectDetails]);
-
-
+  
+    fetchData();
+  }, [projectDetails.id]);
+  
   return (
     <div className="px-12 mb-12">
       <div className="h-20 w-full flex items-center ">

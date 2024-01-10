@@ -4,12 +4,13 @@ import { DialogDefault } from './popupLogin';
 import { useAuth } from './useAuth'; 
 import { useNavigate } from 'react-router-dom';
 import { APP_API_BASE_URL } from '../../apis';
+import {  loginUser } from '../../apis/login-api';
 
 let globalEmail: string | null = null;
 
 const LoginPage: React.FC = () => {
-  const { login } = useAuth(); 
-  const navigate = useNavigate(); 
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showErrorDialog, setShowErrorDialog] = useState(false);
@@ -23,50 +24,45 @@ const LoginPage: React.FC = () => {
         return;
       }
 
-      const response = await fetch(`${APP_API_BASE_URL}/api/v1/auth/signin`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: username,
-          password: password,
-        }),
-      });
+      const response = await loginUser(username, password);
 
-      if (response.ok) {
-        const result = await response.json();
+      // Handle the response as needed
+      if (response) {
+        // Successful login logic
+        if (response.ok) {
+          const result = await response.json();
 
-        // Log the result to the console
-        console.warn("Token:", result.token);
+          // Log the result to the console
+          console.warn("Token:", result.token);
 
-        // // Store the email globally
-        // globalEmail = username;
-        localStorage.setItem('userEmail', username);
+          // Store the email globally
+          globalEmail = username;
+          localStorage.setItem('userEmail', username);
 
-        // Log the email to the console
-        console.log("Email:", globalEmail);
-    
-        // Store the token in local storage
-        localStorage.setItem('loginToken', result.token);
-    
-        // Schedule the local storage clearing after 30 minutes
-        setTimeout(() => {
-          // Clear user email and login token from local storage
-          localStorage.removeItem('userEmail');
-          localStorage.removeItem('loginToken');
-        }, 30 * 60 * 1000);  
-    
-        login(result.token);
-    
-      window.location.href = '/';
-    } else {
-      // If the response status is not ok, log the error response
-      const errorResponse = await response.json();
-      console.error('Login failed:', errorResponse);
+          // Log the email to the console
+          console.log("Email:", globalEmail);
 
-        // Show the popup indicating login failure
-        setShowErrorDialog(true);
+          // Store the token in local storage
+          localStorage.setItem('loginToken', result.token);
+
+          // Schedule the local storage clearing after 30 minutes
+          setTimeout(() => {
+            // Clear user email and login token from local storage
+            localStorage.removeItem('userEmail');
+            localStorage.removeItem('loginToken');
+          }, 30 * 60 * 1000);
+
+          login(result.token);
+
+          window.location.href = '/';
+        } else {
+          // If the response status is not ok, log the error response
+          const errorResponse = await response.json();
+          console.error('Login failed:', errorResponse);
+
+          // Show the popup indicating login failure
+          setShowErrorDialog(true);
+        }
       }
     } catch (error) {
       // Handle network errors or other exceptions
@@ -75,7 +71,6 @@ const LoginPage: React.FC = () => {
       // Show the popup for network errors or other exceptions
       setShowErrorDialog(true);
     }
-    
   };
 
   return (

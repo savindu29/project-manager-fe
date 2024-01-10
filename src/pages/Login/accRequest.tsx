@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { RegisterSuccessDialog } from './popupregister';
 import { RegisterFailedDialog } from './popupFailedRegister';
 import { APP_API_BASE_URL } from '../../apis';
+import { submitAccountRequest } from '../../apis/login-api';
 
 const AccRequest: React.FC = () => {
   const [registered, setRegistered] = useState(false);
@@ -31,34 +32,23 @@ const AccRequest: React.FC = () => {
 
     const accRequest = async () => {
       try {
-          if (!validateInputs()) {
-              setShowDialog1(true);
-              return; 
-          }
-  
-          const response = await fetch(`${APP_API_BASE_URL}/api/user-requests`, {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                  displayName: name,
-                  email: email,
-                  position: position, 
-              }),
-          });
-  
-          if (response.ok) {
-              console.log('Account request successful!');
-              setShowDialog(true);
-          } else {
-              const errorResponse = await response.json();
-              console.error('Account request failed:', errorResponse);
-          }
+        if (!validateInputs()) {
+          setShowDialog1(true);
+          return;
+        }
+        const isSuccess = await submitAccountRequest(name, email, position);
+    
+        if (isSuccess) {
+          console.log('Account request successful!');
+          setShowDialog(true);
+        } else {
+          console.error('Account request failed');
+        }
       } catch (error) {
-          console.error('Error during Account request:', error);
+        console.error('Error during Account request:', error);
       }
-  };
+    };
+    
   
 
   return (
@@ -102,10 +92,6 @@ const AccRequest: React.FC = () => {
   className="mt-5 tracking-wide font-semibold bg-sky-600 text-gray-100 w-full py-4 rounded-lg hover-bg-sky-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
   onClick={accRequest}
 >
- 
-  {/* <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4H1m3 4H1m3 4H1m3 4H1m6.071.286a3.429 3.429 0 1 1 6.858 0M4 1h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Zm9 6.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"/>
-  </svg> */}
   <span className="ml-3">Send</span>
 </button>
                             </div>
